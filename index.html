@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Система тестирования: HTML и CSS</title>
+    <title>Обучающий тест: HTML и CSS</title>
     <style>
         :root {
             --primary: #4a6fa5;
@@ -19,397 +19,235 @@
             --wrong-bg: #f8d7da;
             --wrong-border: #f5c6cb;
             --wrong-text: #721c24;
-            --transition: 0.3s ease;
+            --transition: 0.2s ease;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding: 20px;
-            line-height: 1.6;
-        }
-
-        .app-container {
-            background: var(--container-bg);
-            width: 100%;
-            max-width: 800px;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
-        }
-
-        /* Утилиты видимости */
-        .hidden { display: none !important; }
-
-        /* Заголовки */
-        h1, h2 { color: var(--primary); margin-bottom: 20px; text-align: center; }
-
-        /* Стили кнопок */
-        .btn {
-            padding: 12px 25px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: var(--transition);
-            display: inline-block;
-            text-align: center;
-            margin: 5px;
-        }
-
-        .btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
-        .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
-        .btn-outline:hover { background: var(--primary); color: white; }
-
-        /* Информационная панель */
-        .header-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            font-size: 14px;
-            color: var(--text-muted);
-            border-bottom: 2px solid var(--bg);
-            padding-bottom: 10px;
-        }
-
-        /* Прогресс-бар */
-        .progress-container {
-            width: 100%;
-            height: 8px;
-            background: var(--border);
-            border-radius: 4px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: var(--primary);
-            width: 0%;
-            transition: width 0.4s ease;
-        }
-
-        /* Область вопроса */
-        .question { font-size: 20px; font-weight: 700; margin-bottom: 25px; line-height: 1.4; }
-
-        /* Варианты ответов */
-        .options-grid { display: flex; flex-direction: column; gap: 12px; }
-        .option {
-            display: block;
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 16px;
-            background: var(--container-bg);
-            transition: var(--transition);
-        }
-        .option:hover { border-color: var(--primary); background: #f8faff; }
-
-        /* Экраны результатов и анализа */
-        .result-stats {
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            margin: 30px 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text-main); display: flex; justify-content: center; padding: 20px; line-height: 1.6; }
         
-        .stat-box {
-            display: flex;
-            justify-content: space-around;
-            background: var(--bg);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
+        .app-container { background: var(--container-bg); width: 100%; max-width: 800px; padding: 30px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05); }
+        .hidden { display: none !important; }
+        
+        h1, h2 { color: var(--primary); text-align: center; margin-bottom: 20px; }
+        
+        /* Прогресс и статус */
+        .header-info { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; color: var(--text-muted); }
+        .progress-container { width: 100%; height: 8px; background: var(--border); border-radius: 4px; margin-bottom: 25px; overflow: hidden; }
+        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+        
+        /* Вопрос и варианты */
+        .question { font-size: 18px; font-weight: bold; margin-bottom: 20px; }
+        .options-grid { display: flex; flex-direction: column; gap: 10px; }
+        
+        .option { display: block; width: 100%; padding: 15px; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; text-align: left; font-size: 16px; background: #fff; transition: var(--transition); }
+        .option:hover:not(:disabled) { border-color: var(--primary); background: #f0f4f8; }
+        
+        /* Стили состояния ответов */
+        .option:disabled { cursor: default; }
+        .option.correct { background: var(--correct-bg); border-color: var(--correct-border); color: var(--correct-text); font-weight: bold; }
+        .option.wrong { background: var(--wrong-bg); border-color: var(--wrong-border); color: var(--wrong-text); text-decoration: line-through; opacity: 0.8; }
+        
+        /* Блок пояснения */
+        .explanation-box { margin-top: 20px; padding: 15px; border-radius: 8px; animation: fadeIn 0.4s ease; border-left: 5px solid transparent; }
+        .exp-correct { background: #e2f3e5; border-left-color: #28a745; }
+        .exp-wrong { background: #fae3e5; border-left-color: #dc3545; }
+        .exp-title { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+        
+        /* Кнопки навигации */
+        .nav-buttons { display: flex; justify-content: space-between; flex-wrap: wrap; margin-top: 30px; gap: 10px; border-top: 1px solid var(--border); padding-top: 20px; }
+        .btn { padding: 12px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: bold; transition: var(--transition); }
+        .btn:hover:not(:disabled) { background: var(--primary-hover); }
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-outline { background: transparent; color: var(--text-muted); border: 2px solid var(--border); }
+        .btn-outline:hover { background: var(--border); color: #000; }
+        .btn-danger { background: transparent; color: #dc3545; border: 2px solid #dc3545; }
+        .btn-danger:hover { background: #dc3545; color: white; }
 
-        .stat-item { display: flex; flex-direction: column; align-items: center; }
-        .stat-value { font-size: 28px; font-weight: 800; color: var(--primary); }
-        .stat-label { font-size: 14px; color: var(--text-muted); }
-
-        /* Блок анализа ошибок */
-        .analysis-item {
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-        .analysis-item.correct { background: var(--correct-bg); border-color: var(--correct-border); }
-        .analysis-item.wrong { background: var(--wrong-bg); border-color: var(--wrong-border); }
-        .analysis-q { font-weight: bold; margin-bottom: 10px; }
-        .analysis-ans { font-size: 14px; margin-bottom: 5px; }
-        .analysis-exp { font-size: 13px; color: #555; margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(0,0,0,0.1); }
-
-        /* История */
-        .history-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .history-table th, .history-table td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; }
-        .history-table th { background: var(--bg); font-weight: 600; }
-
-        @media (max-width: 600px) {
-            .app-container { padding: 20px; }
-            .stat-box { flex-direction: column; gap: 15px; }
-        }
+        /* Результаты */
+        .result-stats { display: flex; justify-content: space-around; margin: 30px 0; padding: 20px; background: var(--bg); border-radius: 8px; }
+        .stat-item { text-align: center; }
+        .stat-val { font-size: 32px; font-weight: bold; color: var(--primary); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    
     <div id="screen-start" class="screen">
-        <h1>Тестирование HTML & CSS</h1>
-        <p style="text-align: center; margin-bottom: 30px; color: var(--text-muted);">
-            Вопросы со 101 по 200. Подробная аналитика доступна после завершения.
-        </p>
+        <h1>Обучающий тест: HTML & CSS</h1>
+        <p style="text-align: center; margin-bottom: 30px;">Вопросы со 101 по 200. Включен режим мгновенной проверки с пояснениями.</p>
         <div style="text-align: center;">
-            <button class="btn" onclick="app.startTest()">Начать тестирование</button>
-            <button class="btn btn-outline" onclick="app.showHistory()">История попыток</button>
+            <button class="btn" onclick="app.startTest()">Начать тест</button>
         </div>
     </div>
 
     <div id="screen-quiz" class="screen hidden">
         <div class="header-info">
-            <span id="question-counter">Вопрос 1 из 100</span>
-            <span id="timer">Время: 00:00</span>
+            <span id="q-counter">Вопрос 1 из 100</span>
+            <span id="score-counter">Счет: 0</span>
         </div>
-        <div class="progress-container">
-            <div id="progress-bar" class="progress-bar"></div>
-        </div>
+        <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
+        
         <div id="question-text" class="question"></div>
         <div id="options-container" class="options-grid"></div>
+        
+        <div id="explanation-box" class="explanation-box hidden">
+            <div id="exp-title" class="exp-title"></div>
+            <div id="exp-text"></div>
+        </div>
+
+        <div class="nav-buttons">
+            <button id="btn-prev" class="btn btn-outline" onclick="app.prevQuestion()">← Назад</button>
+            <button id="btn-finish" class="btn btn-danger" onclick="app.endTest()">Завершить тест раньше</button>
+            <button id="btn-next" class="btn" onclick="app.nextQuestion()">Далее →</button>
+        </div>
     </div>
 
     <div id="screen-result" class="screen hidden">
         <h2>Тестирование завершено!</h2>
-        <div class="stat-box">
+        <div class="result-stats">
             <div class="stat-item">
-                <span class="stat-value" id="res-score">0</span>
-                <span class="stat-label">Правильных ответов</span>
+                <div id="res-score" class="stat-val">0</div>
+                <div>Правильных ответов</div>
             </div>
             <div class="stat-item">
-                <span class="stat-value" id="res-percent">0%</span>
-                <span class="stat-label">Успешность</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-value" id="res-time">00:00</span>
-                <span class="stat-label">Затрачено времени</span>
+                <div id="res-percent" class="stat-val">0%</div>
+                <div>Успешность</div>
             </div>
         </div>
-        <div style="text-align: center; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-            <button class="btn" onclick="app.showAnalysis()">Разбор ошибок</button>
-            <button class="btn btn-outline" onclick="app.exportReport()">Скачать отчет (TXT)</button>
-            <button class="btn btn-outline" onclick="location.reload()">На главную</button>
+        <div style="text-align: center;">
+            <button class="btn" onclick="location.reload()">Вернуться на главную</button>
         </div>
     </div>
-
-    <div id="screen-analysis" class="screen hidden">
-        <h2>Подробный разбор</h2>
-        <button class="btn btn-outline" style="margin-bottom: 20px;" onclick="app.showScreen('screen-result')">← Назад к результатам</button>
-        <div id="analysis-container"></div>
-    </div>
-
-    <div id="screen-history" class="screen hidden">
-        <h2>История прохождений</h2>
-        <button class="btn btn-outline" style="margin-bottom: 20px;" onclick="app.showScreen('screen-start')">← Назад</button>
-        <button class="btn btn-outline" style="margin-bottom: 20px; color: red; border-color: red;" onclick="app.clearHistory()">Очистить историю</button>
-        <div style="overflow-x: auto;">
-            <table class="history-table">
-                <thead>
-                    <tr>
-                        <th>Дата</th>
-                        <th>Счет</th>
-                        <th>Процент</th>
-                        <th>Время</th>
-                    </tr>
-                </thead>
-                <tbody id="history-body"></tbody>
-            </table>
-        </div>
-    </div>
-
 </div>
 
 <script>
-/**
- * База данных вопросов.
- * Добавлено поле `explanation` для режима обучения и анализа после теста.
- */
+// Исправленная и дополненная база данных (100 вопросов)
 const quizData = [
-    {
-        q: "101. Как в CSS сделать текст жирным?",
-        options: ["font-weight: bold;", "font-style: bold;", "font: bold;", "text-weight: bold;", "weight: bold;"],
-        correct: 0,
-        explanation: "Свойство font-weight отвечает за насыщенность шрифта. Значение bold делает его жирным."
-    },
-    {
-        q: "102. Как задать прозрачность для элемента в CSS?",
-        options: ["opacity: 0.5;", "background-color: transparent;", "visibility: hidden;", "filter: opacity(50%);", "transparent-opacity: 50%;"],
-        correct: 0,
-        explanation: "Свойство opacity задает уровень прозрачности элемента от 0.0 (полностью прозрачный) до 1.0 (непрозрачный)."
-    },
-    {
-        q: "103. Как в HTML задать ссылку на изображение?",
-        options: ["<a href=\"image.jpg\"><img src=\"image.jpg\" alt=\"image\"></a>", "<link href=\"image.jpg\">", "<a href=\"image.jpg\"><image src=\"image.jpg\"></a>", "<img href=\"image.jpg\" src=\"image.jpg\" />", "<a href=\"image.jpg\"><img src=\"image.jpg\" alt=\"image\"/>"],
-        correct: 0,
-        explanation: "Тег <a> создает ссылку, а вложенный в него тег <img> отображает само изображение как кликабельный элемент."
-    },
-    {
-        q: "104. Как в CSS сделать элемент невидимым, но не удалять его с потока документа?",
-        options: ["visibility: hidden;", "display: none;", "opacity: 0;", "visibility: collapse;", "visibility: 0;"],
-        correct: 0,
-        explanation: "visibility: hidden скрывает элемент, но он продолжает занимать место на странице. В отличие от display: none."
-    },
-    {
-        q: "105. Как в CSS добавить тень для блока?",
-        options: ["box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);", "text-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);", "border-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);", "shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);", "box-shadow: 10px rgba(0, 0, 0, 0.5);"],
-        correct: 0,
-        explanation: "box-shadow принимает параметры: сдвиг по X, сдвиг по Y, радиус размытия и цвет тени."
-    },
-    { q: "106. Как скрыть элемент на мобильных устройствах в CSS?", options: ["display: none;", "visibility: hidden;", "@media screen and (max-width: 600px) { display: none; }", "@media (max-width: 600px) { visibility: hidden; }", "@mobile { display: none; }"], correct: 2 },
-    { q: "107. Как в HTML вставить изображение?", options: ["<image src=\"image.jpg\">", "<img src=\"image.jpg\" alt=\"image\">", "<image href=\"image.jpg\" />", "<img href=\"image.jpg\" />", "<image src=\"image.jpg\">"], correct: 1 },
-    { q: "108. Как в HTML сделать форму с полем для ввода даты?", options: ["<input type=\"date\" name=\"birthday\">", "<input date=\"birthday\">", "<form><date name=\"birthday\"></date></form>", "<input field=\"date\" name=\"birthday\">", "<input type=\"text\" name=\"birthday\" placeholder=\"YYYY-MM-DD\">"], correct: 0 },
-    { q: "109. Как в CSS добавить внутренние отступы у элемента?", options: ["padding: 10px;", "margin: 10px;", "border: 10px;", "spacing: 10px;", "gap: 10px;"], correct: 0 },
-    { q: "110. Как в HTML добавить комментарий?", options: ["", "// This is a comment", "/* This is a comment */", "# This is a comment", "//comment"], correct: 0 },
-    { q: "111. Как задать фон для элемента в CSS?", options: ["background-color: #FF0000;", "color: #FF0000;", "background: #FF0000;", "background-image: url('image.jpg');", "Все варианты правильные кроме B"], correct: 4 },
-    { q: "112. Как задать отступы между блоками в CSS?", options: ["margin: 10px;", "padding: 10px;", "gap: 10px;", "border-spacing: 10px;", "padding-bottom: 10px;"], correct: 0 },
-    { q: "113. Как в HTML создать выпадающий список?", options: ["<select><option>Option 1</option><option>Option 2</option></select>", "<input list=\"options\" />", "<form><list>Option 1</list><list>Option 2</list></form>", "<dropdown>Option 1</dropdown>", "<input type=\"dropdown\" name=\"options\" />"], correct: 0 },
-    { q: "114. Как добавить границу для элемента в CSS?", options: ["border: 1px solid black;", "border: 1px dotted red;", "border: 1px dashed blue;", "border-width: 1px;", "Все варианты правильные"], correct: 4 },
-    { q: "115. Как сделать элемент скрытым в HTML, но доступным для скринридеров?", options: ["hidden", "visibility: hidden;", "display: none;", "aria-hidden=\"false\"", "position: absolute; left: -9999px;"], correct: 4 },
-    { q: "116. Как задать ширину и высоту изображения в HTML?", options: ["<img src=\"image.jpg\" width=\"100\" height=\"100\">", "<image src=\"image.jpg\" width=\"100\" height=\"100\">", "<img src=\"image.jpg\" size=\"100x100\">", "<img src=\"image.jpg\" style=\"width:100px; height:100px;\">", "Варианты A и D правильные"], correct: 4 },
-    { q: "117. Как в CSS сделать элемент с фиксированной высотой, которая зависит от контента?", options: ["height: auto;", "height: 100%;", "height: content;", "min-height: content;", "auto-height: content;"], correct: 0 },
-    { q: "118. Как в HTML задать поле для ввода email?", options: ["<input type=\"email\" name=\"user-email\">", "<input type=\"text\" name=\"user-email\">", "<input field=\"email\" name=\"user-email\">", "<form><email></email></form>", "<input email=\"user-email\">"], correct: 0 },
-    { q: "119. Как задать изображение как фон в CSS?", options: ["background-image: url('image.jpg');", "background: url('image.jpg');", "background-image: 'image.jpg';", "img-background: 'image.jpg';", "Варианты A и B правильные"], correct: 4 },
-    { q: "120. Как добавить элемент в CSS с плавающим расположением?", options: ["float: left;", "position: absolute;", "display: inline-block;", "position: fixed;", "display: flex;"], correct: 0 },
-    { q: "121. Как в HTML задать мета-тег с описанием страницы?", options: ["<meta name=\"description\" content=\"This is a webpage\">", "<meta description=\"This is a webpage\">", "<meta name=\"description\" value=\"This is a webpage\">", "<meta content=\"This is a webpage\">", "<meta name=\"description\" url=\"This is a webpage\">"], correct: 0 },
-    { q: "122. Как задать абсолютное позиционирование для элемента в CSS?", options: ["position: absolute;", "position: relative;", "position: fixed;", "position: static;", "position: inherit;"], correct: 0 },
-    { q: "123. Как в CSS задать шрифт для заголовков?", options: ["h1, h2, h3 { font-family: Arial, sans-serif; }", "header { font-family: Arial, sans-serif; }", "h1, h2, h3 { font-style: Arial, sans-serif; }", "header h1 { font: Arial, sans-serif; }", "h1 { font: Arial; }"], correct: 0 },
-    { q: "124. Как в HTML добавить поле для ввода пароля?", options: ["<input type=\"password\" name=\"user-password\">", "<input type=\"text\" name=\"user-password\">", "<input type=\"password\" value=\"user-password\">", "<input password=\"user-password\">", "<input type=\"text\" value=\"password\">"], correct: 0 },
-    { q: "125. Как задать цвет фона для страницы?", options: ["background-color: #FFFFFF;", "background: #FFFFFF;", "body { background-color: #FFFFFF; }", "body { background: #FFFFFF; }", "Варианты C и D правильные"], correct: 4 },
-    { q: "126. Как в CSS сделать изображение растянутым на всю ширину экрана?", options: ["width: 100%;", "height: 100%;", "width: 100vw;", "height: 100vh;", "background-size: 100%;"], correct: 2 },
-    { q: "127. Как добавить отступы только сверху элемента в CSS?", options: ["margin-top: 10px;", "padding-top: 10px;", "border-top: 10px solid black;", "top: 10px;", "all-top: 10px;"], correct: 0 },
-    { q: "128. Как в CSS задать полосу прокрутки для элемента?", options: ["overflow: scroll;", "scroll: yes;", "overflow: auto;", "scrollbar: auto;", "Варианты A и C правильные"], correct: 4 },
-    { q: "129. Как в HTML вставить таблицу?", options: ["<table><tr><td>Data</td></tr></table>", "<table><row><td>Data</td></row></table>", "<table><row><column>Data</column></row></table>", "<table><data>Data</data></table>", "<table><tr><column>Data</column></tr></table>"], correct: 0 },
-    { q: "130. Как в HTML добавить ссылку на страницу?", options: ["<a href=\"page.html\">Link</a>", "<link href=\"page.html\">Link</link>", "<url href=\"page.html\">Link</url>", "<anchor href=\"page.html\">Link</anchor>", "<a link=\"page.html\">Link</a>"], correct: 0 },
-    { q: "131. Как в CSS установить фиксированное позиционирование для элемента?", options: ["position: fixed;", "position: absolute;", "position: relative;", "position: static;", "position: sticky;"], correct: 0 },
-    { q: "132. Как в CSS изменить цвет текста?", options: ["color: red;", "font-color: red;", "text-color: red;", "background-color: red;", "font: red;"], correct: 0 },
-    { q: "133. Как сделать фон изображения адаптивным (чтобы он подстраивался под размер экрана)?", options: ["background-size: cover;", "background-size: contain;", "background-size: auto;", "background-size: 100%;", "Варианты A и B в зависимости от задачи"], correct: 4 },
-    { q: "134. Как в HTML добавить поле для ввода числа?", options: ["<input type=\"number\" name=\"quantity\">", "<input type=\"text\" name=\"quantity\">", "<input type=\"range\" name=\"quantity\">", "<input type=\"digit\" name=\"quantity\">", "<input number=\"quantity\">"], correct: 0 },
-    { q: "135. Как задать отступы между элементами в CSS (Grid/Flex)?", options: ["margin: 10px;", "padding: 10px;", "gap: 10px;", "border-spacing: 10px;", "Все варианты правильные"], correct: 2 },
-    { q: "136. Как в CSS задать высоту для элемента?", options: ["height: 100px;", "max-height: 100px;", "min-height: 100px;", "height: auto;", "Все варианты правильные"], correct: 4 },
-    { q: "137. Как в HTML задать фрейм для встраивания другого документа?", options: ["<iframe src=\"page.html\"></iframe>", "<frame src=\"page.html\"></frame>", "<embed src=\"page.html\"></embed>", "<object src=\"page.html\"></object>", "<window src=\"page.html\"></window>"], correct: 0 },
-    { q: "138. Как в CSS установить стиль для текста ссылки при наведении?", options: ["a:hover { color: red; }", "a:active { color: red; }", "a:focus { color: red; }", "a:link { color: red; }", "a:visited { color: red; }"], correct: 0 },
-    { q: "139. Как в CSS изменить шрифт для текста?", options: ["font-family: Arial, sans-serif;", "font-size: 16px;", "font-style: italic;", "font-weight: bold;", "Все варианты меняют параметры шрифта"], correct: 4 },
-    { q: "140. Как задать размер шрифта в CSS?", options: ["font-size: 16px;", "text-size: 16px;", "font: 16px;", "font-size: 16em;", "font-size: 16pt;"], correct: 0 },
-    { q: "141. Как в HTML сделать ссылку, открывающуюся в новой вкладке?", options: ["<a href=\"page.html\" target=\"_blank\">Link</a>", "<a href=\"page.html\" target=\"new\">Link</a>", "<a href=\"page.html\" open=\"new\">Link</a>", "<a href=\"page.html\" target=\"window\">Link</a>", "<a href=\"page.html\" target=\"_new\">Link</a>"], correct: 0 },
-    { q: "142. Как добавить фон с изображением для элемента в CSS?", options: ["background-image: url('image.jpg');", "background: url('image.jpg');", "background-image: 'image.jpg';", "background-url: 'image.jpg';", "Варианты A и B правильные"], correct: 4 },
-    { q: "143. Как в HTML добавить поле для ввода телефона?", options: ["<input type=\"tel\" name=\"phone\">", "<input type=\"text\" name=\"phone\">", "<input type=\"number\" name=\"phone\">", "<input type=\"phone\" name=\"phone\">", "<input type=\"telphone\" name=\"phone\">"], correct: 0 },
-    { q: "144. Как в CSS изменить цвет фона при наведении?", options: ["background-color: red;", "background-color: blue;", "background-color: yellow;", ":hover { background-color: red; }", "background: hover red;"], correct: 3 },
-    { q: "145. Как в HTML добавить поле для ввода даты с выбором?", options: ["<input type=\"date\" name=\"birthdate\">", "<input type=\"datetime\" name=\"birthdate\">", "<input type=\"text\" name=\"birthdate\">", "<input type=\"date\" placeholder=\"YYYY-MM-DD\">", "<form><input type=\"date\"></form>"], correct: 0 },
-    { q: "146. Как задать цвет фона для всей страницы в CSS?", options: ["body { background-color: #f0f0f0; }", "background-color: #f0f0f0;", "background: #f0f0f0;", "body { color: #f0f0f0; }", "Варианты A и C"], correct: 4 },
-    { q: "147. Как в HTML создать элемент для вывода результата выполнения скрипта?", options: ["<div id=\"result\"></div>", "<output id=\"result\"></output>", "<p id=\"result\"></p>", "<pre id=\"result\"></pre>", "<span id=\"result\"></span>"], correct: 1 },
-    { q: "148. Как в CSS сделать элемент видимым при прокрутке страницы (залипающим)?", options: ["position: sticky;", "position: fixed;", "position: absolute;", "position: relative;", "visibility: visible;"], correct: 0 },
-    { q: "149. Как задать ширину элемента в CSS?", options: ["width: 100px;", "width: auto;", "max-width: 100px;", "min-width: 100px;", "Все варианты правильные"], correct: 4 },
-    { q: "150. Как задать цвет текста в CSS с использованием шестнадцатеричного значения?", options: ["color: #FF0000;", "color: rgb(255, 0, 0);", "color: rgba(255, 0, 0, 1);", "color: red;", "Только вариант A"], correct: 0 },
-    { q: "151. Как в CSS сделать элемент прозрачным?", options: ["opacity: 0.5;", "visibility: hidden;", "background-color: transparent;", "filter: blur(5px);", "opacity и background-color: transparent"], correct: 4 },
-    { q: "152. Как в HTML создать поле для ввода пароля?", options: ["<input type=\"password\" name=\"password\">", "<input type=\"text\" name=\"password\">", "<input type=\"password\" />", "<input password=\"true\" />", "Варианты A и C правильные"], correct: 4 },
-    { q: "153. Как задать минимальную ширину для элемента в CSS?", options: ["min-width: 200px;", "max-width: 200px;", "width: 200px;", "min-size: 200px;", "width: auto;"], correct: 0 },
-    { q: "154. Как в HTML добавить разделитель строк?", options: ["<br>", "<hr>", "<div>", "<p>", "<span>"], correct: 0 },
-    { q: "155. Как задать размер шрифта для элемента в CSS с помощью относительных единиц?", options: ["font-size: 1.5em;", "font-size: 1.5px;", "font-size: 15%;", "font-size: 15pt;", "Варианты A и C"], correct: 4 },
-    { q: "156. Как в HTML добавить ссылку на почтовый ящик?", options: ["<a href=\"mailto:someone@example.com\">Email</a>", "<a href=\"email:someone@example.com\">Email</a>", "<email href=\"someone@example.com\">Email</email>", "<link href=\"mailto:someone@example.com\">Email</link>", "<a href=\"contact@example.com\">Email</a>"], correct: 0 },
-    { q: "157. Как задать стиль для псевдоэлемента ::before?", options: [".element::before { content: \"text\"; }", ".element:before { content: \"text\"; }", "::before { content: \"text\"; }", ".element::before { text: \"text\"; }", "Варианты A и B (B - устаревший синтаксис)"], correct: 4 },
-    { q: "158. Как в CSS изменить стиль кнопки при нажатии?", options: ["button:active { background-color: red; }", "button:focus { background-color: red; }", "button:hover { background-color: red; }", "button:clicked { background-color: red; }", "Только вариант A"], correct: 0 },
-    { q: "159. Как задать текст, выравненный по центру в CSS?", options: ["text-align: center;", "align-text: center;", "text-position: center;", "align: center;", "center-align: true;"], correct: 0 },
-    { q: "160. Как в HTML добавить кнопку для отправки формы?", options: ["<button type=\"submit\">Send</button>", "<input type=\"submit\" value=\"Send\">", "<form button=\"submit\">Send</form>", "<button value=\"submit\">Send</button>", "Варианты A и B"], correct: 4 },
-    { q: "161. Как скрыть элемент на странице с помощью CSS?", options: ["display: none;", "visibility: hidden;", "opacity: 0;", "height: 0;", "Все варианты скрывают элемент визуально"], correct: 4 },
-    { q: "162. Как в CSS установить свойство для внешнего отступа элемента?", options: ["margin: 10px;", "padding: 10px;", "spacing: 10px;", "border-spacing: 10px;", "padding-top: 10px;"], correct: 0 },
-    { q: "163. Как в CSS использовать шрифт с Google Fonts?", options: ["@import url('...');", "<link href=\"...\">", "font-family: 'Roboto';", "Все варианты правильные", "Варианты A и B для подключения"], correct: 4 },
-    { q: "164. Как задать цвет фона с помощью градиента?", options: ["background: linear-gradient(to right, red, yellow);", "background: radial-gradient(red, yellow);", "background: gradient(red, yellow);", "background-color: linear-gradient(red, yellow);", "Варианты A и B"], correct: 4 },
-    { q: "165. Как задать отступы внутри элемента в CSS?", options: ["padding: 10px;", "margin: 10px;", "padding-top: 10px;", "border-spacing: 10px;", "spacing: 10px;"], correct: 0 },
-    { q: "166. Как задать фон для страницы в HTML с помощью CSS?", options: ["<style> body { background-color: lightblue; }</style>", "<body style=\"background-color: lightblue;\">", "<style> background-color: lightblue; </style>", "<style> background: lightblue; </style>", "Варианты A и B правильные"], correct: 4 },
-    { q: "167. Как добавить изображение на фон элемента в CSS?", options: ["background-image: url('image.jpg');", "background: image('image.jpg');", "background-img: url('image.jpg');", "image-background: url('image.jpg');", "background: url(image.jpg);"], correct: 4 },
-    { q: "168. Как сделать элемент центрированным по горизонтали и вертикали в CSS?", options: ["display: flex; justify-content: center; align-items: center;", "position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);", "display: grid; place-items: center;", "Все варианты правильные", "Только flex и grid"], correct: 3 },
-    { q: "169. Как в HTML вставить видео?", options: ["<video src=\"video.mp4\" controls></video>", "<video file=\"video.mp4\" controls></video>", "<embed src=\"video.mp4\" controls></embed>", "<source src=\"video.mp4\" type=\"video/mp4\">", "<media src=\"video.mp4\" type=\"video/mp4\">"], correct: 0 },
-    { q: "170. Как задать ширину колонки в таблице?", options: ["th, td { width: 150px; }", "table { column-width: 150px; }", "table, th, td { width: 150px; }", "table { width: 150px; }", "table { cell-width: 150px; }"], correct: 0 },
-    { q: "171. Как в CSS установить прозрачность для фона?", options: ["background-color: rgba(255, 0, 0, 0.5);", "background-color: transparent;", "opacity: 0.5;", "filter: opacity(50%);", "Все варианты влияют на прозрачность"], correct: 4 },
-    { q: "172. Как использовать кастомный шрифт?", options: ["@font-face { font-family: 'MyFont'; src: url('myfont.woff2'); }", "@font-face { font-family: 'MyFont'; src: url('myfont.ttf'); }", "font-family: 'MyFont', sans-serif;", "Все варианты правильные", "Варианты A и B"], correct: 4 },
-    { q: "173. Как сделать список с маркерами в HTML?", options: ["<ul><li>Item 1</li></ul>", "<ol><li>Item 1</li></ol>", "<list><item>Item 1</item></list>", "<ul><item>Item 1</item></ul>", "<ul><li>Item 1</li><li>Item 2</li></ul>"], correct: 4 },
-    { q: "174. Как в HTML добавить таблицу?", options: ["<table><tr><td>Data</td></tr></table>", "<table><row><data>Data</data></row></table>", "<table><column><data>Data</data></column></table>", "<table><tr><td><data>Data</data></td></tr></table>", "<table><row><column>Data</column></row></table>"], correct: 0 },
-    { q: "175. Как в CSS задать горизонтальный отступ для элемента?", options: ["margin-left: 20px;", "margin-top: 20px;", "padding-left: 20px;", "margin: 20px;", "Варианты A и C"], correct: 4 },
-    { q: "176. Как использовать анимацию в CSS?", options: ["@keyframes name { ... }", "animation: name 2s;", "@keyframes animation { ... }", "Все варианты правильные", "Варианты A и B в связке"], correct: 4 },
-    { q: "177. Как в CSS задать границу для элемента?", options: ["border: 1px solid black;", "border-width: 1px;", "border-style: solid;", "border-color: black;", "Все варианты правильные"], correct: 4 },
-    { q: "178. Как в CSS сделать изображение растянутым на весь экран?", options: ["background-size: 100% 100%;", "background-size: cover;", "background-size: contain;", "background-size: stretch;", "Варианты A и B"], correct: 4 },
-    { q: "179. Как в HTML вставить изображение с альт-текстом?", options: ["<img src=\"image.jpg\" alt=\"description\">", "<image src=\"image.jpg\" alt=\"description\">", "<img href=\"image.jpg\" alt=\"description\">", "<image src=\"image.jpg\">", "<img src=\"image.jpg\">"], correct: 0 },
-    { q: "180. Как сделать ссылку, которая открывает окно для ввода текста (JS)?", options: ["<a href=\"javascript:void(0);\" onclick=\"prompt('Enter text:');\">Input Text</a>", "<a href=\"input:text\">Input Text</a>", "<a href=\"text:prompt\">Input Text</a>", "<a href=\"javascript:alert('Enter text');\">Input Text</a>", "<a href=\"prompt:text\">Input Text</a>"], correct: 0 },
-    { q: "181. Как создать ссылку, которая будет открывать новую вкладку в браузере?", options: ["<a href=\"https://example.com\" target=\"_blank\">Open Link</a>", "<a href=\"https://example.com\" target=\"new\">Open Link</a>", "<a href=\"https://example.com\" rel=\"noopener\">Open Link</a>", "<a href=\"https://example.com\" new=\"true\">Open Link</a>", "<a href=\"https://example.com\" target=\"tab\">Open Link</a>"], correct: 0 },
-    { q: "182. Как в CSS сделать элемент фиксированным на экране при прокрутке?", options: ["position: sticky;", "position: fixed;", "position: relative;", "position: absolute;", "Варианты A и B (по-разному)"], correct: 4 },
-    { q: "183. Как в HTML вставить аудиофайл?", options: ["<audio src=\"audio.mp3\" controls></audio>", "<audio file=\"audio.mp3\" controls></audio>", "<audio href=\"audio.mp3\"></audio>", "<sound src=\"audio.mp3\" controls></sound>", "<media src=\"audio.mp3\"></media>"], correct: 0 },
-    { q: "184. Как в CSS задать отступы для всех элементов на странице?", options: ["* { margin: 0; padding: 0; }", "all { margin: 0; padding: 0; }", "body { margin: 0; padding: 0; }", "* { margin-top: 0; padding-top: 0; }", "body * { margin: 0; padding: 0; }"], correct: 0 },
-    { q: "185. Как в HTML добавить мета-тег для кодировки страницы?", options: ["<meta charset=\"UTF-8\">", "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">", "<meta name=\"charset\" content=\"UTF-8\">", "<meta content=\"UTF-8\">", "Варианты A и B"], correct: 4 },
-    { q: "186. Как в CSS задать радиус скругления для углов элемента?", options: ["border-radius: 10px;", "corner-radius: 10px;", "border-corner: 10px;", "radius: 10px;", "round-border: 10px;"], correct: 0 },
-    { q: "187. Как в HTML сделать ссылку с изображением?", options: ["<a href=\"https://example.com\"><img src=\"image.jpg\" alt=\"Image\"></a>", "<a href=\"https://example.com\"><image src=\"image.jpg\" alt=\"Image\"></image></a>", "<link href=\"image.jpg\" rel=\"icon\">", "<a href=\"https://example.com\" img=\"image.jpg\">Link</a>", "<a href=\"https://example.com\" image=\"image.jpg\">Link</a>"], correct: 0 },
-    { q: "188. Как в CSS сделать элемент невидимым, но оставить его на странице?", options: ["visibility: hidden;", "display: none;", "opacity: 0;", "color: transparent;", "Варианты A и C"], correct: 4 },
-    { q: "189. Как в CSS задать фон для элемента, который будет растягиваться по размеру элемента (сохраняя пропорции)?", options: ["background-size: cover;", "background-repeat: no-repeat;", "background-attachment: fixed;", "background-size: contain;", "background-position: center;"], correct: 0 },
-    { q: "190. Как в CSS сделать все ссылки на странице без подчеркивания?", options: ["a { text-decoration: none; }", "a { decoration: none; }", "a { no-underline: true; }", "a { border: none; }", "a { underline: none; }"], correct: 0 },
-    { q: "191. Как сделать текст жирным с помощью CSS?", options: ["font-weight: bold;", "font-style: bold;", "text-weight: bold;", "text-decoration: bold;", "font-size: bold;"], correct: 0 },
-    { q: "192. Как в HTML указать ссылку для скачивания файла?", options: ["<a href=\"file.zip\" download>Download</a>", "<a href=\"file.zip\" target=\"_blank\">Download</a>", "<a href=\"file.zip\">Download</a>", "<a href=\"file.zip\" download=\"true\">Download</a>", "<a href=\"file.zip\" download=\"file\">Download</a>"], correct: 0 },
-    { q: "193. Как сделать рамку вокруг элемента в CSS?", options: ["border: 1px solid black;", "border-width: 1px; border-color: black; border-style: solid;", "border-radius: 10px;", "outline: 1px solid black;", "Варианты A, B и D"], correct: 4 },
-    { q: "194. Как в HTML вставить картинку в качестве фона для страницы?", options: ["<body style=\"background-image: url('background.jpg');\">", "<div background=\"background.jpg\"></div>", "<background src=\"background.jpg\">", "<body background=\"background.jpg\">", "Варианты A и D"], correct: 4 },
-    { q: "195. Как в HTML задать таблицу без внешней линии?", options: ["<table border=\"0\">", "<table style=\"border: none;\">", "<table border=\"hidden\">", "<table style=\"border: 0px;\">", "Все варианты правильные"], correct: 4 },
-    { q: "196. Как в CSS изменить шрифт для всего документа?", options: ["body { font-family: Arial, sans-serif; }", "* { font-family: Arial, sans-serif; }", "html { font-family: Arial, sans-serif; }", "body { font: Arial, sans-serif; }", "Все варианты будут работать"], correct: 4 },
-    { q: "197. Как в CSS добавить тень к тексту?", options: ["text-shadow: 2px 2px 5px grey;", "shadow-text: 2px 2px 5px grey;", "text-effect: shadow(2px 2px 5px grey);", "font-shadow: 2px 2px 5px grey;", "shadow: text(2px 2px 5px grey);"], correct: 0 },
-    { q: "198. Как в HTML создать выпадающий список (полный синтаксис)?", options: ["<select><option value=\"1\">Option 1</option></select>", "<dropdown><option value=\"1\">Option 1</option></dropdown>", "<list><option value=\"1\">Option 1</option></list>", "<ul><li value=\"1\">Option 1</li></ul>", "<select><item value=\"1\">Option 1</item></select>"], correct: 0 },
-    { q: "199. Как в HTML сделать скрытый элемент?", options: ["<div hidden>Content</div>", "<div style=\"display:none;\">Content</div>", "<div style=\"visibility:hidden;\">Content</div>", "Все варианты правильные", "a) и b)"], correct: 3 },
-    { q: "200. Как в HTML задать описание изображения (семантически)?", options: ["<img src=\"image.jpg\" alt=\"Image description\">", "<image src=\"image.jpg\" alt=\"Image description\">", "<img src=\"image.jpg\" title=\"Image description\">", "<img src=\"image.jpg\" caption=\"Image description\">", "Только A"], correct: 0 }
+    {q: "101. Как в CSS сделать текст жирным?", options: ["font-weight: bold;", "font-style: bold;", "font: bold;", "text-weight: bold;", "weight: bold;"], correct: 0, explanation: "Свойство font-weight отвечает за насыщенность шрифта. Значение bold (или 700) делает его жирным."},
+    {q: "102. Как задать прозрачность для элемента в CSS?", options: ["opacity: 0.5;", "background-color: transparent;", "visibility: hidden;", "filter: opacity(50%);", "transparent-opacity: 50%;"], correct: 0, explanation: "Свойство opacity задает уровень прозрачности всего элемента от 0.0 до 1.0."},
+    {q: "103. Как в HTML задать ссылку на изображение?", options: ["<a href=\"image.jpg\"><img src=\"image.jpg\" alt=\"image\"></a>", "<link href=\"image.jpg\">", "<a href=\"image.jpg\"><image src=\"image.jpg\"></a>", "<img href=\"image.jpg\" src=\"image.jpg\" />", "<a href=\"image.jpg\"><img src=\"image.jpg\" alt=\"image\"/>"], correct: 0, explanation: "Тег <a> делает содержимое кликабельной ссылкой, а вложенный тег <img> отображает само изображение."},
+    {q: "104. Как в CSS сделать элемент невидимым, но не удалять его из потока документа?", options: ["visibility: hidden;", "display: none;", "opacity: 0;", "visibility: collapse;", "visibility: 0;"], correct: 0, explanation: "visibility: hidden скрывает элемент, но он продолжает занимать физическое место на странице. display: none убирает его из потока."},
+    {q: "105. Как в CSS добавить тень для блока?", options: ["box-shadow: 10px 10px 20px rgba(0,0,0,0.5);", "text-shadow: 10px 10px 20px rgba(0,0,0,0.5);", "border-shadow: 10px 10px rgba(0,0,0,0.5);", "shadow: 10px 10px 20px rgba(0,0,0,0.5);", "box-shadow: 10px rgba(0,0,0,0.5);"], correct: 0, explanation: "Свойство box-shadow применяется к блокам. Параметры: смещение по X, по Y, размытие, растяжение и цвет."},
+    {q: "106. Как скрыть элемент на мобильных устройствах в CSS (ширина до 600px)?", options: ["display: none;", "visibility: hidden;", "@media (max-width: 600px) { .elem { display: none; } }", "@media (max-width: 600px) { visibility: hidden; }", "@mobile { display: none; }"], correct: 2, explanation: "Медиа-запросы (@media) позволяют применять CSS правила только при определенных условиях экрана (например, max-width)."},
+    {q: "107. Как семантически правильно в HTML вставить изображение?", options: ["<image src=\"image.jpg\">", "<img src=\"image.jpg\" alt=\"описание\">", "<image href=\"image.jpg\" />", "<img href=\"image.jpg\" />", "<pic src=\"image.jpg\">"], correct: 1, explanation: "Используется одинарный тег <img> с обязательными атрибутами src (путь) и alt (альтернативный текст)."},
+    {q: "108. Как в HTML сделать форму с полем для выбора даты?", options: ["<input type=\"date\" name=\"birthday\">", "<input date=\"birthday\">", "<form><date name=\"birthday\"></date></form>", "<input field=\"date\" name=\"birthday\">", "<input type=\"text\" placeholder=\"YYYY-MM-DD\">"], correct: 0, explanation: "Атрибут type=\"date\" у тега <input> вызывает встроенный в браузер календарь для выбора даты."},
+    {q: "109. Как в CSS добавить внутренние отступы у элемента?", options: ["padding: 10px;", "margin: 10px;", "border: 10px;", "spacing: 10px;", "gap: 10px;"], correct: 0, explanation: "padding отвечает за внутренние отступы (от контента до границы блока). margin — за внешние."},
+    {q: "110. Как в HTML добавить комментарий?", options: ["", "// Комментарий", "/* Комментарий */", "# Комментарий", ""], correct: 0, explanation: "В HTML комментарии оборачиваются в . Варианты со слешами используются в JS или CSS."},
+    {q: "111. Как задать сплошной цвет фона для элемента в CSS?", options: ["background-color: #FF0000;", "color: #FF0000;", "background-image: url('image.jpg');", "text-background: #FF0000;", "bgcolor: #FF0000;"], correct: 0, explanation: "background-color отвечает именно за цвет фона. color меняет цвет текста."},
+    {q: "112. Как задать внешние отступы между блоками в стандартном потоке CSS?", options: ["margin: 10px;", "padding: 10px;", "gap: 10px;", "border-spacing: 10px;", "padding-bottom: 10px;"], correct: 0, explanation: "margin задает отступ от границы текущего элемента до соседних элементов."},
+    {q: "113. Как в HTML создать выпадающий список?", options: ["<select><option>Option 1</option></select>", "<input list=\"options\" />", "<dropdown>Option 1</dropdown>", "<select><item>Option 1</item></select>", "<list><option>Option 1</option></list>"], correct: 0, explanation: "Выпадающий список создается тегом <select>, внутри которого располагаются элементы списка <option>."},
+    {q: "114. Как добавить границу для элемента в CSS (краткая запись)?", options: ["border: 1px solid black;", "border: 1px dotted red;", "border: 1px dashed blue;", "Все варианты выше правильные", "border-width: 1px;"], correct: 3, explanation: "Свойство border позволяет задать ширину, стиль (solid, dotted, dashed) и цвет линии одновременно."},
+    {q: "115. Как сделать элемент визуально скрытым, но доступным для скринридеров (читалок экрана)?", options: ["hidden", "visibility: hidden;", "display: none;", "position: absolute; width: 1px; height: 1px; overflow: hidden;", "opacity: 0;"], correct: 3, explanation: "display: none и visibility: hidden скрывают элемент и от скринридеров. Сдвиг за экран или обрезка (паттерн .sr-only) оставляет текст доступным для программ чтения."},
+    {q: "116. Как правильно задать ширину и высоту изображения прямо в HTML?", options: ["<img src=\"image.jpg\" width=\"100\" height=\"100\">", "<img src=\"image.jpg\" style=\"w:100; h:100\">", "<img src=\"image.jpg\" size=\"100x100\">", "<img src=\"image.jpg\" width=\"100px\" height=\"100px\">", "Варианты A и D правильные"], correct: 0, explanation: "Атрибуты width и height в HTML указываются без 'px'. Использование px в атрибутах считается устаревшим (хотя браузеры это простят)."},
+    {q: "117. Какое значение свойства height по умолчанию зависит от контента?", options: ["height: auto;", "height: 100%;", "height: content;", "min-height: content;", "auto-height: true;"], correct: 0, explanation: "Значение по умолчанию для высоты блока — auto. Блок растягивается по высоте вложенного в него контента."},
+    {q: "118. Как в HTML задать поле, которое валидирует ввод email адреса?", options: ["<input type=\"email\" name=\"user-email\">", "<input type=\"text\" pattern=\"email\">", "<input field=\"email\" name=\"user-email\">", "<form><email></email></form>", "<input email=\"user-email\">"], correct: 0, explanation: "В HTML5 появился type=\"email\", который автоматически проверяет наличие символа '@' и домена при отправке формы."},
+    {q: "119. Как установить изображение в качестве фона в CSS?", options: ["background-image: url('image.jpg');", "background: src('image.jpg');", "background-image: 'image.jpg';", "img-background: 'image.jpg';", "background-image: url(image.jpg);"], correct: 0, explanation: "Используется функция url(). Кавычки внутри скобок рекомендуются, но не строго обязательны (вариант E тоже сработает, но A — стандарт)."},
+    {q: "120. Как добавить элементу обтекание текстом в CSS?", options: ["float: left;", "position: absolute;", "display: inline-block;", "position: fixed;", "display: flex;"], correct: 0, explanation: "Свойство float (со значениями left или right) изымает элемент из обычного потока по горизонтали, позволяя тексту обтекать его."},
+    {q: "121. Как в HTML задать мета-тег с описанием страницы (для SEO)?", options: ["<meta name=\"description\" content=\"Описание\">", "<meta description=\"Описание\">", "<meta name=\"description\" value=\"Описание\">", "<meta content=\"Описание\">", "<meta name=\"desc\" url=\"Описание\">"], correct: 0, explanation: "Для описания используется атрибут name=\"description\", а сам текст помещается в атрибут content."},
+    {q: "122. Как задать позиционирование относительно окна браузера, чтобы элемент не двигался при прокрутке?", options: ["position: fixed;", "position: absolute;", "position: relative;", "position: static;", "position: sticky;"], correct: 0, explanation: "position: fixed фиксирует элемент относительно области просмотра (viewport). Он остается на месте при скролле."},
+    {q: "123. Как в CSS задать шрифт одновременно для заголовков h1, h2 и h3?", options: ["h1, h2, h3 { font-family: Arial, sans-serif; }", "header { font-family: Arial, sans-serif; }", "h1+h2+h3 { font-family: Arial, sans-serif; }", "h1 h2 h3 { font: Arial, sans-serif; }", "h1-h3 { font-family: Arial; }"], correct: 0, explanation: "Запятая в селекторах CSS позволяет применять одни и те же правила к нескольким элементам сразу (группировка селекторов)."},
+    {q: "124. Как в HTML скрыть вводимые символы (точки/звездочки) для поля пароля?", options: ["<input type=\"password\" name=\"pass\">", "<input type=\"hidden\" name=\"pass\">", "<input type=\"text\" secret=\"true\">", "<input password=\"pass\">", "<input type=\"secure\">"], correct: 0, explanation: "type=\"password\" указывает браузеру маскировать вводимые символы из соображений безопасности."},
+    {q: "125. Как задать цвет фона для всей страницы?", options: ["body { background-color: #FFFFFF; }", "html { bg-color: #FFFFFF; }", "page { background: #FFFFFF; }", "body { color: #FFFFFF; }", "Все { background-color: #FFFFFF; }"], correct: 0, explanation: "Тег <body> содержит весь отображаемый контент страницы, поэтому фон страницы задается через стилизацию body."},
+    {q: "126. Как в CSS сделать фоновое изображение растянутым так, чтобы оно покрывало весь блок без искажения пропорций?", options: ["background-size: cover;", "width: 100%;", "background-size: 100% 100%;", "background-size: contain;", "background-fit: cover;"], correct: 0, explanation: "background-size: cover масштабирует картинку, сохраняя пропорции, чтобы она полностью закрыла блок (даже если часть картинки обрежется)."},
+    {q: "127. Как добавить внешний отступ только сверху элемента?", options: ["margin-top: 10px;", "padding-top: 10px;", "border-top: 10px solid black;", "top: 10px;", "margin: 10px 0 0 0;"], correct: 0, explanation: "margin-top задает внешний отступ сверху. Вариант E тоже верный, но A — самый прямой и читаемый способ."},
+    {q: "128. Как в CSS добавить полосу прокрутки для блока, если контент не помещается?", options: ["overflow: auto;", "scroll: yes;", "overflow: hidden;", "scrollbar: auto;", "display: scroll;"], correct: 0, explanation: "overflow: auto добавляет полосы прокрутки только тогда, когда содержимое выходит за границы блока. overflow: scroll добавляет их всегда."},
+    {q: "129. Из каких базовых тегов строится HTML таблица?", options: ["<table><tr><td>Данные</td></tr></table>", "<table><row><td>Данные</td></row></table>", "<table><column><data>Данные</data></column></table>", "<table grid=\"true\">Данные</table>", "<table><tr><column>Данные</column></tr></table>"], correct: 0, explanation: "<table> — сама таблица, <tr> (table row) — строка таблицы, <td> (table data) — ячейка данных."},
+    {q: "130. Какой тег и атрибут используются для создания гиперссылки?", options: ["<a href=\"page.html\">Ссылка</a>", "<link href=\"page.html\">Ссылка</link>", "<url href=\"page.html\">Ссылка</url>", "<a src=\"page.html\">Ссылка</a>", "<a link=\"page.html\">Ссылка</a>"], correct: 0, explanation: "Тег <a> (anchor) с атрибутом href (hypertext reference) задает адрес перехода."},
+    {q: "131. Как позиционировать элемент абсолютно относительно его ближайшего позиционированного родителя?", options: ["position: absolute;", "position: fixed;", "position: relative;", "position: static;", "position: sticky;"], correct: 0, explanation: "position: absolute ищет ближайшего предка с position, отличным от static. Если такого нет, позиционируется относительно <body>."},
+    {q: "132. Какое свойство меняет цвет текста в CSS?", options: ["color: red;", "font-color: red;", "text-color: red;", "background-color: red;", "font: red;"], correct: 0, explanation: "За цвет текста отвечает свойство color. Свойства font-color не существует."},
+    {q: "133. Как сделать так, чтобы фоновое изображение полностью помещалось в блок, не обрезаясь (сохраняя пропорции)?", options: ["background-size: contain;", "background-size: cover;", "background-size: auto;", "background-size: 100% 100%;", "background-fit: contain;"], correct: 0, explanation: "background-size: contain масштабирует изображение так, чтобы оно целиком поместилось в блок (могут появиться пустые поля)."},
+    {q: "134. Как в HTML добавить поле только для ввода чисел (со стрелочками увеличения/уменьшения)?", options: ["<input type=\"number\">", "<input type=\"text\" pattern=\"[0-9]*\">", "<input type=\"range\">", "<input type=\"digit\">", "<input number=\"true\">"], correct: 0, explanation: "type=\"number\" вызывает числовую клавиатуру на мобильных и добавляет кнопки-стрелки в десктопных браузерах."},
+    {q: "135. Какое свойство задает отступы между элементами внутри Flexbox или Grid контейнера?", options: ["gap: 10px;", "margin: 10px;", "padding: 10px;", "border-spacing: 10px;", "space-between: 10px;"], correct: 0, explanation: "Свойство gap (ранее grid-gap) идеально подходит для задания промежутков между флекс- или грид-элементами без использования margin."},
+    {q: "136. Как ограничить максимальную высоту элемента, чтобы он не растягивался бесконечно?", options: ["max-height: 500px;", "height: 500px;", "min-height: 500px;", "limit-height: 500px;", "height-max: 500px;"], correct: 0, explanation: "max-height не позволяет элементу стать выше указанного значения, даже если контента внутри очень много."},
+    {q: "137. Какой тег используется для встраивания другой веб-страницы (например, карты или видео YouTube) в текущую?", options: ["<iframe src=\"page.html\"></iframe>", "<frame src=\"page.html\"></frame>", "<embed src=\"page.html\"></embed>", "<object src=\"page.html\"></object>", "<window src=\"page.html\"></window>"], correct: 0, explanation: "<iframe> (inline frame) создает встроенный фрейм, в который загружается внешний HTML-документ."},
+    {q: "138. Как в CSS изменить цвет ссылки только при наведении на нее курсора мыши?", options: ["a:hover { color: red; }", "a:active { color: red; }", "a:focus { color: red; }", "a:link { color: red; }", "a:visited { color: red; }"], correct: 0, explanation: "Псевдокласс :hover срабатывает, когда пользователь наводит указатель (курсор) на элемент."},
+    {q: "139. Как в CSS изменить семейство шрифта для текста?", options: ["font-family: Arial, sans-serif;", "font-size: 16px;", "font-style: italic;", "font-weight: bold;", "text-family: Arial;"], correct: 0, explanation: "Свойство font-family определяет приоритетный список шрифтов для элемента."},
+    {q: "140. Как задать размер шрифта равный 16 пикселям?", options: ["font-size: 16px;", "text-size: 16px;", "font: 16px;", "font-size: 16em;", "font-size: 16pt;"], correct: 0, explanation: "Свойство font-size управляет размером текста. Единица 'px' означает пиксели."},
+    {q: "141. Какой атрибут нужно добавить ссылке, чтобы она открывалась в новой вкладке браузера?", options: ["target=\"_blank\"", "target=\"new\"", "open=\"new\"", "target=\"_window\"", "rel=\"new_tab\""], correct: 0, explanation: "Атрибут target=\"_blank\" указывает браузеру открыть ссылку в новом окне или вкладке."},
+    {q: "142. Какой из вариантов записи фона корректен в CSS?", options: ["background: url('image.jpg') no-repeat center;", "background-image: 'image.jpg';", "img-background: url('image.jpg');", "background-src: 'image.jpg';", "Все варианты правильные"], correct: 0, explanation: "Свойство background — это шорткат. В нем можно одновременно указать изображение (url), повторение (no-repeat) и позицию (center)."},
+    {q: "143. Какое поле ввода лучше всего использовать для телефонных номеров на мобильных устройствах?", options: ["<input type=\"tel\">", "<input type=\"text\">", "<input type=\"number\">", "<input type=\"phone\">", "<input type=\"mobile\">"], correct: 0, explanation: "type=\"tel\" вызывает специализированную телефонную клавиатуру на смартфонах (с плюсом, решеткой и звездочкой)."},
+    {q: "144. Как стилизовать элемент, по которому кликнули (в момент удержания кнопки мыши)?", options: [":active { background: red; }", ":hover { background: red; }", ":focus { background: red; }", ":visited { background: red; }", ":clicked { background: red; }"], correct: 0, explanation: "Псевдокласс :active применяется к элементу в момент его активации (например, пока нажата кнопка мыши)."},
+    {q: "145. Как создать поле ввода даты и времени одновременно?", options: ["<input type=\"datetime-local\">", "<input type=\"date-time\">", "<input type=\"datetime\">", "<input type=\"date\" time=\"true\">", "<input type=\"clock\">"], correct: 0, explanation: "В HTML5 type=\"datetime-local\" предоставляет интерфейс выбора как даты, так и конкретного времени (без учета часового пояса)."},
+    {q: "146. Какой CSS селектор выберет все элементы <p> внутри <div>?", options: ["div p { color: red; }", "div + p { color: red; }", "div > p { color: red; }", "div, p { color: red; }", "p div { color: red; }"], correct: 0, explanation: "Селектор потомка (пробел) выбирает все теги <p>, которые находятся внутри <div> на любом уровне вложенности."},
+    {q: "147. Какой HTML тег семантически предназначен для вывода результата вычислений JS?", options: ["<output>", "<div>", "<result>", "<pre>", "<span>"], correct: 0, explanation: "Тег <output> представляет собой область, куда программа или скрипт может вывести результаты вычислений."},
+    {q: "148. Как сделать шапку сайта «прилипающей» к верхнему краю экрана при прокрутке?", options: ["position: sticky; top: 0;", "position: fixed; top: 0;", "position: absolute; top: 0;", "position: static; top: 0;", "Варианты A и B"], correct: 4, explanation: "И sticky, и fixed могут закрепить шапку. Fixed вырывает из потока навсегда, sticky оставляет в потоке до момента достижения отступа (top: 0)."},
+    {q: "149. Какое свойство позволяет сделать ширину элемента равной 100% от ширины видимого окна браузера (viewport)?", options: ["width: 100vw;", "width: 100%;", "width: auto;", "width: max-content;", "width: 100vh;"], correct: 0, explanation: "Единица измерения 'vw' (viewport width) означает процент от ширины окна браузера. 100vw = 100% ширины окна."},
+    {q: "150. Как задать цвет текста, используя формат RGB?", options: ["color: rgb(255, 0, 0);", "color: #FF0000;", "color: rgba(255, 0, 0, 1);", "color: red;", "Варианты A и C"], correct: 4, explanation: "Функции rgb() и rgba() позволяют задавать цвет по долям красного, зеленого и синего (и альфа-канала для прозрачности)."},
+    {q: "151. Как в CSS применить размытие к элементу?", options: ["filter: blur(5px);", "opacity: 0.5;", "backdrop-filter: blur(5px);", "blur: 5px;", "Варианты A и C"], correct: 4, explanation: "filter: blur() размывает сам элемент, а backdrop-filter: blur() размывает фон ПОД элементом (эффект матового стекла)."},
+    {q: "152. Какой тег используется для создания чекбокса (галочки)?", options: ["<input type=\"checkbox\">", "<input type=\"radio\">", "<checkbox>", "<check>", "<input type=\"tick\">"], correct: 0, explanation: "type=\"checkbox\" создает элемент формы, который может находиться в двух состояниях: выбран/не выбран."},
+    {q: "153. Как в CSS сделать так, чтобы текст не переносился на новую строку, а обрезался многоточием?", options: ["white-space: nowrap; overflow: hidden; text-overflow: ellipsis;", "text-wrap: none;", "overflow: ellipsis;", "word-break: keep-all;", "text-overflow: hidden;"], correct: 0, explanation: "Для троеточия нужна связка трех свойств: запрет переноса (nowrap), скрытие вышедшего за рамки (hidden) и само троеточие (ellipsis)."},
+    {q: "154. Какой одинарный тег используется для принудительного переноса строки в HTML?", options: ["<br>", "<hr>", "<newline>", "<break>", "<p>"], correct: 0, explanation: "<br> (line break) прерывает строку текста и переносит продолжение на новую строку."},
+    {q: "155. Какая единица измерения в CSS относительна размера шрифта родительского элемента?", options: ["em", "rem", "px", "vh", "%"], correct: 0, explanation: "1em равен размеру шрифта родителя. А вот 1rem относителен шрифта корневого элемента (html)."},
+    {q: "156. Как создать ссылку, при клике на которую откроется почтовый клиент по умолчанию?", options: ["<a href=\"mailto:test@mail.com\">Написать</a>", "<a href=\"email:test@mail.com\">Написать</a>", "<link href=\"mailto:test@mail.com\">", "<a href=\"send:test@mail.com\">Написать</a>", "<mail href=\"test@mail.com\">"], correct: 0, explanation: "Протокол mailto: в атрибуте href указывает браузеру открыть приложение электронной почты."},
+    {q: "157. Какое свойство обязательно должно присутствовать в псевдоэлементах ::before и ::after?", options: ["content", "display", "position", "width", "background"], correct: 0, explanation: "Без свойства content (даже если оно пустое: content: \"\";) псевдоэлемент не будет отрисован браузером."},
+    {q: "158. Какой псевдокласс выбирает элемент формы, когда он активен (например, в поле мигает курсор)?", options: [":focus", ":active", ":hover", ":selected", ":checked"], correct: 0, explanation: "Псевдокласс :focus применяется к элементу, когда он получает фокус (через клик мышью или навигацию по Tab)."},
+    {q: "159. Как выровнять текст по правому краю?", options: ["text-align: right;", "align: right;", "float: right;", "justify-content: right;", "text-position: right;"], correct: 0, explanation: "Свойство text-align управляет горизонтальным выравниванием текста внутри блочного элемента."},
+    {q: "160. Какая кнопка используется для отправки данных формы на сервер?", options: ["<button type=\"submit\">", "<input type=\"submit\">", "<button type=\"button\">", "Варианты A и B", "Все варианты"], correct: 3, explanation: "Оба варианта отправляют форму. <button> удобнее, так как внутрь можно поместить иконки или другие теги."},
+    {q: "161. В чем разница между display: none и opacity: 0?", options: ["display: none удаляет элемент из потока, opacity: 0 делает прозрачным, но оставляет кликабельным", "Разницы нет", "opacity: 0 удаляет из потока", "display: none можно анимировать, opacity нельзя", "opacity: 0 не скрывает текст"], correct: 0, explanation: "Элемент с opacity: 0 полностью невидим, но продолжает занимать место и реагировать на клики."},
+    {q: "162. Какое свойство CSS отвечает за скругление углов?", options: ["border-radius", "corner-radius", "border-round", "box-radius", "radius"], correct: 0, explanation: "Свойство border-radius позволяет закруглить углы рамок блоков. Значение 50% сделает из квадратного блока круг."},
+    {q: "163. Как подключить внешний CSS файл к HTML документу?", options: ["<link rel=\"stylesheet\" href=\"style.css\">", "<style src=\"style.css\"></style>", "<css href=\"style.css\">", "<script src=\"style.css\"></script>", "<import src=\"style.css\">"], correct: 0, explanation: "Для подключения внешних таблиц стилей используется тег <link> внутри секции <head>."},
+    {q: "164. Как создать плавный переход (анимацию) изменения цвета фона при наведении?", options: ["transition: background-color 0.3s;", "animation: background 0.3s;", "transform: background 0.3s;", "delay: background 0.3s;", "smooth: background-color;"], correct: 0, explanation: "Свойство transition позволяет плавно изменять значения CSS-свойств за указанное время."},
+    {q: "165. Что делает свойство z-index?", options: ["Управляет перекрытием элементов по оси Z", "Задает масштаб элемента", "Увеличивает прозрачность", "Управляет отступами", "Включает аппаратное ускорение"], correct: 0, explanation: "z-index определяет \"высоту\" элемента над плоскостью экрана. Элемент с бОльшим z-index перекрывает элемент с меньшим."},
+    {q: "166. Как вставить CSS стили прямо внутри HTML тега?", options: ["<div style=\"color: red;\">", "<div css=\"color: red;\">", "<div class=\"color: red;\">", "<div font=\"color: red;\">", "<style><div color=\"red\"></style>"], correct: 0, explanation: "Атрибут style позволяет задавать инлайн-стили напрямую конкретному элементу. Это перебивает стили из внешних файлов."},
+    {q: "167. Как убрать маркеры (точки) у списка <ul>?", options: ["list-style-type: none;", "list-type: empty;", "bullet-style: none;", "text-decoration: none;", "margin: 0;"], correct: 0, explanation: "Свойство list-style-type управляет внешним видом маркеров списка. none убирает их полностью."},
+    {q: "168. Идеальный способ отцентрировать один элемент по центру экрана (горизонталь и вертикаль)?", options: ["display: grid; place-items: center;", "display: flex; justify-content: center; align-items: center;", "Оба варианта (A и B) отличные", "margin: auto;", "text-align: center; vertical-align: middle;"], correct: 2, explanation: "Grid (place-items) и Flexbox (justify-content + align-items) — современные и надежные стандарты центрирования элементов."},
+    {q: "169. Какой тег воспроизводит аудио на странице?", options: ["<audio src=\"sound.mp3\" controls>", "<sound src=\"sound.mp3\">", "<music src=\"sound.mp3\">", "<embed src=\"sound.mp3\">", "<play src=\"sound.mp3\">"], correct: 0, explanation: "Тег <audio> используется для встраивания звука. Атрибут controls добавляет плеер (кнопку Play, ползунок громкости)."},
+    {q: "170. Как убрать подчеркивание у ссылок?", options: ["text-decoration: none;", "text-style: normal;", "font-decoration: none;", "underline: none;", "link-style: none;"], correct: 0, explanation: "Свойство text-decoration отвечает за оформление текста (подчеркивание, зачеркивание). none отключает все эффекты."},
+    {q: "171. Что означает селектор * (звездочка) в CSS?", options: ["Выбирает абсолютно все элементы на странице", "Указывает на наличие ошибки", "Выбирает корневой элемент", "Означает \"важное правило\" (!important)", "Выбирает элементы без классов"], correct: 0, explanation: "Универсальный селектор * применяется ко всем элементам документа. Часто используется для обнуления margin/padding."},
+    {q: "172. Как импортировать шрифт в CSS файл с другого сервера (например, Google Fonts)?", options: ["@import url('https://...');", "@font-face { src: url('...'); }", "import 'https://...';", "@include font('https://...');", "Варианты A и B"], correct: 4, explanation: "@import загружает внешний CSS файл со шрифтом. @font-face напрямую подключает файлы шрифта (woff, ttf)."},
+    {q: "173. Какой тег создает нумерованный список (1, 2, 3...)?", options: ["<ol>", "<ul>", "<list>", "<dl>", "<nl>"], correct: 0, explanation: "<ol> расшифровывается как Ordered List (упорядоченный список). Элементы внутри оборачиваются в <li>."},
+    {q: "174. Какое CSS свойство делает курсор в виде \"руки с пальцем\" при наведении?", options: ["cursor: pointer;", "cursor: hand;", "pointer: true;", "mouse: click;", "cursor: link;"], correct: 0, explanation: "cursor: pointer указывает пользователю, что элемент кликабельный (как ссылка)."},
+    {q: "175. Какая разница между margin и padding?", options: ["margin — внешний отступ от границы до соседей, padding — внутренний отступ от контента до границы", "margin — внутренний, padding — внешний", "Это одно и то же", "margin применяется только к тексту", "padding работает только в Flexbox"], correct: 0, explanation: "Это основа блочной модели CSS (Box Model). Padding увеличивает размер самого блока, margin раздвигает соседей."},
+    {q: "176. Как объявить CSS анимацию, чтобы использовать ее в свойстве animation?", options: ["@keyframes", "@animate", "@transition", "@motion", "@timeline"], correct: 0, explanation: "Правило @keyframes задает ключевые кадры анимации (от 0% до 100%), которые затем вызываются свойством animation."},
+    {q: "177. Как убрать рамку, которая появляется вокруг поля ввода (input) при клике по нему?", options: ["outline: none;", "border: none;", "shadow: none;", "focus: none;", "margin: 0;"], correct: 0, explanation: "Эта рамка задается свойством outline (контур фокуса). Однако из соображений доступности (a11y) ее лучше заменять на кастомную стилизацию :focus."},
+    {q: "178. Какое значение display нужно задать, чтобы элементы выстроились в гибкую строку или столбец?", options: ["display: flex;", "display: inline;", "display: block;", "display: grid;", "display: table;"], correct: 0, explanation: "Флексбокс (display: flex) — мощный инструмент для создания одномерных макетов, гибкого распределения пространства и выравнивания."},
+    {q: "179. Какой атрибут изображения содержит текст, который прочитает скринридер или покажет браузер, если картинка не загрузится?", options: ["alt", "title", "description", "src", "caption"], correct: 0, explanation: "Атрибут alt (alternative text) критически важен для SEO и доступности веб-сайтов."},
+    {q: "180. Как задать линейный градиент для фона слева направо (от красного к синему)?", options: ["background: linear-gradient(to right, red, blue);", "background: gradient(red, blue);", "background: to right red blue;", "gradient-linear: red, blue;", "background-color: linear(red, blue);"], correct: 0, explanation: "Функция linear-gradient создает изображение градиента. 'to right' указывает направление вектора."},
+    {q: "181. Как в HTML создать кнопку-переключатель (только один выбор из группы)?", options: ["<input type=\"radio\"> (одинаковый атрибут name)", "<input type=\"checkbox\">", "<input type=\"switch\">", "<select type=\"radio\">", "<radio>"], correct: 0, explanation: "Радио-кнопки (type=\"radio\") объединяются в группу, если у них одинаковое значение атрибута name."},
+    {q: "182. Как добавить тень самому тексту, а не блоку?", options: ["text-shadow: 2px 2px 4px #000;", "box-shadow: 2px 2px 4px #000;", "font-shadow: 2px 2px 4px #000;", "shadow: text 2px 2px;", "text-effect: shadow;"], correct: 0, explanation: "Свойство text-shadow работает аналогично box-shadow, но применяется непосредственно к контурам букв."},
+    {q: "183. Какой атрибут позволяет запретить изменение размера поля <textarea> пользователем?", options: ["В CSS: resize: none;", "В HTML: resize=\"false\"", "В HTML: fixed=\"true\"", "В CSS: size: fixed;", "В CSS: overflow: hidden;"], correct: 0, explanation: "По умолчанию браузеры разрешают растягивать <textarea>. CSS свойство resize со значением none отключает эту возможность."},
+    {q: "184. Как в CSS задать прозрачность цвета фона 50%, не делая прозрачным текст внутри блока?", options: ["background-color: rgba(255,0,0, 0.5);", "opacity: 0.5;", "background-opacity: 0.5;", "color-opacity: 50%;", "filter: alpha(50);"], correct: 0, explanation: "Использование rgba() или hsla() задает прозрачность только для конкретного цвета. Свойство opacity сделает прозрачным весь блок с потомками."},
+    {q: "185. Какое свойство предотвращает выделение текста мышью?", options: ["user-select: none;", "text-select: none;", "pointer-events: none;", "selection: false;", "cursor: default;"], correct: 0, explanation: "Свойство user-select управляет тем, может ли пользователь выделить текст (полезно для кнопок интерфейса)."},
+    {q: "186. Для чего нужен тег <nav>?", options: ["Для разметки блока основной навигации по сайту", "Для вставки видео", "Для создания нижнего колонтитула", "Это замена тега div", "Для создания таблицы"], correct: 0, explanation: "<nav> (navigation) — семантический тег HTML5, указывающий скринридерам и поисковикам, что внутри находятся главные ссылки навигации."},
+    {q: "187. Как в CSS зафиксировать картинку фона, чтобы она не прокручивалась вместе с текстом?", options: ["background-attachment: fixed;", "background-position: fixed;", "background-scroll: none;", "background-repeat: no-repeat;", "position: fixed;"], correct: 0, explanation: "Свойство background-attachment определяет, прокручивается ли фоновое изображение вместе с документом (scroll/local) или оно фиксировано (fixed)."},
+    {q: "188. Какой атрибут делает поле формы обязательным для заполнения?", options: ["required", "mandatory", "validate", "important", "needed"], correct: 0, explanation: "Атрибут required (булев атрибут) не позволит браузеру отправить форму, если это поле пустое."},
+    {q: "189. Как применить стили только если ширина экрана больше или равна 1024px?", options: ["@media (min-width: 1024px)", "@media (max-width: 1024px)", "@media (width > 1024px)", "@screen 1024px", "@media min: 1024px"], correct: 0, explanation: "min-width в медиа-запросе задает условие \"ширина окна браузера минимум 1024 пикселя и больше\" (Mobile-first подход)."},
+    {q: "190. Как скрыть элемент от мыши (чтобы клики проходили сквозь него)?", options: ["pointer-events: none;", "cursor: none;", "click: through;", "z-index: -1;", "opacity: 0;"], correct: 0, explanation: "pointer-events: none отключает реакцию элемента на любые события мыши/касаний (ховеры, клики). Клик передается элементу под ним."},
+    {q: "191. Какой тег семантически правильно использовать для создания шапки сайта?", options: ["<header>", "<head>", "<top>", "<navbar>", "<nav>"], correct: 0, explanation: "<header> — семантический тег HTML5 для вводной части или группы навигационных элементов (шапки страницы или статьи)."},
+    {q: "192. Какое свойство Flexbox выравнивает элементы по побочной (перпендикулярной) оси?", options: ["align-items", "justify-content", "align-content", "flex-direction", "align-self"], correct: 0, explanation: "justify-content выравнивает по главной оси (по умолчанию горизонтальной), а align-items — по побочной (вертикальной)."},
+    {q: "193. Для чего нужен атрибут placeholder у тега <input>?", options: ["Выводит подсказку внутри поля до начала ввода", "Устанавливает значение по умолчанию", "Задает имя поля для сервера", "Валидирует данные", "Скрывает ввод"], correct: 0, explanation: "Placeholder отображает серый текст-подсказку внутри поля, который исчезает, как только пользователь начинает печатать."},
+    {q: "194. Как сделать так, чтобы фоновое изображение не повторялось плиткой?", options: ["background-repeat: no-repeat;", "background-tile: none;", "background-size: once;", "repeat: false;", "background-image: single;"], correct: 0, explanation: "По умолчанию браузер размножает фоновое изображение по горизонтали и вертикали. background-repeat: no-repeat запрещает это."},
+    {q: "195. Какой псевдокласс стилизует первый элемент внутри родителя?", options: [":first-child", ":first", ":nth-child(0)", ":first-element", ":child(1)"], correct: 0, explanation: "Псевдокласс :first-child применяется к элементу, если он является первым дочерним элементом своего родителя."},
+    {q: "196. Какая разница между тегами <strong> и <b>?", options: ["<strong> передает семантическую важность (акцент), <b> просто делает жирным визуально", "Разницы нет", "<b> важнее для SEO", "<strong> устарел в HTML5", "<b> используется только в таблицах"], correct: 0, explanation: "Скринридеры прочитают текст в <strong> с интонационным выделением. <b> не несет смысловой нагрузки, только визуальную."},
+    {q: "197. Как сделать шрифт курсивным в CSS?", options: ["font-style: italic;", "font-weight: italic;", "text-decoration: italic;", "font: italic;", "text-style: italic;"], correct: 0, explanation: "Свойство font-style используется для задания курсивного начертания (italic или oblique)."},
+    {q: "198. Как изменить цвет плейсхолдера (текста-подсказки) в поле ввода?", options: ["input::placeholder { color: red; }", "input:placeholder { color: red; }", "input[placeholder] { color: red; }", "placeholder { color: red; }", "input { placeholder-color: red; }"], correct: 0, explanation: "Для стилизации плейсхолдера используется специальный псевдоэлемент ::placeholder."},
+    {q: "199. Что такое CSS переменные (Custom Properties) и как они объявляются?", options: ["--main-color: red; (внутри селектора, например :root)", "$main-color: red;", "@main-color: red;", "var main-color = red;", "color: var(--main);"], correct: 0, explanation: "CSS переменные начинаются с двух тире (--). Они позволяют переиспользовать значения. Получить значение: var(--main-color)."},
+    {q: "200. Как объединить две ячейки таблицы по горизонтали (в одну строку)?", options: ["<td colspan=\"2\">", "<td rowspan=\"2\">", "<td merge=\"2\">", "<td width=\"2\">", "<td cols=\"2\">"], correct: 0, explanation: "Атрибут colspan (column span) указывает, на сколько столбцов должна растянуться ячейка. rowspan растягивает по вертикали (строкам)."}
 ];
 
-/**
- * Архитектура приложения
- * Используем ООП подход для удобства анализа и расширения кода в будущем.
- */
 class QuizApp {
     constructor(data) {
         this.data = data;
         this.current = 0;
         this.score = 0;
-        this.userAnswers = [];
-        this.timerInterval = null;
-        this.timeSeconds = 0;
+        this.userAnswers = new Array(data.length).fill(undefined);
         
-        this.initDOM();
-    }
-
-    initDOM() {
         this.els = {
             screens: document.querySelectorAll('.screen'),
-            questionText: document.getElementById('question-text'),
-            optionsContainer: document.getElementById('options-container'),
-            progress: document.getElementById('progress-bar'),
-            counter: document.getElementById('question-counter'),
-            timer: document.getElementById('timer'),
-            
-            // Результаты
+            qText: document.getElementById('question-text'),
+            optionsGrid: document.getElementById('options-container'),
+            progressBar: document.getElementById('progress-bar'),
+            qCounter: document.getElementById('q-counter'),
+            scoreCounter: document.getElementById('score-counter'),
+            expBox: document.getElementById('explanation-box'),
+            expTitle: document.getElementById('exp-title'),
+            expText: document.getElementById('exp-text'),
+            btnPrev: document.getElementById('btn-prev'),
+            btnNext: document.getElementById('btn-next'),
             resScore: document.getElementById('res-score'),
-            resPercent: document.getElementById('res-percent'),
-            resTime: document.getElementById('res-time'),
-            
-            analysisContainer: document.getElementById('analysis-container'),
-            historyBody: document.getElementById('history-body')
+            resPercent: document.getElementById('res-percent')
         };
     }
 
@@ -421,182 +259,101 @@ class QuizApp {
     startTest() {
         this.current = 0;
         this.score = 0;
-        this.userAnswers = [];
-        this.timeSeconds = 0;
-        
-        this.startTimer();
+        this.userAnswers.fill(undefined);
         this.showScreen('screen-quiz');
         this.renderQuestion();
     }
 
-    startTimer() {
-        clearInterval(this.timerInterval);
-        this.timerInterval = setInterval(() => {
-            this.timeSeconds++;
-            const m = Math.floor(this.timeSeconds / 60).toString().padStart(2, '0');
-            const s = (this.timeSeconds % 60).toString().padStart(2, '0');
-            this.els.timer.innerText = `Время: ${m}:${s}`;
-        }, 1000);
-    }
-
     renderQuestion() {
         const q = this.data[this.current];
-        this.els.questionText.innerText = q.q;
-        this.els.optionsContainer.innerHTML = '';
+        const ansIndex = this.userAnswers[this.current];
+        const isAnswered = ansIndex !== undefined;
+
+        // Обновление заголовков и прогресса
+        this.els.qText.innerText = q.q;
+        this.els.qCounter.innerText = `Вопрос ${this.current + 1} из ${this.data.length}`;
+        this.els.scoreCounter.innerText = `Счет: ${this.score}`;
+        this.els.progressBar.style.width = `${((this.current) / this.data.length) * 100}%`;
         
-        // Обновление прогресса
-        const progressPercent = (this.current / this.data.length) * 100;
-        this.els.progress.style.width = `${progressPercent}%`;
-        this.els.counter.innerText = `Вопрос ${this.current + 1} из ${this.data.length}`;
+        // Очистка вариантов
+        this.els.optionsGrid.innerHTML = '';
 
         q.options.forEach((opt, index) => {
             const btn = document.createElement('button');
             btn.className = 'option';
             btn.innerText = opt;
-            btn.onclick = () => this.handleAnswer(index);
-            this.els.optionsContainer.appendChild(btn);
+            
+            if (isAnswered) {
+                btn.disabled = true; // Блокируем после ответа
+                if (index === q.correct) btn.classList.add('correct');
+                if (index === ansIndex && ansIndex !== q.correct) btn.classList.add('wrong');
+            } else {
+                btn.onclick = () => this.handleAnswer(index);
+            }
+            this.els.optionsGrid.appendChild(btn);
         });
+
+        // Показ пояснения, если ответ уже дан
+        if (isAnswered) {
+            const isCorrect = ansIndex === q.correct;
+            this.els.expTitle.innerText = isCorrect ? '✅ Верно!' : '❌ Неверно!';
+            this.els.expTitle.style.color = isCorrect ? 'var(--correct-text)' : 'var(--wrong-text)';
+            this.els.expText.innerHTML = `<b>Пояснение:</b> ${q.explanation}`;
+            this.els.expBox.className = `explanation-box ${isCorrect ? 'exp-correct' : 'exp-wrong'}`;
+        } else {
+            this.els.expBox.className = 'explanation-box hidden';
+        }
+
+        // Логика кнопок навигации
+        this.els.btnPrev.disabled = this.current === 0;
+        this.els.btnNext.disabled = !isAnswered; // Кнопка "Далее" заблокирована, пока не дан ответ
+        
+        if (this.current === this.data.length - 1) {
+            this.els.btnNext.innerText = 'Завершить тест';
+            this.els.btnNext.classList.add('btn-danger'); // Подсвечиваем кнопку завершения
+        } else {
+            this.els.btnNext.innerText = 'Далее →';
+            this.els.btnNext.classList.remove('btn-danger');
+        }
     }
 
     handleAnswer(selectedIndex) {
-        const q = this.data[this.current];
-        const isCorrect = selectedIndex === q.correct;
+        if (this.userAnswers[this.current] !== undefined) return;
         
-        if (isCorrect) this.score++;
+        this.userAnswers[this.current] = selectedIndex;
+        if (selectedIndex === this.data[this.current].correct) {
+            this.score++;
+        }
         
-        // Сохраняем для аналитики
-        this.userAnswers.push({
-            question: q.q,
-            selectedText: q.options[selectedIndex],
-            correctText: q.options[q.correct],
-            isCorrect: isCorrect,
-            explanation: q.explanation || "Дополнительное объяснение отсутствует."
-        });
+        this.renderQuestion(); // Перерисовка для показа зеленого/красного цветов и пояснения
+    }
 
-        this.current++;
-        
-        if (this.current < this.data.length) {
+    nextQuestion() {
+        if (this.current < this.data.length - 1) {
+            this.current++;
             this.renderQuestion();
         } else {
             this.endTest();
         }
     }
 
-    endTest() {
-        clearInterval(this.timerInterval);
-        
-        const percent = Math.round((this.score / this.data.length) * 100);
-        const m = Math.floor(this.timeSeconds / 60).toString().padStart(2, '0');
-        const s = (this.timeSeconds % 60).toString().padStart(2, '0');
-        const timeStr = `${m}:${s}`;
+    prevQuestion() {
+        if (this.current > 0) {
+            this.current--;
+            this.renderQuestion();
+        }
+    }
 
+    endTest() {
+        // Если завершаем досрочно, считаем процент от всего объема теста
+        const percent = Math.round((this.score / this.data.length) * 100);
         this.els.resScore.innerText = `${this.score} / ${this.data.length}`;
         this.els.resPercent.innerText = `${percent}%`;
-        this.els.resTime.innerText = timeStr;
-
-        this.saveToHistory(this.score, percent, timeStr);
         this.showScreen('screen-result');
-    }
-
-    showAnalysis() {
-        this.els.analysisContainer.innerHTML = '';
-        
-        this.userAnswers.forEach((ans, i) => {
-            const div = document.createElement('div');
-            div.className = `analysis-item ${ans.isCorrect ? 'correct' : 'wrong'}`;
-            
-            let html = `
-                <div class="analysis-q">${ans.question}</div>
-                <div class="analysis-ans"><b>Ваш ответ:</b> ${ans.selectedText}</div>
-            `;
-            
-            if (!ans.isCorrect) {
-                html += `<div class="analysis-ans" style="color: var(--wrong-text);"><b>Правильный ответ:</b> ${ans.correctText}</div>`;
-            }
-            
-            html += `<div class="analysis-exp"><b>Пояснение:</b> ${ans.explanation}</div>`;
-            
-            div.innerHTML = html;
-            this.els.analysisContainer.appendChild(div);
-        });
-        
-        this.showScreen('screen-analysis');
-    }
-
-    saveToHistory(score, percent, time) {
-        const history = JSON.parse(localStorage.getItem('quizHistory')) || [];
-        const date = new Date().toLocaleString('ru-RU');
-        
-        history.push({ date, score, percent, time });
-        localStorage.setItem('quizHistory', JSON.stringify(history));
-    }
-
-    showHistory() {
-        const history = JSON.parse(localStorage.getItem('quizHistory')) || [];
-        this.els.historyBody.innerHTML = '';
-        
-        if (history.length === 0) {
-            this.els.historyBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">История пуста</td></tr>';
-        } else {
-            // Показываем новые попытки сверху
-            history.reverse().forEach(record => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${record.date}</td>
-                    <td>${record.score} / ${this.data.length}</td>
-                    <td>${record.percent}%</td>
-                    <td>${record.time}</td>
-                `;
-                this.els.historyBody.appendChild(tr);
-            });
-        }
-        
-        this.showScreen('screen-history');
-    }
-
-    clearHistory() {
-        if(confirm("Вы уверены, что хотите удалить всю историю прохождений?")) {
-            localStorage.removeItem('quizHistory');
-            this.showHistory();
-        }
-    }
-
-    exportReport() {
-        let report = `ОТЧЕТ О ПРОХОЖДЕНИИ ТЕСТА\n`;
-        report += `Дата: ${new Date().toLocaleString('ru-RU')}\n`;
-        report += `Результат: ${this.score} из ${this.data.length} (${Math.round((this.score / this.data.length) * 100)}%)\n`;
-        const m = Math.floor(this.timeSeconds / 60).toString().padStart(2, '0');
-        const s = (this.timeSeconds % 60).toString().padStart(2, '0');
-        report += `Затраченное время: ${m}:${s}\n\n`;
-        report += `--- ДЕТАЛЬНЫЙ АНАЛИЗ ОШИБОК ---\n\n`;
-
-        const errors = this.userAnswers.filter(ans => !ans.isCorrect);
-        
-        if (errors.length === 0) {
-            report += `Ошибок нет. Идеальный результат!\n`;
-        } else {
-            errors.forEach((err, i) => {
-                report += `${i + 1}. ${err.question}\n`;
-                report += `   Вы выбрали: ${err.selectedText}\n`;
-                report += `   Правильный ответ: ${err.correctText}\n`;
-                report += `   Справка: ${err.explanation}\n\n`;
-            });
-        }
-
-        // Создание Blob и скачивание (имитация генерации файла для практики)
-        const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `quiz_report_${new Date().getTime()}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
     }
 }
 
-// Инициализация приложения
 const app = new QuizApp(quizData);
-
 </script>
 </body>
 </html>
