@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Тест по HTML и CSS (101-200)</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
+        .quiz-container { background: #fff; width: 100%; max-width: 700px; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .question { font-size: 18px; margin-bottom: 20px; font-weight: bold; color: #333; }
+        .option { display: block; width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; text-align: left; transition: 0.2s; background: #fff; }
+        .option:hover { background: #eef2f7; border-color: #4a6fa5; }
+        #progress { margin-top: 20px; color: #666; font-size: 14px; }
+        .result { text-align: center; font-size: 20px; font-weight: bold; }
+        .btn-restart { padding: 12px 25px; background: #4a6fa5; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div id="quiz-box">
+        <div id="question" class="question"></div>
+        <div id="options"></div>
+        <div id="progress"></div>
+    </div>
+</div>
+
+<script>
+const quizData = [
+    {q: "101. Как в CSS сделать текст жирным?", options: ["font-weight: bold;", "font-style: bold;", "font: bold;", "text-weight: bold;", "weight: bold;"], correct: 0},
+    {q: "102. Как задать прозрачность для элемента в CSS?", options: ["opacity: 0.5;", "background-color: transparent;", "visibility: hidden;", "filter: opacity(50%);", "transparent-opacity: 50%;"], correct: 0},
+    {q: "103. Как в HTML задать ссылку на изображение?", options: ["<a href=\"image.jpg\"><img src=\"image.jpg\" alt=\"image\"></a>", "<link href=\"image.jpg\">", "<a href=\"image.jpg\"><image src=\"image.jpg\"></a>", "<img href=\"image.jpg\" src=\"image.jpg\" />", "<a href=\"image.jpg\"><img src=\"image.jpg\" alt=\"image\"/>"], correct: 0},
+    {q: "104. Как в CSS сделать элемент невидимым, но не удалять его с потока документа?", options: ["visibility: hidden;", "display: none;", "opacity: 0;", "visibility: collapse;", "visibility: 0;"], correct: 0},
+    {q: "105. Как в CSS добавить тень для блока?", options: ["box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);", "text-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);", "border-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);", "shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);", "box-shadow: 10px rgba(0, 0, 0, 0.5);"], correct: 0},
+    {q: "106. Как скрыть элемент на мобильных устройствах в CSS?", options: ["display: none;", "visibility: hidden;", "@media screen and (max-width: 600px) { display: none; }", "@media (max-width: 600px) { visibility: hidden; }", "@mobile { display: none; }"], correct: 2},
+    {q: "107. Как в HTML вставить изображение?", options: ["<image src=\"image.jpg\">", "<img src=\"image.jpg\" alt=\"image\">", "<image href=\"image.jpg\" />", "<img href=\"image.jpg\" />", "<image src=\"image.jpg\">"], correct: 1},
+    {q: "108. Как в HTML сделать форму с полем для ввода даты?", options: ["<input type=\"date\" name=\"birthday\">", "<input date=\"birthday\">", "<form><date name=\"birthday\"></date></form>", "<input field=\"date\" name=\"birthday\">", "<input type=\"text\" name=\"birthday\" placeholder=\"YYYY-MM-DD\">"], correct: 0},
+    {q: "109. Как в CSS добавить внутренние отступы у элемента?", options: ["padding: 10px;", "margin: 10px;", "border: 10px;", "spacing: 10px;", "gap: 10px;"], correct: 0},
+    {q: "110. Как в HTML добавить комментарий?", options: ["", "// This is a comment", "/* This is a comment */", "# This is a comment", "//comment"], correct: 0},
+    {q: "111. Как задать фон для элемента в CSS?", options: ["background-color: #FF0000;", "color: #FF0000;", "background: #FF0000;", "background-image: url('image.jpg');", "Все варианты правильные"], correct: 4},
+    {q: "112. Как задать отступы между блоками в CSS?", options: ["margin: 10px;", "padding: 10px;", "gap: 10px;", "border-spacing: 10px;", "padding-bottom: 10px;"], correct: 0},
+    {q: "113. Как в HTML создать выпадающий список?", options: ["<select><option>Option 1</option><option>Option 2</option></select>", "<input list=\"options\" />", "<form><list>Option 1</list><list>Option 2</list></form>", "<dropdown>Option 1</dropdown>", "<input type=\"dropdown\" name=\"options\" />"], correct: 0},
+    {q: "114. Как добавить границу для элемента в CSS?", options: ["border: 1px solid black;", "border: 1px dotted red;", "border: 1px dashed blue;", "border-width: 1px;", "Все варианты правильные"], correct: 4},
+    {q: "115. Как сделать элемент скрытым в HTML, но доступным для скринридеров?", options: ["hidden", "visibility: hidden;", "display: none;", "aria-hidden=\"false\"", "display: invisible;"], correct: 3},
+    {q: "116. Как задать ширину и высоту изображения в HTML?", options: ["<img src=\"image.jpg\" width=\"100\" height=\"100\">", "<image src=\"image.jpg\" width=\"100\" height=\"100\">", "<img src=\"image.jpg\" size=\"100x100\">", "<img src=\"image.jpg\" style=\"width:100px; height:100px;\">", "Все варианты правильные"], correct: 4},
+    {q: "117. Как в CSS сделать элемент с фиксированной высотой, которая зависит от контента?", options: ["height: auto;", "height: 100%;", "height: content;", "min-height: content;", "auto-height: content;"], correct: 0},
+    {q: "118. Как в HTML задать поле для ввода email?", options: ["<input type=\"email\" name=\"user-email\">", "<input type=\"text\" name=\"user-email\">", "<input field=\"email\" name=\"user-email\">", "<form><email></email></form>", "<input email=\"user-email\">"], correct: 0},
+    {q: "119. Как задать изображение как фон в CSS?", options: ["background-image: url('image.jpg');", "background: url('image.jpg');", "background-image: 'image.jpg';", "img-background: 'image.jpg';", "Все варианты правильные"], correct: 4},
+    {q: "120. Как добавить элемент в CSS с плавающим расположением?", options: ["float: left;", "position: absolute;", "display: inline-block;", "position: fixed;", "display: flex;"], correct: 0},
+    {q: "121. Как в HTML задать мета-тег с описанием страницы?", options: ["<meta name=\"description\" content=\"This is a webpage\">", "<meta description=\"This is a webpage\">", "<meta name=\"description\" value=\"This is a webpage\">", "<meta content=\"This is a webpage\">", "<meta name=\"description\" url=\"This is a webpage\">"], correct: 0},
+    {q: "122. Как задать абсолютное позиционирование для элемента в CSS?", options: ["position: absolute;", "position: relative;", "position: fixed;", "position: static;", "position: inherit;"], correct: 0},
+    {q: "123. Как в CSS задать шрифт для заголовков?", options: ["h1, h2, h3 { font-family: Arial, sans-serif; }", "header { font-family: Arial, sans-serif; }", "h1, h2, h3 { font-style: Arial, sans-serif; }", "header h1 { font: Arial, sans-serif; }", "h1 { font: Arial; }"], correct: 0},
+    {q: "124. Как в HTML добавить поле для ввода пароля?", options: ["<input type=\"password\" name=\"user-password\">", "<input type=\"text\" name=\"user-password\">", "<input type=\"password\" value=\"user-password\">", "<input password=\"user-password\">", "<input type=\"text\" value=\"password\">"], correct: 0},
+    {q: "125. Как задать цвет фона для страницы?", options: ["background-color: #FFFFFF;", "background: #FFFFFF;", "body { background-color: #FFFFFF; }", "body { background: #FFFFFF; }", "Все варианты правильные"], correct: 4},
+    {q: "126. Как в CSS сделать изображение растянутым на всю ширину экрана?", options: ["width: 100%;", "height: 100%;", "width: 100vw;", "height: 100vh;", "background-size: 100%;"], correct: 2},
+    {q: "127. Как добавить отступы только сверху элемента в CSS?", options: ["margin-top: 10px;", "padding-top: 10px;", "border-top: 10px solid black;", "top: 10px;", "all-top: 10px;"], correct: 0},
+    {q: "128. Как в CSS задать полосу прокрутки для элемента?", options: ["overflow: scroll;", "scroll: yes;", "overflow: auto;", "scrollbar: auto;", "Все варианты правильные"], correct: 4},
+    {q: "129. Как в HTML вставить таблицу?", options: ["<table><tr><td>Data</td></tr></table>", "<table><row><td>Data</td></row></table>", "<table><row><column>Data</column></row></table>", "<table><data>Data</data></table>", "<table><tr><column>Data</column></tr></table>"], correct: 0},
+    {q: "130. Как в HTML добавить ссылку на страницу?", options: ["<a href=\"page.html\">Link</a>", "<link href=\"page.html\">Link</link>", "<url href=\"page.html\">Link</url>", "<anchor href=\"page.html\">Link</anchor>", "<a link=\"page.html\">Link</a>"], correct: 0},
+    {q: "131. Как в CSS установить фиксированное позиционирование для элемента?", options: ["position: fixed;", "position: absolute;", "position: relative;", "position: static;", "position: sticky;"], correct: 0},
+    {q: "132. Как в CSS изменить цвет текста?", options: ["color: red;", "font-color: red;", "text-color: red;", "background-color: red;", "font: red;"], correct: 0},
+    {q: "133. Как сделать фон изображения адаптивным (чтобы он подстраивался под размер экрана)?", options: ["background-size: cover;", "background-size: contain;", "background-size: auto;", "background-size: 100%;", "Все варианты правильные"], correct: 4},
+    {q: "134. Как в HTML добавить поле для ввода числа?", options: ["<input type=\"number\" name=\"quantity\">", "<input type=\"text\" name=\"quantity\">", "<input type=\"range\" name=\"quantity\">", "<input type=\"digit\" name=\"quantity\">", "<input number=\"quantity\">"], correct: 0},
+    {q: "135. Как задать отступы между элементами в CSS?", options: ["margin: 10px;", "padding: 10px;", "gap: 10px;", "border-spacing: 10px;", "Все варианты правильные"], correct: 4},
+    {q: "136. Как в CSS задать высоту для элемента?", options: ["height: 100px;", "max-height: 100px;", "min-height: 100px;", "height: auto;", "Все варианты правильные"], correct: 4},
+    {q: "137. Как в HTML задать фрейм для встраивания другого документа?", options: ["<iframe src=\"page.html\"></iframe>", "<frame src=\"page.html\"></frame>", "<embed src=\"page.html\"></embed>", "<object src=\"page.html\"></object>", "<window src=\"page.html\"></window>"], correct: 0},
+    {q: "138. Как в CSS установить стиль для текста ссылки при наведении?", options: ["a:hover { color: red; }", "a:active { color: red; }", "a:focus { color: red; }", "a:link { color: red; }", "a:visited { color: red; }"], correct: 0},
+    {q: "139. Как в CSS изменить шрифт для текста?", options: ["font-family: Arial, sans-serif;", "font-size: 16px;", "font-style: italic;", "font-weight: bold;", "Все варианты правильные"], correct: 4},
+    {q: "140. Как задать размер шрифта в CSS?", options: ["font-size: 16px;", "text-size: 16px;", "font: 16px;", "font-size: 16em;", "font-size: 16pt;"], correct: 0},
+    {q: "141. Как в HTML сделать ссылку, открывающуюся в новой вкладке?", options: ["<a href=\"page.html\" target=\"_blank\">Link</a>", "<a href=\"page.html\" target=\"new\">Link</a>", "<a href=\"page.html\" open=\"new\">Link</a>", "<a href=\"page.html\" target=\"window\">Link</a>", "<a href=\"page.html\" target=\"_new\">Link</a>"], correct: 0},
+    {q: "142. Как добавить фон с изображением для элемента в CSS?", options: ["background-image: url('image.jpg');", "background: url('image.jpg');", "background-image: 'image.jpg';", "background-url: 'image.jpg';", "Все варианты правильные"], correct: 4},
+    {q: "143. Как в HTML добавить поле для ввода телефона?", options: ["<input type=\"tel\" name=\"phone\">", "<input type=\"text\" name=\"phone\">", "<input type=\"number\" name=\"phone\">", "<input type=\"phone\" name=\"phone\">", "<input type=\"telphone\" name=\"phone\">"], correct: 0},
+    {q: "144. Как в CSS изменить цвет фона при наведении?", options: ["background-color: red;", "background-color: blue;", "background-color: yellow;", "a:hover { background-color: red; }", "background: hover red;"], correct: 3},
+    {q: "145. Как в HTML добавить поле для ввода даты с выбором?", options: ["<input type=\"date\" name=\"birthdate\">", "<input type=\"datetime\" name=\"birthdate\">", "<input type=\"text\" name=\"birthdate\">", "<input type=\"date\" placeholder=\"YYYY-MM-DD\">", "<form><input type=\"date\"></form>"], correct: 0},
+    {q: "146. Как задать цвет фона для всей страницы в CSS?", options: ["body { background-color: #f0f0f0; }", "background-color: #f0f0f0;", "background: #f0f0f0;", "body { color: #f0f0f0; }", "Все варианты правильные"], correct: 4},
+    {q: "147. Как в HTML создать элемент для вывода результата выполнения скрипта?", options: ["<div id=\"result\"></div>", "<output id=\"result\"></output>", "<p id=\"result\"></p>", "<pre id=\"result\"></pre>", "<span id=\"result\"></span>"], correct: 1},
+    {q: "148. Как в CSS сделать элемент видимым при прокрутке страницы?", options: ["position: sticky;", "position: fixed;", "position: absolute;", "position: relative;", "visibility: visible;"], correct: 0},
+    {q: "149. Как задать ширину элемента в CSS?", options: ["width: 100px;", "width: auto;", "max-width: 100px;", "min-width: 100px;", "Все варианты правильные"], correct: 4},
+    {q: "150. Как задать цвет текста в CSS с использованием шестнадцатеричного значения?", options: ["color: #FF0000;", "color: rgb(255, 0, 0);", "color: rgba(255, 0, 0, 1);", "color: red;", "Все варианты правильные"], correct: 4},
+    {q: "151. Как в CSS сделать элемент прозрачным?", options: ["opacity: 0.5;", "visibility: hidden;", "background-color: transparent;", "filter: blur(5px);", "Все варианты правильные"], correct: 4},
+    {q: "152. Как в HTML создать поле для ввода пароля?", options: ["<input type=\"password\" name=\"password\">", "<input type=\"text\" name=\"password\">", "<input type=\"password\" />", "<input password=\"true\" />", "<input type=\"pass\" name=\"password\">"], correct: 0},
+    {q: "153. Как задать минимальную ширину для элемента в CSS?", options: ["min-width: 200px;", "max-width: 200px;", "width: 200px;", "min-size: 200px;", "width: auto;"], correct: 0},
+    {q: "154. Как в HTML добавить разделитель строк?", options: ["<br>", "<hr>", "<div>", "<p>", "<span>"], correct: 1},
+    {q: "155. Как задать размер шрифта для элемента в CSS с помощью относительных единиц?", options: ["font-size: 1.5em;", "font-size: 1.5px;", "font-size: 15%;", "font-size: 15pt;", "Все варианты правильные"], correct: 4},
+    {q: "156. Как в HTML добавить ссылку на почтовый ящик?", options: ["<a href=\"mailto:someone@example.com\">Email</a>", "<a href=\"email:someone@example.com\">Email</a>", "<email href=\"someone@example.com\">Email</email>", "<link href=\"mailto:someone@example.com\">Email</link>", "<a href=\"contact@example.com\">Email</a>"], correct: 0},
+    {q: "157. Как задать стиль для псевдоэлемента ::before?", options: [".element::before { content: \"text\"; }", ".element:before { content: \"text\"; }", "::before { content: \"text\"; }", ".element::before { text: \"text\"; }", "Все варианты правильные"], correct: 4},
+    {q: "158. Как в CSS изменить стиль кнопки при нажатии?", options: ["button:active { background-color: red; }", "button:focus { background-color: red; }", "button:hover { background-color: red; }", "button:clicked { background-color: red; }", "Все варианты правильные"], correct: 4},
+    {q: "159. Как задать текст, выравненный по центру в CSS?", options: ["text-align: center;", "align-text: center;", "text-position: center;", "align: center;", "center-align: true;"], correct: 0},
+    {q: "160. Как в HTML добавить кнопку для отправки формы?", options: ["<button type=\"submit\">Send</button>", "<input type=\"submit\" value=\"Send\">", "<form button=\"submit\">Send</form>", "<button value=\"submit\">Send</button>", "a) и b)"], correct: 4},
+    {q: "161. Как скрыть элемент на странице с помощью CSS?", options: ["display: none;", "visibility: hidden;", "opacity: 0;", "height: 0;", "Все варианты правильные"], correct: 4},
+    {q: "162. Как в CSS установить свойство для внешнего отступа элемента?", options: ["margin: 10px;", "padding: 10px;", "spacing: 10px;", "border-spacing: 10px;", "padding-top: 10px;"], correct: 0},
+    {q: "163. Как в CSS использовать шрифт с Google Fonts?", options: ["@import url('https://fonts.googleapis.com/css2?family=Roboto');", "link href=\"https://fonts.googleapis.com/css2?family=Roboto\" rel=\"stylesheet\">", "font-family: 'Roboto', sans-serif;", "Все варианты правильные", "b) и c)"], correct: 3},
+    {q: "164. Как задать цвет фона для текста с помощью градиента?", options: ["background: linear-gradient(to right, red, yellow);", "background: radial-gradient(red, yellow);", "background: gradient(red, yellow);", "background-color: linear-gradient(red, yellow);", "Все варианты правильные"], correct: 4},
+    {q: "165. Как задать отступы внутри элемента в CSS?", options: ["padding: 10px;", "margin: 10px;", "padding-top: 10px;", "border-spacing: 10px;", "spacing: 10px;"], correct: 0},
+    {q: "166. Как задать фон для страницы в HTML с помощью CSS?", options: ["<style> body { background-color: lightblue; }</style>", "<body style=\"background-color: lightblue;\">", "<style> background-color: lightblue; </style>", "<style> background: lightblue; </style>", "a) и b)"], correct: 4},
+    {q: "167. Как добавить изображение на фон элемента в CSS?", options: ["background-image: url('image.jpg');", "background: image('image.jpg');", "background-img: url('image.jpg');", "image-background: url('image.jpg');", "background: url(image.jpg);"], correct: 4},
+    {q: "168. Как сделать элемент центрированным по горизонтали и вертикали в CSS?", options: ["display: flex; justify-content: center; align-items: center;", "position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);", "display: grid; place-items: center;", "Все варианты правильные", "b) и c)"], correct: 3},
+    {q: "169. Как в HTML вставить видео?", options: ["<video src=\"video.mp4\" controls></video>", "<video file=\"video.mp4\" controls></video>", "<embed src=\"video.mp4\" controls></embed>", "<source src=\"video.mp4\" type=\"video/mp4\">", "<media src=\"video.mp4\" type=\"video/mp4\">"], correct: 0},
+    {q: "170. Как задать ширину колонки в таблице?", options: ["th, td { width: 150px; }", "table { column-width: 150px; }", "table, th, td { width: 150px; }", "table { width: 150px; }", "table { cell-width: 150px; }"], correct: 0},
+    {q: "171. Как в CSS установить прозрачность для фона?", options: ["background-color: rgba(255, 0, 0, 0.5);", "background-color: transparent;", "opacity: 0.5;", "filter: opacity(50%);", "Все варианты правильные"], correct: 4},
+    {q: "172. Как использовать шрифт на веб-странице, загружая его через @font-face?", options: ["@font-face { font-family: 'MyFont'; src: url('myfont.woff2'); }", "@font-face { font-family: 'MyFont'; src: url('myfont.ttf'); }", "font-family: 'MyFont', sans-serif;", "Все варианты правильные", "a) и b)"], correct: 3},
+    {q: "173. Как сделать список с маркерами в HTML?", options: ["<ul><li>Item 1</li></ul>", "<ol><li>Item 1</li></ol>", "<list><item>Item 1</item></list>", "<ul><item>Item 1</item></ul>", "<ul><li>Item 1</li><li>Item 2</li></ul>"], correct: 4},
+    {q: "174. Как в HTML добавить таблицу?", options: ["<table><tr><td>Data</td></tr></table>", "<table><row><data>Data</data></row></table>", "<table><column><data>Data</data></column></table>", "<table><tr><td><data>Data</data></td></tr></table>", "<table><row><column>Data</column></row></table>"], correct: 0},
+    {q: "175. Как в CSS задать горизонтальный отступ для элемента?", options: ["margin-left: 20px;", "margin-top: 20px;", "padding-left: 20px;", "margin: 20px;", "Все варианты правильные"], correct: 4},
+    {q: "176. Как использовать анимацию в CSS?", options: ["@keyframes animationName { ... }", "animation: animationName 2s;", "@keyframes animation { ... }", "Все варианты правильные", "b) и c)"], correct: 3},
+    {q: "177. Как в CSS задать границу для элемента?", options: ["border: 1px solid black;", "border-width: 1px;", "border-style: solid;", "border-color: black;", "Все варианты правильные"], correct: 4},
+    {q: "178. Как в CSS сделать изображение растянутым на весь экран?", options: ["background-size: 100% 100%;", "background-size: cover;", "background-size: contain;", "background-size: stretch;", "Все варианты правильные"], correct: 4},
+    {q: "179. Как в HTML вставить изображение?", options: ["<img src=\"image.jpg\" alt=\"description\">", "<image src=\"image.jpg\" alt=\"description\">", "<img href=\"image.jpg\" alt=\"description\">", "<image src=\"image.jpg\">", "<img src=\"image.jpg\">"], correct: 4},
+    {q: "180. Как сделать ссылку, которая открывает окно для ввода текста?", options: ["<a href=\"javascript:void(0);\" onclick=\"prompt('Enter text:');\">Input Text</a>", "<a href=\"input:text\">Input Text</a>", "<a href=\"text:prompt\">Input Text</a>", "<a href=\"javascript:alert('Enter text');\">Input Text</a>", "<a href=\"prompt:text\">Input Text</a>"], correct: 0},
+    {q: "181. Как создать ссылку, которая будет открывать новую вкладку в браузере?", options: ["<a href=\"https://example.com\" target=\"_blank\">Open Link</a>", "<a href=\"https://example.com\" target=\"new\">Open Link</a>", "<a href=\"https://example.com\" rel=\"noopener\">Open Link</a>", "<a href=\"https://example.com\" new=\"true\">Open Link</a>", "<a href=\"https://example.com\" target=\"tab\">Open Link</a>"], correct: 0},
+    {q: "182. Как в CSS сделать элемент фиксированным на экране при прокрутке?", options: ["position: sticky;", "position: fixed;", "position: relative;", "position: absolute;", "Все варианты правильные"], correct: 1},
+    {q: "183. Как в HTML вставить аудиофайл?", options: ["<audio src=\"audio.mp3\" controls></audio>", "<audio file=\"audio.mp3\" controls></audio>", "<audio href=\"audio.mp3\"></audio>", "<sound src=\"audio.mp3\" controls></sound>", "<media src=\"audio.mp3\"></media>"], correct: 0},
+    {q: "184. Как в CSS задать отступы для всех элементов на странице?", options: ["* { margin: 0; padding: 0; }", "all { margin: 0; padding: 0; }", "body { margin: 0; padding: 0; }", "* { margin-top: 0; padding-top: 0; }", "body * { margin: 0; padding: 0; }"], correct: 0},
+    {q: "185. Как в HTML добавить мета-тег для кодировки страницы?", options: ["<meta charset=\"UTF-8\">", "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">", "<meta name=\"charset\" content=\"UTF-8\">", "<meta content=\"UTF-8\">", "a) и b)"], correct: 4},
+    {q: "186. Как в CSS задать радиус скругления для углов элемента?", options: ["border-radius: 10px;", "corner-radius: 10px;", "border-corner: 10px;", "radius: 10px;", "round-border: 10px;"], correct: 0},
+    {q: "187. Как в HTML сделать ссылку с изображением?", options: ["<a href=\"https://example.com\"><img src=\"image.jpg\" alt=\"Image\"></a>", "<a href=\"https://example.com\"><image src=\"image.jpg\" alt=\"Image\"></image></a>", "<link href=\"image.jpg\" rel=\"icon\">", "<a href=\"https://example.com\" img=\"image.jpg\">Link</a>", "<a href=\"https://example.com\" image=\"image.jpg\">Link</a>"], correct: 0},
+    {q: "188. Как в CSS сделать элемент невидимым, но оставить его на странице?", options: ["visibility: hidden;", "display: none;", "opacity: 0;", "color: transparent;", "Все варианты правильные"], correct: 4},
+    {q: "189. Как в CSS задать фон для элемента, который будет растягиваться по размеру элемента?", options: ["background-size: cover;", "background-repeat: no-repeat;", "background-attachment: fixed;", "background-size: contain;", "background-position: center;"], correct: 0},
+    {q: "190. Как в CSS сделать все ссылки на странице без подчеркивания?", options: ["a { text-decoration: none; }", "a { decoration: none; }", "a { no-underline: true; }", "a { border: none; }", "a { underline: none; }"], correct: 0},
+    {q: "191. Как сделать текст жирным с помощью CSS?", options: ["font-weight: bold;", "font-style: bold;", "text-weight: bold;", "text-decoration: bold;", "font-size: bold;"], correct: 0},
+    {q: "192. Как в HTML указать ссылку для скачивания файла?", options: ["<a href=\"file.zip\" download>Download</a>", "<a href=\"file.zip\" target=\"_blank\">Download</a>", "<a href=\"file.zip\">Download</a>", "<a href=\"file.zip\" download=\"true\">Download</a>", "<a href=\"file.zip\" download=\"file\">Download</a>"], correct: 0},
+    {q: "193. Как сделать рамку вокруг элемента в CSS?", options: ["border: 1px solid black;", "border-width: 1px; border-color: black; border-style: solid;", "border-radius: 10px;", "outline: 1px solid black;", "Все варианты правильные"], correct: 4},
+    {q: "194. Как в HTML вставить картинку в качестве фона для страницы?", options: ["<body style=\"background-image: url('background.jpg');\">", "<div background=\"background.jpg\"></div>", "<background src=\"background.jpg\">", "<body background=\"background.jpg\">", "<div style=\"background-image: url('background.jpg');\">"], correct: 4},
+    {q: "195. Как в HTML задать таблицу без внешней линии?", options: ["<table border=\"0\">", "<table style=\"border: none;\">", "<table border=\"hidden\">", "<table style=\"border: 0px;\">", "Все варианты правильные"], correct: 4},
+    {q: "196. Как в CSS изменить шрифт для всего документа?", options: ["body { font-family: Arial, sans-serif; }", "* { font-family: Arial, sans-serif; }", "html { font-family: Arial, sans-serif; }", "body { font: Arial, sans-serif; }", "Все варианты правильные"], correct: 4},
+    {q: "197. Как в CSS добавить тень к тексту?", options: ["text-shadow: 2px 2px 5px grey;", "shadow-text: 2px 2px 5px grey;", "text-effect: shadow(2px 2px 5px grey);", "font-shadow: 2px 2px 5px grey;", "shadow: text(2px 2px 5px grey);"], correct: 0},
+    {q: "198. Как в HTML создать выпадающий список?", options: ["<select><option value=\"1\">Option 1</option></select>", "<dropdown><option value=\"1\">Option 1</option></dropdown>", "<list><option value=\"1\">Option 1</option></list>", "<ul><li value=\"1\">Option 1</li></ul>", "<select><item value=\"1\">Option 1</item></select>"], correct: 0},
+    {q: "199. Как в HTML сделать скрытый элемент?", options: ["<div hidden>Content</div>", "<div style=\"display:none;\">Content</div>", "<div style=\"visibility:hidden;\">Content</div>", "Все варианты правильные", "a) и b)"], correct: 3},
+    {q: "200. Как в HTML задать описание изображения?", options: ["<img src=\"image.jpg\" alt=\"Image description\">", "<image src=\"image.jpg\" alt=\"Image description\">", "<img src=\"image.jpg\" title=\"Image description\">", "<img src=\"image.jpg\" caption=\"Image description\">", "a) и c)"], correct: 4}
+];
+
+let current = 0;
+let score = 0; 
+
+function show() {
+    const q = quizData[current];
+    document.getElementById("question").innerText = q.q;
+    const ops = document.getElementById("options");
+    ops.innerHTML = "";
+    
+    q.options.forEach((o, i) => {
+        const btn = document.createElement("button");
+        btn.className = "option";
+        btn.innerText = o;
+        btn.onclick = () => {
+            if(i === q.correct) score++;
+            current++;
+            if(current < quizData.length) show();
+            else {
+                document.getElementById("quiz-box").innerHTML = `<div class="result">Тест завершен! Ваш результат: ${score} из ${quizData.length}</div><button class="btn-restart" onclick="location.reload()">Начать заново</button>`;
+            }
+        };
+        ops.appendChild(btn);
+    });
+    document.getElementById("progress").innerText = `Вопрос ${current + 1} из ${quizData.length}`;
+}
+show();
+</script>
+</body>
+</html>
