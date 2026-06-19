@@ -3,357 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Обучающий тест: HTML и CSS</title>
+    <title>IT & WinForms Mega Test</title>
     <style>
         :root {
-            --primary: #4a6fa5;
-            --primary-hover: #365580;
-            --bg: #f4f7f6;
-            --container-bg: #ffffff;
-            --text-main: #333333;
-            --text-muted: #666666;
-            --border: #dddddd;
-            --correct-bg: #d4edda;
-            --correct-border: #c3e6cb;
-            --correct-text: #155724;
-            --wrong-bg: #f8d7da;
-            --wrong-border: #f5c6cb;
-            --wrong-text: #721c24;
-            --transition: 0.2s ease;
+            --bg-color: #1e1e2e;
+            --card-bg: #252538;
+            --text-color: #cdd6f4;
+            --accent: #89b4fa;
+            --success: #a6e3a1;
+            --error: #f38ba8;
+            --border-radius: 12px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text-main); display: flex; justify-content: center; padding: 20px; line-height: 1.6; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { background-color: var(--card-bg); width: 100%; max-width: 650px; border-radius: var(--border-radius); padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid #313244; }
         
-        .app-container { background: var(--container-bg); width: 100%; max-width: 800px; padding: 30px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05); }
-        .hidden { display: none !important; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #313244; padding-bottom: 15px; }
+        .progress-bar-container { width: 100%; background-color: #313244; height: 8px; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+        .progress-bar { height: 100%; background-color: var(--accent); width: 0%; transition: width 0.3s ease; }
         
-        h1, h2 { color: var(--primary); text-align: center; margin-bottom: 20px; }
+        .question-box { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+        .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
         
-        /* Прогресс и статус */
-        .header-info { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; color: var(--text-muted); }
-        .progress-container { width: 100%; height: 8px; background: var(--border); border-radius: 4px; margin-bottom: 25px; overflow: hidden; }
-        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+        .option-btn { background-color: #313244; border: 2px solid transparent; border-radius: 8px; padding: 14px; text-align: left; color: var(--text-color); font-size: 1rem; cursor: pointer; transition: all 0.2s ease; display: block; width: 100%; word-break: break-word; }
+        .option-btn:hover:not([disabled]) { background-color: #45475a; border-color: var(--accent); }
         
-        /* Вопрос и варианты */
-        .question { font-size: 18px; font-weight: bold; margin-bottom: 20px; }
-        .options-grid { display: flex; flex-direction: column; gap: 10px; }
+        .option-btn.correct { background-color: rgba(166, 227, 161, 0.2) !important; border-color: var(--success) !important; color: var(--success); font-weight: bold; }
+        .option-btn.incorrect { background-color: rgba(243, 139, 168, 0.2) !important; border-color: var(--error) !important; color: var(--error); }
         
-        .option { display: block; width: 100%; padding: 15px; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; text-align: left; font-size: 16px; background: #fff; transition: var(--transition); }
-        .option:hover:not(:disabled) { border-color: var(--primary); background: #f0f4f8; }
+        .explanation-box { background-color: #11111b; border-left: 4px solid var(--accent); border-radius: 4px; padding: 15px; margin-bottom: 20px; display: none; line-height: 1.5; }
+        .explanation-box.show { display: block; animation: fadeIn 0.4s ease; }
         
-        /* Стили состояния ответов */
-        .option:disabled { cursor: default; }
-        .option.correct { background: var(--correct-bg); border-color: var(--correct-border); color: var(--correct-text); font-weight: bold; }
-        .option.wrong { background: var(--wrong-bg); border-color: var(--wrong-border); color: var(--wrong-text); text-decoration: line-through; opacity: 0.8; }
+        .next-btn, .restart-btn { background-color: var(--accent); color: #11111b; border: none; padding: 12px 24px; font-size: 1rem; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: opacity 0.2s; }
+        .next-btn:hover, .restart-btn:hover { opacity: 0.9; }
         
-        /* Блок пояснения */
-        .explanation-box { margin-top: 20px; padding: 15px; border-radius: 8px; animation: fadeIn 0.4s ease; border-left: 5px solid transparent; }
-        .exp-correct { background: #e2f3e5; border-left-color: #28a745; }
-        .exp-wrong { background: #fae3e5; border-left-color: #dc3545; }
-        .exp-title { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+        .results-screen { text-align: center; display: none; }
+        .results-screen h2 { color: var(--accent); margin-bottom: 15px; }
+        .score-text { font-size: 2rem; font-weight: bold; margin-bottom: 20px; }
         
-        /* Кнопки навигации */
-        .nav-buttons { display: flex; justify-content: space-between; flex-wrap: wrap; margin-top: 30px; gap: 10px; border-top: 1px solid var(--border); padding-top: 20px; }
-        .btn { padding: 12px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: bold; transition: var(--transition); }
-        .btn:hover:not(:disabled) { background: var(--primary-hover); }
-        .btn:disabled { background: #ccc; cursor: not-allowed; }
-        .btn-outline { background: transparent; color: var(--text-muted); border: 2px solid var(--border); }
-        .btn-outline:hover { background: var(--border); color: #000; }
-        .btn-danger { background: transparent; color: #dc3545; border: 2px solid #dc3545; }
-        .btn-danger:hover { background: #dc3545; color: white; }
-
-        /* Результаты */
-        .result-stats { display: flex; justify-content: space-around; margin: 30px 0; padding: 20px; background: var(--bg); border-radius: 8px; }
-        .stat-item { text-align: center; }
-        .stat-val { font-size: 32px; font-weight: bold; color: var(--primary); }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div id="screen-start" class="screen">
-        <h1>Обучающий тест: HTML & CSS</h1>
-        <p style="text-align: center; margin-bottom: 30px;">Вопросы со 101 по 200. Включен режим мгновенной проверки с пояснениями.</p>
-        <div style="text-align: center;">
-            <button class="btn" onclick="app.startTest()">Начать тест</button>
+<div class="container">
+    <div id="quiz-screen">
+        <div class="header">
+            <span id="question-counter">Вопрос 1 из 100</span>
+            <span id="score-counter">Очки: 0</span>
         </div>
+        <div class="progress-bar-container">
+            <div id="progress-bar" class="progress-bar"></div>
+        </div>
+        <div id="question-text" class="question-box">Загрузка вопроса...</div>
+        <div id="options-container" class="options-list"></div>
+        <div id="explanation" class="explanation-box"></div>
+        <button id="next-button" class="next-btn" style="display: none;">Следующий вопрос</button>
     </div>
 
-    <div id="screen-quiz" class="screen hidden">
-        <div class="header-info">
-            <span id="q-counter">Вопрос 1 из 100</span>
-            <span id="score-counter">Счет: 0</span>
-        </div>
-        <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
-        
-        <div id="question-text" class="question"></div>
-        <div id="options-container" class="options-grid"></div>
-        
-        <div id="explanation-box" class="explanation-box hidden">
-            <div id="exp-title" class="exp-title"></div>
-            <div id="exp-text"></div>
-        </div>
-
-        <div class="nav-buttons">
-            <button id="btn-prev" class="btn btn-outline" onclick="app.prevQuestion()">← Назад</button>
-            <button id="btn-finish" class="btn btn-danger" onclick="app.endTest()">Завершить тест раньше</button>
-            <button id="btn-next" class="btn" onclick="app.nextQuestion()">Далее →</button>
-        </div>
-    </div>
-
-    <div id="screen-result" class="screen hidden">
+    <div id="results-screen" class="results-screen">
         <h2>Тестирование завершено!</h2>
-        <div class="result-stats">
-            <div class="stat-item">
-                <div id="res-score" class="stat-val">0</div>
-                <div>Правильных ответов</div>
-            </div>
-            <div class="stat-item">
-                <div id="res-percent" class="stat-val">0%</div>
-                <div>Успешность</div>
-            </div>
-        </div>
-        <div style="text-align: center;">
-            <button class="btn" onclick="location.reload()">Вернуться на главную</button>
-        </div>
+        <div id="final-score" class="score-text">0 / 100</div>
+        <p id="result-comment" style="margin-bottom: 25px; line-height: 1.6;"></p>
+        <button class="restart-btn" onclick="restartQuiz()">Пройти заново</button>
     </div>
 </div>
 
 <script>
-// Исправленная и дополненная база данных (100 вопросов)
-const quizData = [
-    {q: "101. Как в CSS сделать текст жирным?", options: ["font-weight: bold;", "font-style: bold;", "font: bold;", "text-weight: bold;", "weight: bold;"], correct: 0, explanation: "Свойство font-weight отвечает за насыщенность шрифта. Значение bold (или 700) делает его жирным."},
-    {q: "102. Как задать прозрачность для элемента в CSS?", options: ["opacity: 0.5;", "background-color: transparent;", "visibility: hidden;", "filter: opacity(50%);", "transparent-opacity: 50%;"], correct: 0, explanation: "Свойство opacity задает уровень прозрачности всего элемента от 0.0 до 1.0."},
-    {q: "103. Как в HTML задать ссылку на изображение?", options: ["<a href=\"image.jpg\"><img src=\"image.jpg\" alt=\"image\"></a>", "<link href=\"image.jpg\">", "<a href=\"image.jpg\"><image src=\"image.jpg\"></a>", "<img href=\"image.jpg\" src=\"image.jpg\" />", "<a href=\"image.jpg\"><img src=\"image.jpg\" alt=\"image\"/>"], correct: 0, explanation: "Тег <a> делает содержимое кликабельной ссылкой, а вложенный тег <img> отображает само изображение."},
-    {q: "104. Как в CSS сделать элемент невидимым, но не удалять его из потока документа?", options: ["visibility: hidden;", "display: none;", "opacity: 0;", "visibility: collapse;", "visibility: 0;"], correct: 0, explanation: "visibility: hidden скрывает элемент, но он продолжает занимать физическое место на странице. display: none убирает его из потока."},
-    {q: "105. Как в CSS добавить тень для блока?", options: ["box-shadow: 10px 10px 20px rgba(0,0,0,0.5);", "text-shadow: 10px 10px 20px rgba(0,0,0,0.5);", "border-shadow: 10px 10px rgba(0,0,0,0.5);", "shadow: 10px 10px 20px rgba(0,0,0,0.5);", "box-shadow: 10px rgba(0,0,0,0.5);"], correct: 0, explanation: "Свойство box-shadow применяется к блокам. Параметры: смещение по X, по Y, размытие, растяжение и цвет."},
-    {q: "106. Как скрыть элемент на мобильных устройствах в CSS (ширина до 600px)?", options: ["display: none;", "visibility: hidden;", "@media (max-width: 600px) { .elem { display: none; } }", "@media (max-width: 600px) { visibility: hidden; }", "@mobile { display: none; }"], correct: 2, explanation: "Медиа-запросы (@media) позволяют применять CSS правила только при определенных условиях экрана (например, max-width)."},
-    {q: "107. Как семантически правильно в HTML вставить изображение?", options: ["<image src=\"image.jpg\">", "<img src=\"image.jpg\" alt=\"описание\">", "<image href=\"image.jpg\" />", "<img href=\"image.jpg\" />", "<pic src=\"image.jpg\">"], correct: 1, explanation: "Используется одинарный тег <img> с обязательными атрибутами src (путь) и alt (альтернативный текст)."},
-    {q: "108. Как в HTML сделать форму с полем для выбора даты?", options: ["<input type=\"date\" name=\"birthday\">", "<input date=\"birthday\">", "<form><date name=\"birthday\"></date></form>", "<input field=\"date\" name=\"birthday\">", "<input type=\"text\" placeholder=\"YYYY-MM-DD\">"], correct: 0, explanation: "Атрибут type=\"date\" у тега <input> вызывает встроенный в браузер календарь для выбора даты."},
-    {q: "109. Как в CSS добавить внутренние отступы у элемента?", options: ["padding: 10px;", "margin: 10px;", "border: 10px;", "spacing: 10px;", "gap: 10px;"], correct: 0, explanation: "padding отвечает за внутренние отступы (от контента до границы блока). margin — за внешние."},
-    {q: "110. Как в HTML добавить комментарий?", options: ["", "// Комментарий", "/* Комментарий */", "# Комментарий", ""], correct: 0, explanation: "В HTML комментарии оборачиваются в . Варианты со слешами используются в JS или CSS."},
-    {q: "111. Как задать сплошной цвет фона для элемента в CSS?", options: ["background-color: #FF0000;", "color: #FF0000;", "background-image: url('image.jpg');", "text-background: #FF0000;", "bgcolor: #FF0000;"], correct: 0, explanation: "background-color отвечает именно за цвет фона. color меняет цвет текста."},
-    {q: "112. Как задать внешние отступы между блоками в стандартном потоке CSS?", options: ["margin: 10px;", "padding: 10px;", "gap: 10px;", "border-spacing: 10px;", "padding-bottom: 10px;"], correct: 0, explanation: "margin задает отступ от границы текущего элемента до соседних элементов."},
-    {q: "113. Как в HTML создать выпадающий список?", options: ["<select><option>Option 1</option></select>", "<input list=\"options\" />", "<dropdown>Option 1</dropdown>", "<select><item>Option 1</item></select>", "<list><option>Option 1</option></list>"], correct: 0, explanation: "Выпадающий список создается тегом <select>, внутри которого располагаются элементы списка <option>."},
-    {q: "114. Как добавить границу для элемента в CSS (краткая запись)?", options: ["border: 1px solid black;", "border: 1px dotted red;", "border: 1px dashed blue;", "Все варианты выше правильные", "border-width: 1px;"], correct: 3, explanation: "Свойство border позволяет задать ширину, стиль (solid, dotted, dashed) и цвет линии одновременно."},
-    {q: "115. Как сделать элемент визуально скрытым, но доступным для скринридеров (читалок экрана)?", options: ["hidden", "visibility: hidden;", "display: none;", "position: absolute; width: 1px; height: 1px; overflow: hidden;", "opacity: 0;"], correct: 3, explanation: "display: none и visibility: hidden скрывают элемент и от скринридеров. Сдвиг за экран или обрезка (паттерн .sr-only) оставляет текст доступным для программ чтения."},
-    {q: "116. Как правильно задать ширину и высоту изображения прямо в HTML?", options: ["<img src=\"image.jpg\" width=\"100\" height=\"100\">", "<img src=\"image.jpg\" style=\"w:100; h:100\">", "<img src=\"image.jpg\" size=\"100x100\">", "<img src=\"image.jpg\" width=\"100px\" height=\"100px\">", "Варианты A и D правильные"], correct: 0, explanation: "Атрибуты width и height в HTML указываются без 'px'. Использование px в атрибутах считается устаревшим (хотя браузеры это простят)."},
-    {q: "117. Какое значение свойства height по умолчанию зависит от контента?", options: ["height: auto;", "height: 100%;", "height: content;", "min-height: content;", "auto-height: true;"], correct: 0, explanation: "Значение по умолчанию для высоты блока — auto. Блок растягивается по высоте вложенного в него контента."},
-    {q: "118. Как в HTML задать поле, которое валидирует ввод email адреса?", options: ["<input type=\"email\" name=\"user-email\">", "<input type=\"text\" pattern=\"email\">", "<input field=\"email\" name=\"user-email\">", "<form><email></email></form>", "<input email=\"user-email\">"], correct: 0, explanation: "В HTML5 появился type=\"email\", который автоматически проверяет наличие символа '@' и домена при отправке формы."},
-    {q: "119. Как установить изображение в качестве фона в CSS?", options: ["background-image: url('image.jpg');", "background: src('image.jpg');", "background-image: 'image.jpg';", "img-background: 'image.jpg';", "background-image: url(image.jpg);"], correct: 0, explanation: "Используется функция url(). Кавычки внутри скобок рекомендуются, но не строго обязательны (вариант E тоже сработает, но A — стандарт)."},
-    {q: "120. Как добавить элементу обтекание текстом в CSS?", options: ["float: left;", "position: absolute;", "display: inline-block;", "position: fixed;", "display: flex;"], correct: 0, explanation: "Свойство float (со значениями left или right) изымает элемент из обычного потока по горизонтали, позволяя тексту обтекать его."},
-    {q: "121. Как в HTML задать мета-тег с описанием страницы (для SEO)?", options: ["<meta name=\"description\" content=\"Описание\">", "<meta description=\"Описание\">", "<meta name=\"description\" value=\"Описание\">", "<meta content=\"Описание\">", "<meta name=\"desc\" url=\"Описание\">"], correct: 0, explanation: "Для описания используется атрибут name=\"description\", а сам текст помещается в атрибут content."},
-    {q: "122. Как задать позиционирование относительно окна браузера, чтобы элемент не двигался при прокрутке?", options: ["position: fixed;", "position: absolute;", "position: relative;", "position: static;", "position: sticky;"], correct: 0, explanation: "position: fixed фиксирует элемент относительно области просмотра (viewport). Он остается на месте при скролле."},
-    {q: "123. Как в CSS задать шрифт одновременно для заголовков h1, h2 и h3?", options: ["h1, h2, h3 { font-family: Arial, sans-serif; }", "header { font-family: Arial, sans-serif; }", "h1+h2+h3 { font-family: Arial, sans-serif; }", "h1 h2 h3 { font: Arial, sans-serif; }", "h1-h3 { font-family: Arial; }"], correct: 0, explanation: "Запятая в селекторах CSS позволяет применять одни и те же правила к нескольким элементам сразу (группировка селекторов)."},
-    {q: "124. Как в HTML скрыть вводимые символы (точки/звездочки) для поля пароля?", options: ["<input type=\"password\" name=\"pass\">", "<input type=\"hidden\" name=\"pass\">", "<input type=\"text\" secret=\"true\">", "<input password=\"pass\">", "<input type=\"secure\">"], correct: 0, explanation: "type=\"password\" указывает браузеру маскировать вводимые символы из соображений безопасности."},
-    {q: "125. Как задать цвет фона для всей страницы?", options: ["body { background-color: #FFFFFF; }", "html { bg-color: #FFFFFF; }", "page { background: #FFFFFF; }", "body { color: #FFFFFF; }", "Все { background-color: #FFFFFF; }"], correct: 0, explanation: "Тег <body> содержит весь отображаемый контент страницы, поэтому фон страницы задается через стилизацию body."},
-    {q: "126. Как в CSS сделать фоновое изображение растянутым так, чтобы оно покрывало весь блок без искажения пропорций?", options: ["background-size: cover;", "width: 100%;", "background-size: 100% 100%;", "background-size: contain;", "background-fit: cover;"], correct: 0, explanation: "background-size: cover масштабирует картинку, сохраняя пропорции, чтобы она полностью закрыла блок (даже если часть картинки обрежется)."},
-    {q: "127. Как добавить внешний отступ только сверху элемента?", options: ["margin-top: 10px;", "padding-top: 10px;", "border-top: 10px solid black;", "top: 10px;", "margin: 10px 0 0 0;"], correct: 0, explanation: "margin-top задает внешний отступ сверху. Вариант E тоже верный, но A — самый прямой и читаемый способ."},
-    {q: "128. Как в CSS добавить полосу прокрутки для блока, если контент не помещается?", options: ["overflow: auto;", "scroll: yes;", "overflow: hidden;", "scrollbar: auto;", "display: scroll;"], correct: 0, explanation: "overflow: auto добавляет полосы прокрутки только тогда, когда содержимое выходит за границы блока. overflow: scroll добавляет их всегда."},
-    {q: "129. Из каких базовых тегов строится HTML таблица?", options: ["<table><tr><td>Данные</td></tr></table>", "<table><row><td>Данные</td></row></table>", "<table><column><data>Данные</data></column></table>", "<table grid=\"true\">Данные</table>", "<table><tr><column>Данные</column></tr></table>"], correct: 0, explanation: "<table> — сама таблица, <tr> (table row) — строка таблицы, <td> (table data) — ячейка данных."},
-    {q: "130. Какой тег и атрибут используются для создания гиперссылки?", options: ["<a href=\"page.html\">Ссылка</a>", "<link href=\"page.html\">Ссылка</link>", "<url href=\"page.html\">Ссылка</url>", "<a src=\"page.html\">Ссылка</a>", "<a link=\"page.html\">Ссылка</a>"], correct: 0, explanation: "Тег <a> (anchor) с атрибутом href (hypertext reference) задает адрес перехода."},
-    {q: "131. Как позиционировать элемент абсолютно относительно его ближайшего позиционированного родителя?", options: ["position: absolute;", "position: fixed;", "position: relative;", "position: static;", "position: sticky;"], correct: 0, explanation: "position: absolute ищет ближайшего предка с position, отличным от static. Если такого нет, позиционируется относительно <body>."},
-    {q: "132. Какое свойство меняет цвет текста в CSS?", options: ["color: red;", "font-color: red;", "text-color: red;", "background-color: red;", "font: red;"], correct: 0, explanation: "За цвет текста отвечает свойство color. Свойства font-color не существует."},
-    {q: "133. Как сделать так, чтобы фоновое изображение полностью помещалось в блок, не обрезаясь (сохраняя пропорции)?", options: ["background-size: contain;", "background-size: cover;", "background-size: auto;", "background-size: 100% 100%;", "background-fit: contain;"], correct: 0, explanation: "background-size: contain масштабирует изображение так, чтобы оно целиком поместилось в блок (могут появиться пустые поля)."},
-    {q: "134. Как в HTML добавить поле только для ввода чисел (со стрелочками увеличения/уменьшения)?", options: ["<input type=\"number\">", "<input type=\"text\" pattern=\"[0-9]*\">", "<input type=\"range\">", "<input type=\"digit\">", "<input number=\"true\">"], correct: 0, explanation: "type=\"number\" вызывает числовую клавиатуру на мобильных и добавляет кнопки-стрелки в десктопных браузерах."},
-    {q: "135. Какое свойство задает отступы между элементами внутри Flexbox или Grid контейнера?", options: ["gap: 10px;", "margin: 10px;", "padding: 10px;", "border-spacing: 10px;", "space-between: 10px;"], correct: 0, explanation: "Свойство gap (ранее grid-gap) идеально подходит для задания промежутков между флекс- или грид-элементами без использования margin."},
-    {q: "136. Как ограничить максимальную высоту элемента, чтобы он не растягивался бесконечно?", options: ["max-height: 500px;", "height: 500px;", "min-height: 500px;", "limit-height: 500px;", "height-max: 500px;"], correct: 0, explanation: "max-height не позволяет элементу стать выше указанного значения, даже если контента внутри очень много."},
-    {q: "137. Какой тег используется для встраивания другой веб-страницы (например, карты или видео YouTube) в текущую?", options: ["<iframe src=\"page.html\"></iframe>", "<frame src=\"page.html\"></frame>", "<embed src=\"page.html\"></embed>", "<object src=\"page.html\"></object>", "<window src=\"page.html\"></window>"], correct: 0, explanation: "<iframe> (inline frame) создает встроенный фрейм, в который загружается внешний HTML-документ."},
-    {q: "138. Как в CSS изменить цвет ссылки только при наведении на нее курсора мыши?", options: ["a:hover { color: red; }", "a:active { color: red; }", "a:focus { color: red; }", "a:link { color: red; }", "a:visited { color: red; }"], correct: 0, explanation: "Псевдокласс :hover срабатывает, когда пользователь наводит указатель (курсор) на элемент."},
-    {q: "139. Как в CSS изменить семейство шрифта для текста?", options: ["font-family: Arial, sans-serif;", "font-size: 16px;", "font-style: italic;", "font-weight: bold;", "text-family: Arial;"], correct: 0, explanation: "Свойство font-family определяет приоритетный список шрифтов для элемента."},
-    {q: "140. Как задать размер шрифта равный 16 пикселям?", options: ["font-size: 16px;", "text-size: 16px;", "font: 16px;", "font-size: 16em;", "font-size: 16pt;"], correct: 0, explanation: "Свойство font-size управляет размером текста. Единица 'px' означает пиксели."},
-    {q: "141. Какой атрибут нужно добавить ссылке, чтобы она открывалась в новой вкладке браузера?", options: ["target=\"_blank\"", "target=\"new\"", "open=\"new\"", "target=\"_window\"", "rel=\"new_tab\""], correct: 0, explanation: "Атрибут target=\"_blank\" указывает браузеру открыть ссылку в новом окне или вкладке."},
-    {q: "142. Какой из вариантов записи фона корректен в CSS?", options: ["background: url('image.jpg') no-repeat center;", "background-image: 'image.jpg';", "img-background: url('image.jpg');", "background-src: 'image.jpg';", "Все варианты правильные"], correct: 0, explanation: "Свойство background — это шорткат. В нем можно одновременно указать изображение (url), повторение (no-repeat) и позицию (center)."},
-    {q: "143. Какое поле ввода лучше всего использовать для телефонных номеров на мобильных устройствах?", options: ["<input type=\"tel\">", "<input type=\"text\">", "<input type=\"number\">", "<input type=\"phone\">", "<input type=\"mobile\">"], correct: 0, explanation: "type=\"tel\" вызывает специализированную телефонную клавиатуру на смартфонах (с плюсом, решеткой и звездочкой)."},
-    {q: "144. Как стилизовать элемент, по которому кликнули (в момент удержания кнопки мыши)?", options: [":active { background: red; }", ":hover { background: red; }", ":focus { background: red; }", ":visited { background: red; }", ":clicked { background: red; }"], correct: 0, explanation: "Псевдокласс :active применяется к элементу в момент его активации (например, пока нажата кнопка мыши)."},
-    {q: "145. Как создать поле ввода даты и времени одновременно?", options: ["<input type=\"datetime-local\">", "<input type=\"date-time\">", "<input type=\"datetime\">", "<input type=\"date\" time=\"true\">", "<input type=\"clock\">"], correct: 0, explanation: "В HTML5 type=\"datetime-local\" предоставляет интерфейс выбора как даты, так и конкретного времени (без учета часового пояса)."},
-    {q: "146. Какой CSS селектор выберет все элементы <p> внутри <div>?", options: ["div p { color: red; }", "div + p { color: red; }", "div > p { color: red; }", "div, p { color: red; }", "p div { color: red; }"], correct: 0, explanation: "Селектор потомка (пробел) выбирает все теги <p>, которые находятся внутри <div> на любом уровне вложенности."},
-    {q: "147. Какой HTML тег семантически предназначен для вывода результата вычислений JS?", options: ["<output>", "<div>", "<result>", "<pre>", "<span>"], correct: 0, explanation: "Тег <output> представляет собой область, куда программа или скрипт может вывести результаты вычислений."},
-    {q: "148. Как сделать шапку сайта «прилипающей» к верхнему краю экрана при прокрутке?", options: ["position: sticky; top: 0;", "position: fixed; top: 0;", "position: absolute; top: 0;", "position: static; top: 0;", "Варианты A и B"], correct: 4, explanation: "И sticky, и fixed могут закрепить шапку. Fixed вырывает из потока навсегда, sticky оставляет в потоке до момента достижения отступа (top: 0)."},
-    {q: "149. Какое свойство позволяет сделать ширину элемента равной 100% от ширины видимого окна браузера (viewport)?", options: ["width: 100vw;", "width: 100%;", "width: auto;", "width: max-content;", "width: 100vh;"], correct: 0, explanation: "Единица измерения 'vw' (viewport width) означает процент от ширины окна браузера. 100vw = 100% ширины окна."},
-    {q: "150. Как задать цвет текста, используя формат RGB?", options: ["color: rgb(255, 0, 0);", "color: #FF0000;", "color: rgba(255, 0, 0, 1);", "color: red;", "Варианты A и C"], correct: 4, explanation: "Функции rgb() и rgba() позволяют задавать цвет по долям красного, зеленого и синего (и альфа-канала для прозрачности)."},
-    {q: "151. Как в CSS применить размытие к элементу?", options: ["filter: blur(5px);", "opacity: 0.5;", "backdrop-filter: blur(5px);", "blur: 5px;", "Варианты A и C"], correct: 4, explanation: "filter: blur() размывает сам элемент, а backdrop-filter: blur() размывает фон ПОД элементом (эффект матового стекла)."},
-    {q: "152. Какой тег используется для создания чекбокса (галочки)?", options: ["<input type=\"checkbox\">", "<input type=\"radio\">", "<checkbox>", "<check>", "<input type=\"tick\">"], correct: 0, explanation: "type=\"checkbox\" создает элемент формы, который может находиться в двух состояниях: выбран/не выбран."},
-    {q: "153. Как в CSS сделать так, чтобы текст не переносился на новую строку, а обрезался многоточием?", options: ["white-space: nowrap; overflow: hidden; text-overflow: ellipsis;", "text-wrap: none;", "overflow: ellipsis;", "word-break: keep-all;", "text-overflow: hidden;"], correct: 0, explanation: "Для троеточия нужна связка трех свойств: запрет переноса (nowrap), скрытие вышедшего за рамки (hidden) и само троеточие (ellipsis)."},
-    {q: "154. Какой одинарный тег используется для принудительного переноса строки в HTML?", options: ["<br>", "<hr>", "<newline>", "<break>", "<p>"], correct: 0, explanation: "<br> (line break) прерывает строку текста и переносит продолжение на новую строку."},
-    {q: "155. Какая единица измерения в CSS относительна размера шрифта родительского элемента?", options: ["em", "rem", "px", "vh", "%"], correct: 0, explanation: "1em равен размеру шрифта родителя. А вот 1rem относителен шрифта корневого элемента (html)."},
-    {q: "156. Как создать ссылку, при клике на которую откроется почтовый клиент по умолчанию?", options: ["<a href=\"mailto:test@mail.com\">Написать</a>", "<a href=\"email:test@mail.com\">Написать</a>", "<link href=\"mailto:test@mail.com\">", "<a href=\"send:test@mail.com\">Написать</a>", "<mail href=\"test@mail.com\">"], correct: 0, explanation: "Протокол mailto: в атрибуте href указывает браузеру открыть приложение электронной почты."},
-    {q: "157. Какое свойство обязательно должно присутствовать в псевдоэлементах ::before и ::after?", options: ["content", "display", "position", "width", "background"], correct: 0, explanation: "Без свойства content (даже если оно пустое: content: \"\";) псевдоэлемент не будет отрисован браузером."},
-    {q: "158. Какой псевдокласс выбирает элемент формы, когда он активен (например, в поле мигает курсор)?", options: [":focus", ":active", ":hover", ":selected", ":checked"], correct: 0, explanation: "Псевдокласс :focus применяется к элементу, когда он получает фокус (через клик мышью или навигацию по Tab)."},
-    {q: "159. Как выровнять текст по правому краю?", options: ["text-align: right;", "align: right;", "float: right;", "justify-content: right;", "text-position: right;"], correct: 0, explanation: "Свойство text-align управляет горизонтальным выравниванием текста внутри блочного элемента."},
-    {q: "160. Какая кнопка используется для отправки данных формы на сервер?", options: ["<button type=\"submit\">", "<input type=\"submit\">", "<button type=\"button\">", "Варианты A и B", "Все варианты"], correct: 3, explanation: "Оба варианта отправляют форму. <button> удобнее, так как внутрь можно поместить иконки или другие теги."},
-    {q: "161. В чем разница между display: none и opacity: 0?", options: ["display: none удаляет элемент из потока, opacity: 0 делает прозрачным, но оставляет кликабельным", "Разницы нет", "opacity: 0 удаляет из потока", "display: none можно анимировать, opacity нельзя", "opacity: 0 не скрывает текст"], correct: 0, explanation: "Элемент с opacity: 0 полностью невидим, но продолжает занимать место и реагировать на клики."},
-    {q: "162. Какое свойство CSS отвечает за скругление углов?", options: ["border-radius", "corner-radius", "border-round", "box-radius", "radius"], correct: 0, explanation: "Свойство border-radius позволяет закруглить углы рамок блоков. Значение 50% сделает из квадратного блока круг."},
-    {q: "163. Как подключить внешний CSS файл к HTML документу?", options: ["<link rel=\"stylesheet\" href=\"style.css\">", "<style src=\"style.css\"></style>", "<css href=\"style.css\">", "<script src=\"style.css\">", "<import src=\"style.css\">"], correct: 0, explanation: "Для подключения внешних таблиц стилей используется тег <link> внутри секции <head>."},
-    {q: "164. Как создать плавный переход (анимацию) изменения цвета фона при наведении?", options: ["transition: background-color 0.3s;", "animation: background 0.3s;", "transform: background 0.3s;", "delay: background 0.3s;", "smooth: background-color;"], correct: 0, explanation: "Свойство transition позволяет плавно изменять значения CSS-свойств за указанное время."},
-    {q: "165. Что делает свойство z-index?", options: ["Управляет перекрытием элементов по оси Z", "Задает масштаб элемента", "Увеличивает прозрачность", "Управляет отступами", "Включает аппаратное ускорение"], correct: 0, explanation: "z-index определяет \"высоту\" элемента над плоскостью экрана. Элемент с бОльшим z-index перекрывает элемент с меньшим."},
-    {q: "166. Как вставить CSS стили прямо внутри HTML тега?", options: ["<div style=\"color: red;\">", "<div css=\"color: red;\">", "<div class=\"color: red;\">", "<div font=\"color: red;\">", "<style><div color=\"red\"></style>"], correct: 0, explanation: "Атрибут style позволяет задавать инлайн-стили напрямую конкретному элементу. Это перебивает стили из внешних файлов."},
-    {q: "167. Как убрать маркеры (точки) у списка <ul>?", options: ["list-style-type: none;", "list-type: empty;", "bullet-style: none;", "text-decoration: none;", "margin: 0;"], correct: 0, explanation: "Свойство list-style-type управляет внешним видом маркеров списка. none убирает их полностью."},
-    {q: "168. Идеальный способ отцентрировать один элемент по центру экрана (горизонталь и вертикаль)?", options: ["display: grid; place-items: center;", "display: flex; justify-content: center; align-items: center;", "Оба варианта (A и B) отличные", "margin: auto;", "text-align: center; vertical-align: middle;"], correct: 2, explanation: "Grid (place-items) и Flexbox (justify-content + align-items) — современные и надежные стандарты центрирования элементов."},
-    {q: "169. Какой тег воспроизводит аудио на странице?", options: ["<audio src=\"sound.mp3\" controls>", "<sound src=\"sound.mp3\">", "<music src=\"sound.mp3\">", "<embed src=\"sound.mp3\">", "<play src=\"sound.mp3\">"], correct: 0, explanation: "Тег <audio> используется для встраивания звука. Атрибут controls добавляет плеер (кнопку Play, ползунок громкости)."},
-    {q: "170. Как убрать подчеркивание у ссылок?", options: ["text-decoration: none;", "text-style: normal;", "font-decoration: none;", "underline: none;", "link-style: none;"], correct: 0, explanation: "Свойство text-decoration отвечает за оформление текста (подчеркивание, зачеркивание). none отключает все эффекты."},
-    {q: "171. Что означает селектор * (звездочка) в CSS?", options: ["Выбирает абсолютно все элементы на странице", "Указывает на наличие ошибки", "Выбирает корневой элемент", "Означает \"важное правило\" (!important)", "Выбирает элементы без классов"], correct: 0, explanation: "Универсальный селектор * применяется ко всем элементам документа. Часто используется для обнуления margin/padding."},
-    {q: "172. Как импортировать шрифт в CSS файл с другого сервера (например, Google Fonts)?", options: ["@import url('https://...');", "@font-face { src: url('...'); }", "import 'https://...';", "@include font('https://...');", "Варианты A и B"], correct: 4, explanation: "@import загружает внешний CSS файл со шрифтом. @font-face напрямую подключает файлы шрифта (woff, ttf)."},
-    {q: "173. Какой тег создает нумерованный список (1, 2, 3...)?", options: ["<ol>", "<ul>", "<list>", "<dl>", "<nl>"], correct: 0, explanation: "<ol> расшифровывается как Ordered List (упорядоченный список). Элементы внутри оборачиваются в <li>."},
-    {q: "174. Какое CSS свойство делает курсор в виде \"руки с пальцем\" при наведении?", options: ["cursor: pointer;", "cursor: hand;", "pointer: true;", "mouse: click;", "cursor: link;"], correct: 0, explanation: "cursor: pointer указывает пользователю, что элемент кликабельный (как ссылка)."},
-    {q: "175. Какая разница между margin и padding?", options: ["margin — внешний отступ от границы до соседей, padding — внутренний отступ от контента до границы", "margin — внутренний, padding — внешний", "Это одно и то же", "margin применяется только к тексту", "padding работает только в Flexbox"], correct: 0, explanation: "Это основа блочной модели CSS (Box Model). Padding увеличивает размер самого блока, margin раздвигает соседей."},
-    {q: "176. Как объявить CSS анимацию, чтобы использовать ее в свойстве animation?", options: ["@keyframes", "@animate", "@transition", "@motion", "@timeline"], correct: 0, explanation: "Правило @keyframes задает ключевые кадры анимации (от 0% до 100%), которые затем вызываются свойством animation."},
-    {q: "177. Как убрать рамку, которая появляется вокруг поля ввода (input) при клике по нему?", options: ["outline: none;", "border: none;", "shadow: none;", "focus: none;", "margin: 0;"], correct: 0, explanation: "Эта рамка задается свойством outline (контур фокуса). Однако из соображений доступности (a11y) ее лучше заменять на кастомную стилизацию :focus."},
-    {q: "178. Какое значение display нужно задать, чтобы элементы выстроились в гибкую строку или столбец?", options: ["display: flex;", "display: inline;", "display: block;", "display: grid;", "display: table;"], correct: 0, explanation: "Флексбокс (display: flex) — мощный инструмент для создания одномерных макетов, гибкого распределения пространства и выравнивания."},
-    {q: "179. Какой атрибут изображения содержит текст, который прочитает скринридер или покажет браузер, если картинка не загрузится?", options: ["alt", "title", "description", "src", "caption"], correct: 0, explanation: "Атрибут alt (alternative text) критически важен для SEO и доступности веб-сайтов."},
-    {q: "180. Как задать линейный градиент для фона слева направо (от красного к синему)?", options: ["background: linear-gradient(to right, red, blue);", "background: gradient(red, blue);", "background: to right red blue;", "gradient-linear: red, blue;", "background-color: linear(red, blue);"], correct: 0, explanation: "Функция linear-gradient создает изображение градиента. 'to right' указывает направление вектора."},
-    {q: "181. Как в HTML создать кнопку-переключатель (только один выбор из группы)?", options: ["<input type=\"radio\"> (одинаковый атрибут name)", "<input type=\"checkbox\">", "<input type=\"switch\">", "<select type=\"radio\">", "<radio>"], correct: 0, explanation: "Радио-кнопки (type=\"radio\") объединяются в группу, если у них одинаковое значение атрибута name."},
-    {q: "182. Как добавить тень самому тексту, а не блоку?", options: ["text-shadow: 2px 2px 4px #000;", "box-shadow: 2px 2px 4px #000;", "font-shadow: 2px 2px 4px #000;", "shadow: text 2px 2px;", "text-effect: shadow;"], correct: 0, explanation: "Свойство text-shadow работает аналогично box-shadow, но применяется непосредственно к контурам букв."},
-    {q: "183. Какой атрибут позволяет запретить изменение размера поля <textarea> пользователем?", options: ["В CSS: resize: none;", "В HTML: resize=\"false\"", "В HTML: fixed=\"true\"", "В CSS: size: fixed;", "В CSS: overflow: hidden;"], correct: 0, explanation: "По умолчанию браузеры разрешают растягивать <textarea>. CSS свойство resize со значением none отключает эту возможность."},
-    {q: "184. Как в CSS задать прозрачность цвета фона 50%, не делая прозрачным текст внутри блока?", options: ["background-color: rgba(255,0,0, 0.5);", "opacity: 0.5;", "background-opacity: 0.5;", "color-opacity: 50%;", "filter: alpha(50);"], correct: 0, explanation: "Использование rgba() или hsla() задает прозрачность только для конкретного цвета. Свойство opacity сделает прозрачным весь блок с потомками."},
-    {q: "185. Какое свойство предотвращает выделение текста мышью?", options: ["user-select: none;", "text-select: none;", "pointer-events: none;", "selection: false;", "cursor: default;"], correct: 0, explanation: "Свойство user-select управляет тем, может ли пользователь выделить текст (полезно для кнопок интерфейса)."},
-    {q: "186. Для чего нужен тег <nav>?", options: ["Для разметки блока основной навигации по сайту", "Для вставки видео", "Для создания нижнего колонтитула", "Это замена тега div", "Для создания таблицы"], correct: 0, explanation: "<nav> (navigation) — семантический тег HTML5, указывающий скринридерам и поисковикам, что внутри находятся главные ссылки навигации."},
-    {q: "187. Как в CSS зафиксировать картинку фона, чтобы она не прокручивалась вместе с текстом?", options: ["background-attachment: fixed;", "background-position: fixed;", "background-scroll: none;", "background-repeat: no-repeat;", "position: fixed;"], correct: 0, explanation: "Свойство background-attachment определяет, прокручивается ли фоновое изображение вместе с документом (scroll/local) или оно фиксировано (fixed)."},
-    {q: "188. Какой атрибут делает поле формы обязательным для заполнения?", options: ["required", "mandatory", "validate", "important", "needed"], correct: 0, explanation: "Атрибут required (булев атрибут) не позволит браузеру отправить форму, если это поле пустое."},
-    {q: "189. Как применить стили только если ширина экрана больше или равна 1024px?", options: ["@media (min-width: 1024px)", "@media (max-width: 1024px)", "@media (width > 1024px)", "@screen 1024px", "@media min: 1024px"], correct: 0, explanation: "min-width в медиа-запросе задает условие \"ширина окна браузера минимум 1024 пикселя и больше\" (Mobile-first подход)."},
-    {q: "190. Как скрыть элемент от мыши (чтобы клики проходили сквозь него)?", options: ["pointer-events: none;", "cursor: none;", "click: through;", "z-index: -1;", "opacity: 0;"], correct: 0, explanation: "pointer-events: none отключает реакцию элемента на любые события мыши/касаний (ховеры, клики). Клик передается элементу под ним."},
-    {q: "191. Какой тег семантически правильно использовать для создания шапки сайта?", options: ["<header>", "<head>", "<top>", "<navbar>", "<nav>"], correct: 0, explanation: "<header> — семантический тег HTML5 для вводной части или группы навигационных элементов (шапки страницы или статьи)."},
-    {q: "192. Какое свойство Flexbox выравнивает элементы по побочной (перпендикулярной) оси?", options: ["align-items", "justify-content", "align-content", "flex-direction", "align-self"], correct: 0, explanation: "justify-content выравнивает по главной оси (по умолчанию горизонтальной), а align-items — по побочной (вертикальной)."},
-    {q: "193. Для чего нужен атрибут placeholder у тега <input>?", options: ["Выводит подсказку внутри поля до начала ввода", "Устанавливает значение по умолчанию", "Задает имя поля для сервера", "Валидирует данные", "Скрывает ввод"], correct: 0, explanation: "Placeholder отображает серый текст-подсказку внутри поля, который исчезает, как только пользователь начинает печатать."},
-    {q: "194. Как сделать так, чтобы фоновое изображение не повторялось плиткой?", options: ["background-repeat: no-repeat;", "background-tile: none;", "background-size: once;", "repeat: false;", "background-image: single;"], correct: 0, explanation: "По умолчанию браузер размножает фоновое изображение по горизонтали и вертикали. background-repeat: no-repeat запрещает это."},
-    {q: "195. Какой псевдокласс стилизует первый элемент внутри родителя?", options: [":first-child", ":first", ":nth-child(0)", ":first-element", ":child(1)"], correct: 0, explanation: "Псевдокласс :first-child применяется к элементу, если он является первым дочерним элементом своего родителя."},
-    {q: "196. Какая разница между тегами <strong> и <b>?", options: ["<strong> передает семантическую важность (акцент), <b> просто делает жирным визуально", "Разницы нет", "<b> важнее для SEO", "<strong> устарел в HTML5", "<b> используется только в таблицах"], correct: 0, explanation: "Скринридеры прочитают текст в <strong> с интонационным выделением. <b> не несет смысловой нагрузки, только визуальную."},
-    {q: "197. Как сделать шрифт курсивным в CSS?", options: ["font-style: italic;", "font-weight: italic;", "text-decoration: italic;", "font: italic;", "text-style: italic;"], correct: 0, explanation: "Свойство font-style используется для задания курсивного начертания (italic или oblique)."},
-    {q: "198. Как изменить цвет плейсхолдера (текста-подсказки) в поле ввода?", options: ["input::placeholder { color: red; }", "input:placeholder { color: red; }", "input[placeholder] { color: red; }", "placeholder { color: red; }", "input { placeholder-color: red; }"], correct: 0, explanation: "Для стилизации плейсхолдера используется специальный псевдоэлемент ::placeholder."},
-    {q: "199. Что такое CSS переменные (Custom Properties) и как они объявляются?", options: ["--main-color: red; (внутри селектора, например :root)", "$main-color: red;", "@main-color: red;", "var main-color = red;", "color: var(--main);"], correct: 0, explanation: "CSS переменные начинаются с двух тире (--). Они позволяют переиспользовать значения. Получить значение: var(--main-color)."},
-    {q: "200. Как объединить две ячейки таблицы по горизонтали (в одну строку)?", options: ["<td colspan=\"2\">", "<td rowspan=\"2\">", "<td merge=\"2\">", "<td width=\"2\">", "<td cols=\"2\">"], correct: 0, explanation: "Атрибут colspan (column span) указывает, на сколько столбцов должна растянуться ячейка. rowspan растягивает по вертикали (строкам)."}
-];
+    // Все 100 вопросов с разбиением на категории для умной генерации вариантов
+    const rawQuestions = [
+        { c: "web", q: "Какой тег задаёт заголовок первого уровня?", a: "<h1>" },
+        { c: "web", q: "С какого символа начинается имя переменной в PHP?", a: "$" },
+        { c: "web", q: "Какое ключевое слово объявляет изменяемую переменную с блочной областью видимости?", a: "let" },
+        { c: "web", q: "Какой тег задаёт абзац текста?", a: "<p>" },
+        { c: "web", q: "Как открывается блок PHP-кода?", a: "<?php" },
+        { c: "web", q: "Какое ключевое слово объявляет константу в JavaScript?", a: "const" },
+        { c: "web", q: "За что в первую очередь отвечает CSS?", a: "За внешний вид страницы" },
+        { c: "web", q: "Какие операторы выводят текст в PHP?", a: "echo, print" },
+        { c: "web", q: "Как вывести сообщение в консоль браузера?", a: "console.log()" },
+        { c: "web", q: "Какой тег создаёт гиперссылку?", a: "<a>" },
+        { c: "web", q: "Какой тип данных хранит целые числа?", a: "Number" },
+        { c: "web", q: "Как подключить внешний JS-файл к HTML-странице?", a: '<script src="file.js"></script>' },
+        { c: "web", q: "Какой атрибут тега <a> указывает адрес ссылки?", a: "href" },
+        { c: "web", q: "Какой тип данных хранит значения true/false?", a: "Boolean" },
+        { c: "web", q: "Какое значение в JS обозначает намеренное отсутствие значения?", a: "null" },
+        { c: "web", q: "Какой тег вставляет изображение на страницу?", a: "<img>" },
+        { c: "web", q: "Какой оператор означает «строго равно» (значение и тип)?", a: "===" },
+        { c: "web", q: "Что вернёт typeof \"hello\" в JavaScript?", a: "string" },
+        { c: "web", q: "Какой атрибут тега <img> задаёт альтернативный текст?", a: "alt" },
+        { c: "web", q: "Что делает оператор = в PHP?", a: "Присваивает значение" },
+        { c: "web", q: "Какой оператор означает «строго равно» в JS?", a: "===" },
+        { c: "web", q: "Что обозначает тег <ul>?", a: "Неупорядоченный список" },
+        { c: "web", q: "Какая конструкция выбирает один из нескольких вариантов по значению?", a: "switch" },
+        { c: "web", q: "Как объявить массив в JavaScript?", a: "[]" },
+        { c: "web", q: "Какой тег обозначает отдельный элемент списка?", a: "<li>" },
+        { c: "web", q: "Какой CSS-селектор обращается к элементу по классу?", a: ".class" },
+        { c: "web", q: "Какой цикл удобнее всего, когда число повторений известно заранее?", a: "for" },
+        { c: "web", q: "Как обратиться к первому элементу массива arr?", a: "arr[0]" },
+        { c: "web", q: "Какой CSS-селектор обращается к элементу по идентификатору id?", a: "#id" },
+        { c: "web", q: "Какой цикл специально предназначен для перебора массивов?", a: "for...of" },
+        { c: "web", q: "Какое свойство возвращает количество элементов массива?", a: "length" },
+        { c: "web", q: "Какое свойство CSS задаёт цвет текста?", a: "color" },
+        { c: "web", q: "Как можно объявить массив в PHP?", a: "array() или []" },
+        { c: "web", q: "Какой метод добавляет элемент в конец массива?", a: "push()" },
+        { c: "web", q: "Какое свойство CSS задаёт цвет фона?", a: "background-color" },
+        { c: "web", q: "Как обратиться к первому элементу индексного массива $a?", a: "$a[0]" },
+        { c: "web", q: "Как объявить объект в JavaScript?", a: "let obj = {};" },
+        { c: "web", q: "Какое свойство задаёт внутренний отступ (внутри элемента)?", a: "padding" },
+        { c: "web", q: "Какая функция возвращает количество элементов массива?", a: "count()" },
+        { c: "web", q: "Как обратиться к свойству name объекта obj?", a: "obj.name" },
+        { c: "web", q: "Какое свойство задаёт внешний отступ (вокруг элемента)?", a: "margin" },
+        { c: "web", q: "Как правильно объявляется функция в PHP?", a: "function test(){}" },
+        { c: "web", q: "Что такое DOM?", a: "Объектная модель документа" },
+        { c: "web", q: "Что входит в блочную модель (Box Model)?", a: "content, padding, border, margin" },
+        { c: "web", q: "Какое ключевое слово возвращает значение из функции?", a: "return" },
+        { c: "web", q: "Какой метод находит элемент по его id?", a: "getElementById()" },
+        { c: "web", q: "Какое значение свойства display включает Flexbox?", a: "flex" },
+        { c: "web", q: "Какая функция возвращает длину строки?", a: "strlen()" },
+        { c: "web", q: "Какой метод находит первый элемент по CSS-селектору?", a: "querySelector()" },
+        { c: "web", q: "Какое свойство Flexbox выравнивает элементы по главной оси?", a: "justify-content" },
+        { c: "web", q: "Какое свойство задаёт направление флекс-контейнера?", a: "flex-direction" },
+        { c: "web", q: "Какая функция переводит строку в верхний регистр?", a: "toUpperCase()" },
+        { c: "web", q: "Какое свойство меняет HTML-содержимое элемента?", a: "innerHTML" },
+        { c: "web", q: "Какой атрибут формы задаёт адрес отправки данных?", a: "action" },
+        { c: "web", q: "Каким методом форма передаёт данные скрыто (не через адресную строку)?", a: "POST" },
+        { c: "web", q: "Какой метод создаёт новый элемент в DOM?", a: "createElement()" },
+        { c: "web", q: "Какое свойство задаёт колонки в CSS Grid?", a: "grid-template-columns" },
+        { c: "web", q: "Как получить данные формы, отправленные методом POST?", a: "$_POST" },
+        { c: "web", q: "Какой метод добавляет дочерний элемент в конец родителя?", a: "appendChild()" },
+        { c: "web", q: "Для чего используются медиа-запросы (media queries)?", a: "Для адаптивного дизайна" },
+        { c: "web", q: "Как расшифровывается SQL?", a: "Structured Query Language" },
+        { c: "web", q: "Какой метод назначает обработчик события элементу?", a: "addEventListener()" },
+        { c: "web", q: "С чего начинается медиа-запрос в CSS?", a: "@media" },
+        { c: "web", q: "Какая SQL-команда выбирает (читает) данные?", a: "SELECT" },
+        { c: "web", q: "Какое имя у события щелчка мышью?", a: "click" },
+        { c: "web", q: "Какой тег обозначает «шапку» сайта?", a: "<header>" },
+        { c: "web", q: "Какая SQL-команда добавляет новые данные?", a: "INSERT" },
+        { c: "web", q: "С какого ключевого слова начинается объявление функции в JS?", a: "function" },
+        { c: "web", q: "Какой тег предназначен для блока навигации?", a: "<nav>" },
+        { c: "web", q: "Какая SQL-команда изменяет существующие данные?", a: "UPDATE" },
+        { c: "web", q: "Что делает оператор return в функции?", a: "Возвращает значение" },
+        { c: "web", q: "Какой тег обозначает «подвал» сайта?", a: "<footer>" },
+        { c: "web", q: "Какая SQL-команда удаляет данные из таблицы?", a: "DELETE" },
+        { c: "web", q: "Какой цикл выполняется заранее известное число раз?", a: "for" },
+        { c: "web", q: "Какие расширения PHP используются для работы с MySQL?", a: "mysqli, PDO" },
+        { c: "web", q: "Какое свойство задаёт размер шрифта?", a: "font-size" },
+        { c: "web", q: "Как расшифровывается аббревиатура CRUD?", a: "Create Read Update Delete" },
+        { c: "web", q: "Как записать однострочный комментарий в JavaScript?", a: "//" },
+        { c: "web", q: "Какое свойство задаёт жирность шрифта?", a: "font-weight" },
+        { c: "web", q: "Какой оператор объединяет (склеивает) строки в PHP?", a: "." },
+        { c: "cs", q: "Как создать новую форму в проекте Windows Forms приложения в C#?", a: "Add → Windows Form" },
+        { c: "cs", q: "Как добавить кнопку на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить Button из Toolbox" },
+        { c: "cs", q: "Как связать событие Click кнопки с обработчиком события в коде C#?", a: "Двойной щелчок по кнопке" },
+        { c: "cs", q: "Как изменить текст кнопки программно в коде C#?", a: "button1.Text = \"Текст\";" },
+        { c: "cs", q: "Как добавить текстовое поле (TextBox) на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить TextBox из Toolbox" },
+        { c: "cs", q: "Как установить начальное значение для текстового поля (TextBox) программно в коде C#?", a: "textBox1.Text = \"Текст\";" },
+        { c: "cs", q: "Как добавить элемент выпадающего списка (ComboBox) на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить ComboBox из Toolbox" },
+        { c: "cs", q: "Как заполнить элемент выпадающего списка (ComboBox) данными программно в коде C#?", a: "comboBox1.Items.Add(...)" },
+        { c: "cs", q: "Как установить изображение для элемента PictureBox на форме в C#?", a: "pictureBox1.Image = Image.FromFile(...)" },
+        { c: "cs", q: "Как добавить элемент управления ListBox на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить ListBox из Toolbox" },
+        { c: "cs", q: "Как установить цвет фона для формы в C#?", a: "this.BackColor = Color.Red;" },
+        { c: "cs", q: "Как добавить элемент управления DateTimePicker на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить DateTimePicker из Toolbox" },
+        { c: "cs", q: "Как установить текущую дату и время для элемента DateTimePicker в C#?", a: "dateTimePicker1.Value = DateTime.Now;" },
+        { c: "cs", q: "Как включить режим множественного выбора для элемента управления ListBox в C#?", a: "SelectionMode = MultiExtended" },
+        { c: "cs", q: "Как добавить элемент управления TrackBar на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить TrackBar из Toolbox" },
+        { c: "cs", q: "Как добавить элемент управления RadioButton на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить RadioButton из Toolbox" },
+        { c: "cs", q: "Как установить текст для элемента управления Label в C#?", a: "label1.Text = \"Текст\";" },
+        { c: "cs", q: "Как связать элемент управления CheckBox с переменной в C#?", a: "checkBox1.Checked" },
+        { c: "cs", q: "Как скрыть элемент управления на форме в C#?", a: "Visible = false" },
+        { c: "cs", q: "Как закрыть форму программно в C#?", a: "this.Close();" }
+    ];
 
-class QuizApp {
-    constructor(data) {
-        this.data = data;
-        this.current = 0;
-        this.score = 0;
-        this.userAnswers = new Array(data.length).fill(undefined);
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let selectedOptions = [];
+
+    // Безопасное экранирование HTML тегов для вывода в текст кнопок
+    function escapeHtml(text) {
+        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    // Генерация 5 вариантов (1 правильный + 4 дистрактора)
+    function generateFiveOptions(currentQ) {
+        let optionsSet = new Set();
+        optionsSet.add(currentQ.a);
+
+        // Фильтруем пул ответов из той же категории, чтобы варианты были логичными
+        let sameCategoryPool = rawQuestions.filter(item => item.c === currentQ.c && item.a !== currentQ.a).map(item => item.a);
+        let fallbackPool = rawQuestions.filter(item => item.a !== currentQ.a).map(item => item.a);
+
+        // Перемешиваем пулы
+        sameCategoryPool.sort(() => Math.random() - 0.5);
+        fallbackPool.sort(() => Math.random() - 0.5);
+
+        // Пытаемся заполнить из родной категории
+        for (let ans of sameCategoryPool) {
+            if (optionsSet.size >= 5) break;
+            optionsSet.add(ans);
+        }
+        // Если не набралось 5, берем из общего котла
+        for (let ans of fallbackPool) {
+            if (optionsSet.size >= 5) break;
+            optionsSet.add(ans);
+        }
+
+        let finalOptions = Array.from(optionsSet);
+        return finalOptions.sort(() => Math.random() - 0.5); // окончательный хаотичный заброс
+    }
+
+    function loadQuestion() {
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
         
-        this.els = {
-            screens: document.querySelectorAll('.screen'),
-            qText: document.getElementById('question-text'),
-            optionsGrid: document.getElementById('options-container'),
-            progressBar: document.getElementById('progress-bar'),
-            qCounter: document.getElementById('q-counter'),
-            scoreCounter: document.getElementById('score-counter'),
-            expBox: document.getElementById('explanation-box'),
-            expTitle: document.getElementById('exp-title'),
-            expText: document.getElementById('exp-text'),
-            btnPrev: document.getElementById('btn-prev'),
-            btnNext: document.getElementById('btn-next'),
-            resScore: document.getElementById('res-score'),
-            resPercent: document.getElementById('res-percent')
-        };
-    }
+        if (currentQuestionIndex >= rawQuestions.length) {
+            showResults();
+            return;
+        }
 
-    showScreen(id) {
-        this.els.screens.forEach(s => s.classList.add('hidden'));
-        document.getElementById(id).classList.remove('hidden');
-    }
+        // Обновление интерфейса верхних счетчиков
+        document.getElementById('question-counter').innerText = `Вопрос ${currentQuestionIndex + 1} из ${rawQuestions.length}`;
+        document.getElementById('score-counter').innerText = `Очки: ${score}`;
+        document.getElementById('progress-bar').style.width = `${((currentQuestionIndex) / rawQuestions.length) * 100}%`;
 
-    startTest() {
-        this.current = 0;
-        this.score = 0;
-        this.userAnswers.fill(undefined);
-        this.showScreen('screen-quiz');
-        this.renderQuestion();
-    }
-
-    renderQuestion() {
-        const q = this.data[this.current];
-        const ansIndex = this.userAnswers[this.current];
-        const isAnswered = ansIndex !== undefined;
-
-        // Обновление заголовков и прогресса
-        this.els.qText.innerText = q.q;
-        this.els.qCounter.innerText = `Вопрос ${this.current + 1} из ${this.data.length}`;
-        this.els.scoreCounter.innerText = `Счет: ${this.score}`;
-        this.els.progressBar.style.width = `${((this.current) / this.data.length) * 100}%`;
+        const currentQ = rawQuestions[currentQuestionIndex];
+        document.getElementById('question-text').innerText = `${currentQuestionIndex + 1}. ${currentQ.q}`;
         
-        // Очистка вариантов
-        this.els.optionsGrid.innerHTML = '';
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+        
+        const explanationBox = document.getElementById('explanation');
+        explanationBox.classList.remove('show');
+        document.getElementById('next-button').style.display = 'none';
 
-        q.options.forEach((opt, index) => {
-            const btn = document.createElement('button');
-            btn.className = 'option';
-            btn.innerText = opt;
-            
-            if (isAnswered) {
-                btn.disabled = true; // Блокируем после ответа
-                if (index === q.correct) btn.classList.add('correct');
-                if (index === ansIndex && ansIndex !== q.correct) btn.classList.add('wrong');
-            } else {
-                btn.onclick = () => this.handleAnswer(index);
-            }
-            this.els.optionsGrid.appendChild(btn);
+        // Генерируем опции для текущего вопроса
+        const options = generateFiveOptions(currentQ);
+
+        options.forEach(option => {
+            const button = document.createElement('button');
+            button.className = 'option-btn';
+            button.innerHTML = escapeHtml(option);
+            button.onclick = () => handleAnswerSelect(button, option, currentQ.a);
+            optionsContainer.appendChild(button);
         });
+    }
 
-        // Показ пояснения, если ответ уже дан
-        if (isAnswered) {
-            const isCorrect = ansIndex === q.correct;
-            this.els.expTitle.innerText = isCorrect ? '✅ Верно!' : '❌ Неверно!';
-            this.els.expTitle.style.color = isCorrect ? 'var(--correct-text)' : 'var(--wrong-text)';
-            this.els.expText.innerHTML = `<b>Пояснение:</b> ${q.explanation}`;
-            this.els.expBox.className = `explanation-box ${isCorrect ? 'exp-correct' : 'exp-wrong'}`;
-        } else {
-            this.els.expBox.className = 'explanation-box hidden';
-        }
+    function handleAnswerSelect(selectedBtn, chosenAnswer, correctAnswer) {
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach(btn => btn.disabled = true); // Блокируем клики по остальным кнопкам
 
-        // Логика кнопок навигации
-        this.els.btnPrev.disabled = this.current === 0;
-        this.els.btnNext.disabled = !isAnswered; // Кнопка "Далее" заблокирована, пока не дан ответ
+        const isCorrect = (chosenAnswer === correctAnswer);
         
-        if (this.current === this.data.length - 1) {
-            this.els.btnNext.innerText = 'Завершить тест';
-            this.els.btnNext.classList.add('btn-danger'); // Подсвечиваем кнопку завершения
+        if (isCorrect) {
+            selectedBtn.classList.add('correct');
+            score++;
+            document.getElementById('score-counter').innerText = `Очки: ${score}`;
         } else {
-            this.els.btnNext.innerText = 'Далее →';
-            this.els.btnNext.classList.remove('btn-danger');
+            selectedBtn.classList.add('incorrect');
+            // Подсвечиваем верный вариант, чтобы юзер сразу запоминал
+            buttons.forEach(btn => {
+                if (btn.innerText === correctAnswer || btn.innerHTML === escapeHtml(correctAnswer)) {
+                    btn.classList.add('correct');
+                }
+            });
         }
-    }
 
-    handleAnswer(selectedIndex) {
-        if (this.userAnswers[this.current] !== undefined) return;
+        // Вывод подробного пояснения
+        const explanationBox = document.getElementById('explanation');
+        let techType = rawQuestions[currentQuestionIndex].c === 'web' ? 'Веб-технологии / Архитектура' : 'C# Windows Forms';
         
-        this.userAnswers[this.current] = selectedIndex;
-        if (selectedIndex === this.data[this.current].correct) {
-            this.score++;
-        }
-        
-        this.renderQuestion(); // Перерисовка для показа зеленого/красного цветов и пояснения
-    }
-
-    nextQuestion() {
-        if (this.current < this.data.length - 1) {
-            this.current++;
-            this.renderQuestion();
+        if (isCorrect) {
+            explanationBox.innerHTML = `🟢 <strong>Верно!</strong><br>Конструкция <code>${escapeHtml(correctAnswer)}</code> — это абсолютно точный ответ на данный вопрос в рамках дисциплины "${techType}".`;
         } else {
-            this.endTest();
+            explanationBox.innerHTML = `🔴 <strong>Неверно.</strong><br>Правильный ответ: <code>${escapeHtml(correctAnswer)}</code>.<br>Твой выбор (<code>${escapeHtml(chosenAnswer)}</code>) не решает поставленную в вопросе задачу согласно спецификации "${techType}".`;
         }
+        explanationBox.classList.add('show');
+
+        document.getElementById('next-button').style.display = 'block';
     }
 
-    prevQuestion() {
-        if (this.current > 0) {
-            this.current--;
-            this.renderQuestion();
-        }
+    document.getElementById('next-button').onclick = () => {
+        currentQuestionIndex++;
+        loadQuestion();
+    };
+
+    function showResults() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        const resultsScreen = document.getElementById('results-screen');
+        resultsScreen.style.display = 'block';
+        
+        document.getElementById('final-score').innerText = `${score} / ${rawQuestions.length}`;
+        
+        const percent = (score / rawQuestions.length) * 100;
+        let comment = '';
+        if (percent === 100) comment = 'Идеально! Полное знание всей базы веб-технологий и C#! 🚀';
+        else if (percent >= 85) comment = 'Отличный результат! Большинство модулей пройдены без проблем.🔥';
+        else if (percent >= 50) comment = 'Хорошо, но стоит повторить синтаксис PHP и методы вызова событий в WinForms. 👍';
+        else comment = 'Нужно еще раз внимательно пройтись по ответам. Попробуй заново!';
+        
+        document.getElementById('result-comment').innerText = comment;
     }
 
-    endTest() {
-        // Если завершаем досрочно, считаем процент от всего объема теста
-        const percent = Math.round((this.score / this.data.length) * 100);
-        this.els.resScore.innerText = `${this.score} / ${this.data.length}`;
-        this.els.resPercent.innerText = `${percent}%`;
-        this.showScreen('screen-result');
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        document.getElementById('results-screen').style.display = 'none';
+        document.getElementById('quiz-screen').style.display = 'block';
+        // Перемешаем массив вопросов, чтобы при каждом перезапуске порядок менялся
+        rawQuestions.sort(() => Math.random() - 0.5);
+        loadQuestion();
     }
-}
 
-const app = new QuizApp(quizData);
+    // Первый запуск
+    rawQuestions.sort(() => Math.random() - 0.5);
+    loadQuestion();
 </script>
+
 </body>
 </html>
