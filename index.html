@@ -3,44 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT & WinForms Mega Test</title>
+    <title>C# & JS Hardcore Test (150 вопросов)</title>
     <style>
         :root {
-            --bg-color: #1e1e2e;
-            --card-bg: #252538;
-            --text-color: #cdd6f4;
-            --accent: #89b4fa;
-            --success: #a6e3a1;
-            --error: #f38ba8;
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-color: #c9d1d9;
+            --accent: #58a6ff;
+            --success: #3fb950;
+            --error: #f85149;
             --border-radius: 12px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .container { background-color: var(--card-bg); width: 100%; max-width: 650px; border-radius: var(--border-radius); padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid #313244; }
+        .container { background-color: var(--card-bg); width: 100%; max-width: 700px; border-radius: var(--border-radius); padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid #30363d; }
         
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #313244; padding-bottom: 15px; }
-        .progress-bar-container { width: 100%; background-color: #313244; height: 8px; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #30363d; padding-bottom: 15px; font-weight: 600; color: #8b949e; }
+        .progress-bar-container { width: 100%; background-color: #21262d; height: 8px; border-radius: 4px; margin-bottom: 25px; overflow: hidden; }
         .progress-bar { height: 100%; background-color: var(--accent); width: 0%; transition: width 0.3s ease; }
         
-        .question-box { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+        .question-box { font-size: 1.3rem; font-weight: 600; margin-bottom: 25px; line-height: 1.5; color: #e6edf3; }
         .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
         
-        .option-btn { background-color: #313244; border: 2px solid transparent; border-radius: 8px; padding: 14px; text-align: left; color: var(--text-color); font-size: 1rem; cursor: pointer; transition: all 0.2s ease; display: block; width: 100%; word-break: break-word; }
-        .option-btn:hover:not([disabled]) { background-color: #45475a; border-color: var(--accent); }
+        .option-btn { background-color: #21262d; border: 1px solid #30363d; border-radius: 8px; padding: 15px; text-align: left; color: var(--text-color); font-size: 1rem; cursor: pointer; transition: all 0.2s ease; display: block; width: 100%; word-break: break-word; font-family: Consolas, monospace; }
+        .option-btn:hover:not([disabled]) { background-color: #30363d; border-color: #8b949e; }
         
-        .option-btn.correct { background-color: rgba(166, 227, 161, 0.2) !important; border-color: var(--success) !important; color: var(--success); font-weight: bold; }
-        .option-btn.incorrect { background-color: rgba(243, 139, 168, 0.2) !important; border-color: var(--error) !important; color: var(--error); }
+        .option-btn.correct { background-color: rgba(63, 185, 80, 0.15) !important; border-color: var(--success) !important; color: var(--success); font-weight: bold; }
+        .option-btn.incorrect { background-color: rgba(248, 81, 73, 0.15) !important; border-color: var(--error) !important; color: var(--error); }
         
-        .explanation-box { background-color: #11111b; border-left: 4px solid var(--accent); border-radius: 4px; padding: 15px; margin-bottom: 20px; display: none; line-height: 1.5; }
+        .explanation-box { background-color: #0d1117; border-left: 4px solid var(--accent); border-radius: 6px; padding: 15px; margin-bottom: 20px; display: none; line-height: 1.5; font-size: 0.95rem; }
         .explanation-box.show { display: block; animation: fadeIn 0.4s ease; }
+        .explanation-box code { background: #21262d; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; color: #ff7b72; }
         
-        .next-btn, .restart-btn { background-color: var(--accent); color: #11111b; border: none; padding: 12px 24px; font-size: 1rem; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: opacity 0.2s; }
+        .next-btn, .restart-btn { background-color: var(--success); color: #ffffff; border: none; padding: 14px 24px; font-size: 1.05rem; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; transition: opacity 0.2s; }
         .next-btn:hover, .restart-btn:hover { opacity: 0.9; }
         
         .results-screen { text-align: center; display: none; }
-        .results-screen h2 { color: var(--accent); margin-bottom: 15px; }
-        .score-text { font-size: 2rem; font-weight: bold; margin-bottom: 20px; }
+        .results-screen h2 { color: var(--accent); margin-bottom: 15px; font-size: 2rem; }
+        .score-text { font-size: 3rem; font-weight: bold; margin-bottom: 20px; color: #e6edf3; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -50,183 +51,265 @@
 <div class="container">
     <div id="quiz-screen">
         <div class="header">
-            <span id="question-counter">Вопрос 1 из 100</span>
-            <span id="score-counter">Очки: 0</span>
+            <span id="question-counter">Вопрос 1 / 150</span>
+            <span id="score-counter">Счёт: 0</span>
         </div>
         <div class="progress-bar-container">
             <div id="progress-bar" class="progress-bar"></div>
         </div>
-        <div id="question-text" class="question-box">Загрузка вопроса...</div>
+        <div id="question-text" class="question-box">Загрузка...</div>
         <div id="options-container" class="options-list"></div>
         <div id="explanation" class="explanation-box"></div>
-        <button id="next-button" class="next-btn" style="display: none;">Следующий вопрос</button>
+        <button id="next-button" class="next-btn" style="display: none;">Продолжить</button>
     </div>
 
     <div id="results-screen" class="results-screen">
-        <h2>Тестирование завершено!</h2>
-        <div id="final-score" class="score-text">0 / 100</div>
-        <p id="result-comment" style="margin-bottom: 25px; line-height: 1.6;"></p>
-        <button class="restart-btn" onclick="restartQuiz()">Пройти заново</button>
+        <h2>Итоги тестирования</h2>
+        <div id="final-score" class="score-text">0 / 150</div>
+        <p id="result-comment" style="margin-bottom: 30px; line-height: 1.6; font-size: 1.1rem; color: #8b949e;"></p>
+        <button class="restart-btn" onclick="restartQuiz()">Начать заново</button>
     </div>
 </div>
 
 <script>
-    // Все 100 вопросов с разбиением на категории для умной генерации вариантов
-    const rawQuestions = [
-        { c: "web", q: "Какой тег задаёт заголовок первого уровня?", a: "<h1>" },
-        { c: "web", q: "С какого символа начинается имя переменной в PHP?", a: "$" },
-        { c: "web", q: "Какое ключевое слово объявляет изменяемую переменную с блочной областью видимости?", a: "let" },
-        { c: "web", q: "Какой тег задаёт абзац текста?", a: "<p>" },
-        { c: "web", q: "Как открывается блок PHP-кода?", a: "<?php" },
-        { c: "web", q: "Какое ключевое слово объявляет константу в JavaScript?", a: "const" },
-        { c: "web", q: "За что в первую очередь отвечает CSS?", a: "За внешний вид страницы" },
-        { c: "web", q: "Какие операторы выводят текст в PHP?", a: "echo, print" },
-        { c: "web", q: "Как вывести сообщение в консоль браузера?", a: "console.log()" },
-        { c: "web", q: "Какой тег создаёт гиперссылку?", a: "<a>" },
-        { c: "web", q: "Какой тип данных хранит целые числа?", a: "Number" },
-        { c: "web", q: "Как подключить внешний JS-файл к HTML-странице?", a: '<script src="file.js">' },
-        { c: "web", q: "Какой атрибут тега <a> указывает адрес ссылки?", a: "href" },
-        { c: "web", q: "Какой тип данных хранит значения true/false?", a: "Boolean" },
-        { c: "web", q: "Какое значение в JS обозначает намеренное отсутствие значения?", a: "null" },
-        { c: "web", q: "Какой тег вставляет изображение на страницу?", a: "<img>" },
-        { c: "web", q: "Какой оператор означает «строго равно» (значение и тип)?", a: "===" },
-        { c: "web", q: "Что вернёт typeof \"hello\" в JavaScript?", a: "string" },
-        { c: "web", q: "Какой атрибут тега <img> задаёт альтернативный текст?", a: "alt" },
-        { c: "web", q: "Что делает оператор = в PHP?", a: "Присваивает значение" },
-        { c: "web", q: "Какой оператор означает «строго равно» в JS?", a: "===" },
-        { c: "web", q: "Что обозначает тег <ul>?", a: "Неупорядоченный список" },
-        { c: "web", q: "Какая конструкция выбирает один из нескольких вариантов по значению?", a: "switch" },
-        { c: "web", q: "Как объявить массив в JavaScript?", a: "[]" },
-        { c: "web", q: "Какой тег обозначает отдельный элемент списка?", a: "<li>" },
-        { c: "web", q: "Какой CSS-селектор обращается к элементу по классу?", a: ".class" },
-        { c: "web", q: "Какой цикл удобнее всего, когда число повторений известно заранее?", a: "for" },
-        { c: "web", q: "Как обратиться к первому элементу массива arr?", a: "arr[0]" },
-        { c: "web", q: "Какой CSS-селектор обращается к элементу по идентификатору id?", a: "#id" },
-        { c: "web", q: "Какой цикл специально предназначен для перебора массивов?", a: "for...of" },
-        { c: "web", q: "Какое свойство возвращает количество элементов массива?", a: "length" },
-        { c: "web", q: "Какое свойство CSS задаёт цвет текста?", a: "color" },
-        { c: "web", q: "Как можно объявить массив в PHP?", a: "array() или []" },
-        { c: "web", q: "Какой метод добавляет элемент в конец массива?", a: "push()" },
-        { c: "web", q: "Какое свойство CSS задаёт цвет фона?", a: "background-color" },
-        { c: "web", q: "Как обратиться к первому элементу индексного массива $a?", a: "$a[0]" },
-        { c: "web", q: "Как объявить объект в JavaScript?", a: "let obj = {};" },
-        { c: "web", q: "Какое свойство задаёт внутренний отступ (внутри элемента)?", a: "padding" },
-        { c: "web", q: "Какая функция возвращает количество элементов массива?", a: "count()" },
-        { c: "web", q: "Как обратиться к свойству name объекта obj?", a: "obj.name" },
-        { c: "web", q: "Какое свойство задаёт внешний отступ (вокруг элемента)?", a: "margin" },
-        { c: "web", q: "Как правильно объявляется функция в PHP?", a: "function test(){}" },
-        { c: "web", q: "Что такое DOM?", a: "Объектная модель документа" },
-        { c: "web", q: "Что входит в блочную модель (Box Model)?", a: "content, padding, border, margin" },
-        { c: "web", q: "Какое ключевое слово возвращает значение из функции?", a: "return" },
-        { c: "web", q: "Какой метод находит элемент по его id?", a: "getElementById()" },
-        { c: "web", q: "Какое значение свойства display включает Flexbox?", a: "flex" },
-        { c: "web", q: "Какая функция возвращает длину строки?", a: "strlen()" },
-        { c: "web", q: "Какой метод находит первый элемент по CSS-селектору?", a: "querySelector()" },
-        { c: "web", q: "Какое свойство Flexbox выравнивает элементы по главной оси?", a: "justify-content" },
-        { c: "web", q: "Какое свойство задаёт направление флекс-контейнера?", a: "flex-direction" },
-        { c: "web", q: "Какая функция переводит строку в верхний регистр?", a: "toUpperCase()" },
-        { c: "web", q: "Какое свойство меняет HTML-содержимое элемента?", a: "innerHTML" },
-        { c: "web", q: "Какой атрибут формы задаёт адрес отправки данных?", a: "action" },
-        { c: "web", q: "Каким методом форма передаёт данные скрыто (не через адресную строку)?", a: "POST" },
-        { c: "web", q: "Какой метод создаёт новый элемент в DOM?", a: "createElement()" },
-        { c: "web", q: "Какое свойство задаёт колонки в CSS Grid?", a: "grid-template-columns" },
-        { c: "web", q: "Как получить данные формы, отправленные методом POST?", a: "$_POST" },
-        { c: "web", q: "Какой метод добавляет дочерний элемент в конец родителя?", a: "appendChild()" },
-        { c: "web", q: "Для чего используются медиа-запросы (media queries)?", a: "Для адаптивного дизайна" },
-        { c: "web", q: "Как расшифровывается SQL?", a: "Structured Query Language" },
-        { c: "web", q: "Какой метод назначает обработчик события элементу?", a: "addEventListener()" },
-        { c: "web", q: "С чего начинается медиа-запрос в CSS?", a: "@media" },
-        { c: "web", q: "Какая SQL-команда выбирает (читает) данные?", a: "SELECT" },
-        { c: "web", q: "Какое имя у события щелчка мышью?", a: "click" },
-        { c: "web", q: "Какой тег обозначает «шапку» сайта?", a: "<header>" },
-        { c: "web", q: "Какая SQL-команда добавляет новые данные?", a: "INSERT" },
-        { c: "web", q: "С какого ключевого слова начинается объявление функции в JS?", a: "function" },
-        { c: "web", q: "Какой тег предназначен для блока навигации?", a: "<nav>" },
-        { c: "web", q: "Какая SQL-команда изменяет существующие данные?", a: "UPDATE" },
-        { c: "web", q: "Что делает оператор return в функции?", a: "Возвращает значение" },
-        { c: "web", q: "Какой тег обозначает «подвал» сайта?", a: "<footer>" },
-        { c: "web", q: "Какая SQL-команда удаляет данные из таблицы?", a: "DELETE" },
-        { c: "web", q: "Какой цикл выполняется заранее известное число раз?", a: "for" },
-        { c: "web", q: "Какие расширения PHP используются для работы с MySQL?", a: "mysqli, PDO" },
-        { c: "web", q: "Какое свойство задаёт размер шрифта?", a: "font-size" },
-        { c: "web", q: "Как расшифровывается аббревиатура CRUD?", a: "Create Read Update Delete" },
-        { c: "web", q: "Как записать однострочный комментарий в JavaScript?", a: "//" },
-        { c: "web", q: "Какое свойство задаёт жирность шрифта?", a: "font-weight" },
-        { c: "web", q: "Какой оператор объединяет (склеивает) строки в PHP?", a: "." },
-        { c: "cs", q: "Как создать новую форму в проекте Windows Forms приложения в C#?", a: "Add → Windows Form" },
-        { c: "cs", q: "Как добавить кнопку на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить Button из Toolbox" },
-        { c: "cs", q: "Как связать событие Click кнопки с обработчиком события в коде C#?", a: "Двойной щелчок по кнопке" },
-        { c: "cs", q: "Как изменить текст кнопки программно в коде C#?", a: "button1.Text = \"Текст\";" },
-        { c: "cs", q: "Как добавить текстовое поле (TextBox) на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить TextBox из Toolbox" },
-        { c: "cs", q: "Как установить начальное значение для текстового поля (TextBox) программно в коде C#?", a: "textBox1.Text = \"Текст\";" },
-        { c: "cs", q: "Как добавить элемент выпадающего списка (ComboBox) на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить ComboBox из Toolbox" },
-        { c: "cs", q: "Как заполнить элемент выпадающего списка (ComboBox) данными программно в коде C#?", a: "comboBox1.Items.Add(...)" },
-        { c: "cs", q: "Как установить изображение для элемента PictureBox на форме в C#?", a: "pictureBox1.Image = Image.FromFile(...)" },
-        { c: "cs", q: "Как добавить элемент управления ListBox на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить ListBox из Toolbox" },
-        { c: "cs", q: "Как установить цвет фона для формы в C#?", a: "this.BackColor = Color.Red;" },
-        { c: "cs", q: "Как добавить элемент управления DateTimePicker на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить DateTimePicker из Toolbox" },
-        { c: "cs", q: "Как установить текущую дату и время для элемента DateTimePicker в C#?", a: "dateTimePicker1.Value = DateTime.Now;" },
-        { c: "cs", q: "Как включить режим множественного выбора для элемента управления ListBox в C#?", a: "SelectionMode = MultiExtended" },
-        { c: "cs", q: "Как добавить элемент управления TrackBar на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить TrackBar из Toolbox" },
-        { c: "cs", q: "Как добавить элемент управления RadioButton на форму в Windows Forms приложении во время проектирования интерфейса?", a: "Перетащить RadioButton из Toolbox" },
-        { c: "cs", q: "Как установить текст для элемента управления Label в C#?", a: "label1.Text = \"Текст\";" },
-        { c: "cs", q: "Как связать элемент управления CheckBox с переменной в C#?", a: "checkBox1.Checked" },
-        { c: "cs", q: "Как скрыть элемент управления на форме в C#?", a: "Visible = false" },
-        { c: "cs", q: "Как закрыть форму программно в C#?", a: "this.Close();" }
+    const questionsDB = [
+        // === JS: DOM ===
+        { c: "js-dom", q: "Как найти HTML-элемент по его ID в JS?", a: "document.getElementById()" },
+        { c: "js-dom", q: "Какой метод находит первый элемент, соответствующий CSS-селектору?", a: "document.querySelector()" },
+        { c: "js-dom", q: "Какой метод возвращает NodeList всех элементов по CSS-селектору?", a: "document.querySelectorAll()" },
+        { c: "js-dom", q: "Какое свойство изменяет HTML-содержимое элемента вместе с тегами?", a: "innerHTML" },
+        { c: "js-dom", q: "Какое свойство безопасно изменяет только текстовое содержимое узла?", a: "textContent" },
+        { c: "js-dom", q: "Какой метод создает новый HTML-элемент в памяти?", a: "document.createElement()" },
+        { c: "js-dom", q: "Какой метод добавляет узел в конец списка дочерних элементов родителя?", a: "appendChild()" },
+        { c: "js-dom", q: "Как удалить дочерний элемент у родительского узла?", a: "removeChild()" },
+        { c: "js-dom", q: "Какое свойство хранит ссылку на родительский узел элемента?", a: "parentNode" },
+        { c: "js-dom", q: "Какое свойство указывает на следующий элемент на том же уровне вложенности?", a: "nextElementSibling" },
+        { c: "js-dom", q: "Какой метод добавляет новый CSS-класс элементу?", a: "classList.add()" },
+        { c: "js-dom", q: "Какой метод переключает класс (добавляет если нет, удаляет если есть)?", a: "classList.toggle()" },
+        { c: "js-dom", q: "Как получить значение указанного атрибута HTML-тега?", a: "getAttribute()" },
+        { c: "js-dom", q: "Как установить новое значение атрибуту элемента?", a: "setAttribute()" },
+        { c: "js-dom", q: "Через какое свойство объекта можно изменять инлайн-стили элемента?", a: "element.style" },
+
+        // === JS: События ===
+        { c: "js-events", q: "Как назначить слушатель события на элемент?", a: "addEventListener()" },
+        { c: "js-events", q: "Как удалить ранее добавленный слушатель события?", a: "removeEventListener()" },
+        { c: "js-events", q: "Какой метод отменяет стандартное поведение браузера (например, переход по ссылке)?", a: "event.preventDefault()" },
+        { c: "js-events", q: "Какой метод останавливает всплытие события к родительским элементам?", a: "event.stopPropagation()" },
+        { c: "js-events", q: "Какое свойство объекта события указывает на элемент, который инициировал событие?", a: "event.target" },
+        { c: "js-events", q: "Как называется событие клика мышью?", a: "\"click\"" },
+        { c: "js-events", q: "Какое событие срабатывает при отправке формы?", a: "\"submit\"" },
+        { c: "js-events", q: "Какое событие происходит, когда курсор мыши наводится на элемент?", a: "\"mouseover\"" },
+        { c: "js-events", q: "Какое событие происходит, когда курсор мыши покидает пределы элемента?", a: "\"mouseout\"" },
+        { c: "js-events", q: "Какое событие срабатывает при нажатии клавиши на клавиатуре?", a: "\"keydown\"" },
+        { c: "js-events", q: "Какое событие срабатывает при отпускании клавиши?", a: "\"keyup\"" },
+        { c: "js-events", q: "Какое событие окна срабатывает, когда весь HTML загружен и DOM построен?", a: "\"DOMContentLoaded\"" },
+        { c: "js-events", q: "Какое событие мгновенно реагирует на каждый ввод символа в текстовое поле?", a: "\"input\"" },
+        { c: "js-events", q: "Какое событие срабатывает при потере элементом фокуса?", a: "\"blur\"" },
+        { c: "js-events", q: "Какое событие срабатывает при получении элементом фокуса (например, клик по input)?", a: "\"focus\"" },
+
+        // === JS: Массивы ===
+        { c: "js-arrays", q: "Какой метод добавляет элементы в конец массива и возвращает новую длину?", a: "push()" },
+        { c: "js-arrays", q: "Какой метод удаляет последний элемент массива и возвращает его?", a: "pop()" },
+        { c: "js-arrays", q: "Какой метод удаляет первый элемент массива, сдвигая остальные?", a: "shift()" },
+        { c: "js-arrays", q: "Какой метод добавляет элементы в начало массива?", a: "unshift()" },
+        { c: "js-arrays", q: "Какой метод создает новый массив, применяя коллбэк к каждому элементу?", a: "map()" },
+        { c: "js-arrays", q: "Какой метод создает массив только из тех элементов, которые прошли проверку условия?", a: "filter()" },
+        { c: "js-arrays", q: "Какой метод аккумулирует значения массива в одно итоговое значение?", a: "reduce()" },
+        { c: "js-arrays", q: "Какой метод выполняет указанную функцию для каждого элемента, ничего не возвращая?", a: "forEach()" },
+        { c: "js-arrays", q: "Какой метод возвращает копию части массива, не изменяя оригинал?", a: "slice()" },
+        { c: "js-arrays", q: "Какой метод может удалять, заменять и добавлять элементы прямо в оригинальный массив?", a: "splice()" },
+        { c: "js-arrays", q: "Какой метод ищет элемент в массиве и возвращает его индекс (или -1)?", a: "indexOf()" },
+        { c: "js-arrays", q: "Какой метод возвращает true, если массив содержит указанный элемент?", a: "includes()" },
+        { c: "js-arrays", q: "Какой метод объединяет все элементы массива в одну строку?", a: "join()" },
+        { c: "js-arrays", q: "Какой метод объединяет два или более массивов в один новый?", a: "concat()" },
+        { c: "js-arrays", q: "Какое свойство возвращает количество элементов в массиве JS?", a: "length" },
+
+        // === JS: Циклы и Условия ===
+        { c: "js-loops", q: "Какой цикл лучше всего подходит, когда число итераций известно заранее?", a: "for" },
+        { c: "js-loops", q: "Какой цикл выполняется, пока заданное условие истинно (проверка до итерации)?", a: "while" },
+        { c: "js-loops", q: "Какой цикл гарантированно выполнит тело хотя бы один раз?", a: "do...while" },
+        { c: "js-loops", q: "Какой цикл перебирает перечисляемые свойства (ключи) объекта?", a: "for...in" },
+        { c: "js-loops", q: "Какой цикл перебирает значения итерируемых объектов (массивы, строки)?", a: "for...of" },
+        { c: "js-loops", q: "Какой оператор немедленно прерывает выполнение всего цикла?", a: "break" },
+        { c: "js-loops", q: "Какой оператор прерывает текущую итерацию и переходит к следующей?", a: "continue" },
+        { c: "js-loops", q: "Как выглядит условие классического бесконечного цикла while?", a: "while(true)" },
+        { c: "js-loops", q: "Как обратиться к текущему элементу массива arr в цикле for со счетчиком i?", a: "arr[i]" },
+        { c: "js-loops", q: "В конструкции for(let i = 0; i < 5; i++) что выполнится только один раз в самом начале?", a: "let i = 0" },
+        { c: "js-loops", q: "Конструкция switch работает на основе строгого (===) или нестрогого (==) сравнения?", a: "Строгого (===)" },
+        { c: "js-loops", q: "Какой блок выполнится в switch, если ни один case не совпал?", a: "default" },
+        { c: "js-loops", q: "Что произойдет, если в блоке case забыть написать break?", a: "Код 'провалится' в следующий case" },
+        { c: "js-loops", q: "Как записать тернарный оператор?", a: "условие ? выражение1 : выражение2" },
+        { c: "js-loops", q: "Какой оператор объединения с null возвращает правый операнд только если левый null или undefined?", a: "??" },
+
+        // === JS: Функции и Объекты ===
+        { c: "js-functions", q: "Как называется функция, объявленная через '() => {}'?", a: "Стрелочная функция (Arrow function)" },
+        { c: "js-functions", q: "Какое ключевое слово объявляет переменную с функциональной (или глобальной) областью видимости?", a: "var" },
+        { c: "js-functions", q: "Что возвращает функция, если в ней нет инструкции return?", a: "undefined" },
+        { c: "js-functions", q: "Какое слово используется для преобразования JS-объекта в строку JSON?", a: "JSON.stringify()" },
+        { c: "js-functions", q: "Как преобразовать строку JSON обратно в объект JS?", a: "JSON.parse()" },
+        { c: "js-functions", q: "Какая функция откладывает выполнение кода на заданное время (в миллисекундах)?", a: "setTimeout()" },
+        { c: "js-functions", q: "Какая функция циклично вызывает код через равные промежутки времени?", a: "setInterval()" },
+        { c: "js-functions", q: "Каким методом можно остановить таймер setInterval?", a: "clearInterval()" },
+        { c: "js-functions", q: "Какая структура данных используется для работы с асинхронными операциями, ожидая их завершения или ошибки?", a: "Promise" },
+        { c: "js-functions", q: "Какое ключевое слово заставляет асинхронную функцию дождаться выполнения Promise?", a: "await" },
+        { c: "js-functions", q: "На что ссылается 'this' в стрелочной функции?", a: "На лексический контекст (где была создана)" },
+        { c: "js-functions", q: "Как называется способность функции запоминать область видимости, в которой она была создана?", a: "Замыкание (Closure)" },
+        { c: "js-functions", q: "Какой оператор позволяет собрать оставшиеся аргументы функции в массив (...args)?", a: "Rest-оператор" },
+        { c: "js-functions", q: "Какой оператор позволяет 'развернуть' элементы массива в аргументы (...arr)?", a: "Spread-оператор" },
+        { c: "js-functions", q: "Какой метод принудительно привязывает контекст this к функции, не вызывая её?", a: "bind()" },
+
+        // === C#: Массивы ===
+        { c: "cs-arrays", q: "Как объявить целочисленный массив из 5 элементов в C#?", a: "int[] arr = new int[5];" },
+        { c: "cs-arrays", q: "Какое свойство массива в C# возвращает общее количество его элементов?", a: "Length" },
+        { c: "cs-arrays", q: "Как отсортировать массив arr по возрастанию с помощью встроенного класса Array?", a: "Array.Sort(arr);" },
+        { c: "cs-arrays", q: "Как изменить порядок элементов в массиве arr на обратный?", a: "Array.Reverse(arr);" },
+        { c: "cs-arrays", q: "Какой синтаксис объявляет двумерный (прямоугольный) массив в C#?", a: "int[,] arr" },
+        { c: "cs-arrays", q: "Какой синтаксис объявляет зубчатый (jagged) массив (массив массивов)?", a: "int[][] arr" },
+        { c: "cs-arrays", q: "Можно ли изменить размер обычного массива после его создания в C#?", a: "Нет, их размер фиксирован" },
+        { c: "cs-arrays", q: "Какой метод используется для очистки (сброса в дефолт) элементов массива?", a: "Array.Clear()" },
+        { c: "cs-arrays", q: "Какой метод копирует элементы из одного массива в другой?", a: "Array.Copy()" },
+        { c: "cs-arrays", q: "Как найти индекс первого вхождения элемента в массиве?", a: "Array.IndexOf()" },
+        { c: "cs-arrays", q: "Какой метод позволяет изменить размер существующего массива (путем создания нового)?", a: "Array.Resize()" },
+        { c: "cs-arrays", q: "Какой тип коллекции в C# лучше использовать вместо массива, если размер должен меняться динамически?", a: "List<T>" },
+        { c: "cs-arrays", q: "Как инициализировать массив значениями при создании?", a: "int[] arr = { 1, 2, 3 };" },
+        { c: "cs-arrays", q: "Что будет лежать в массиве bool[] arr = new bool[3]; по умолчанию?", a: "false" },
+        { c: "cs-arrays", q: "Что будет лежать в массиве объектов (например, string[]) по умолчанию?", a: "null" },
+
+        // === C#: Динамические Коллекции ===
+        { c: "cs-lists", q: "Как добавить элемент в конец List<T> в C#?", a: "Add()" },
+        { c: "cs-lists", q: "Как вставить элемент в List<T> по определенному индексу?", a: "Insert()" },
+        { c: "cs-lists", q: "Какое свойство у List<T> возвращает текущее количество элементов?", a: "Count" },
+        { c: "cs-lists", q: "Какой метод удаляет первое вхождение конкретного объекта из List<T>?", a: "Remove()" },
+        { c: "cs-lists", q: "Какой метод удаляет элемент из List<T> по указанному индексу?", a: "RemoveAt()" },
+        { c: "cs-lists", q: "Как полностью очистить List<T> от элементов?", a: "Clear()" },
+        { c: "cs-lists", q: "Какой метод проверяет, содержится ли элемент в List<T>?", a: "Contains()" },
+        { c: "cs-lists", q: "Как преобразовать коллекцию List<T> в обычный массив?", a: "ToArray()" },
+        { c: "cs-lists", q: "Какое пространство имен необходимо подключить для использования List<T>?", a: "System.Collections.Generic" },
+        { c: "cs-lists", q: "Какой метод добавляет в List<T> сразу несколько элементов (другую коллекцию)?", a: "AddRange()" },
+        { c: "cs-lists", q: "Коллекция Dictionary<TKey, TValue> хранит данные в виде...", a: "Ключ-Значение (Key-Value)" },
+        { c: "cs-lists", q: "Коллекция Queue<T> работает по принципу...", a: "FIFO (Первым пришел - первым ушел)" },
+        { c: "cs-lists", q: "Коллекция Stack<T> работает по принципу...", a: "LIFO (Последним пришел - первым ушел)" },
+        { c: "cs-lists", q: "Какой метод извлекает элемент из начала Queue<T>?", a: "Dequeue()" },
+        { c: "cs-lists", q: "Какой метод кладет элемент на вершину Stack<T>?", a: "Push()" },
+
+        // === C#: Циклы ===
+        { c: "cs-loops", q: "Какой цикл в C# идеально подходит для перебора элементов List и массивов без использования индексов?", a: "foreach" },
+        { c: "cs-loops", q: "Можно ли изменять элементы коллекции (добавлять/удалять) внутри цикла foreach по этой же коллекции?", a: "Нет, вызовет InvalidOperationException" },
+        { c: "cs-loops", q: "Как выглядит синтаксис бесконечного цикл for в C#?", a: "for(;;)" },
+        { c: "cs-loops", q: "Если в цикле while(условие) условие изначально false, сколько раз выполнится тело?", a: "0 раз" },
+        { c: "cs-loops", q: "Что делает оператор continue в C#?", a: "Перепрыгивает к следующей итерации цикла" },
+        { c: "cs-loops", q: "Что делает оператор break в C#?", a: "Полностью выходит из текущего цикла" },
+        { c: "cs-loops", q: "Где проверяется условие в цикле do...while?", a: "В конце (после выполнения тела)" },
+        { c: "cs-loops", q: "Какой тип переменной обычно используется в foreach для работы с коллекцией `List<string>`?", a: "string" },
+        { c: "cs-loops", q: "Может ли цикл for иметь несколько счетчиков (например, `for(int i=0, j=10; ...)` )?", a: "Да, через запятую" },
+        { c: "cs-loops", q: "Какое ключевое слово можно использовать в foreach вместо явного указания типа переменной?", a: "var" },
+        { c: "cs-loops", q: "Какой цикл чаще всего используется для чтения данных из потоков до конца?", a: "while (reader.Read())" },
+        { c: "cs-loops", q: "Доступна ли переменная счетчика `int i`, объявленная внутри `for(...)`, после завершения этого цикла?", a: "Нет, она уничтожается" },
+        { c: "cs-loops", q: "Выполнится ли блок finally, если внутри цикла в блоке try сработал break?", a: "Да, finally выполняется всегда" },
+        { c: "cs-loops", q: "Какой оператор передает управление на указанную метку (label), обходя циклы?", a: "goto" },
+        { c: "cs-loops", q: "Как выйти сразу из двух вложенных циклов при наступлении условия в C#?", a: "Использовать return или goto метка" },
+
+        // === C#: Делегаты и События ===
+        { c: "cs-events", q: "Какое ключевое слово используется для объявления безопасного указателя на метод в C#?", a: "delegate" },
+        { c: "cs-events", q: "Какое ключевое слово создает событие на основе делегата?", a: "event" },
+        { c: "cs-events", q: "Какой оператор используется для подписки на событие (добавления обработчика)?", a: "+=" },
+        { c: "cs-events", q: "Какой оператор используется для отписки от события?", a: "-=" },
+        { c: "cs-events", q: "Стандартный встроенный делегат, который ничего не возвращает (void), называется...", a: "Action" },
+        { c: "cs-events", q: "Стандартный встроенный делегат, который всегда возвращает значение, называется...", a: "Func" },
+        { c: "cs-events", q: "Стандартный делегат, возвращающий bool (обычно для проверки условий), называется...", a: "Predicate" },
+        { c: "cs-events", q: "Какой метод используется для безопасного вызова события (генерации) в современном C#?", a: "Invoke()" },
+        { c: "cs-events", q: "Как называется паттерн, когда в обработчик события передается `(object sender, EventArgs e)`?", a: "Стандартная модель событий .NET" },
+        { c: "cs-events", q: "Что хранит параметр `sender` в обработчике события WinForms?", a: "Ссылку на элемент управления, вызвавший событие" },
+        { c: "cs-events", q: "Какое событие WinForms формы срабатывает при ее первом запуске?", a: "Load" },
+        { c: "cs-events", q: "Какое событие у TextBox срабатывает при каждом изменении текста пользователем?", a: "TextChanged" },
+        { c: "cs-events", q: "Какое событие формы возникает перед ее закрытием и позволяет отменить это действие?", a: "FormClosing" },
+        { c: "cs-events", q: "Как проверить, подписан ли кто-то на событие перед вызовом (старый синтаксис)?", a: "if (MyEvent != null)" },
+        { c: "cs-events", q: "Как называется анонимная функция в C#, передаваемая в методы (`x => x > 5`)?", a: "Лямбда-выражение (Lambda)" },
+
+        // === C#: ООП и Базовый синтаксис ===
+        { c: "cs-oop", q: "Какое ключевое слово описывает шаблон создания объектов?", a: "class" },
+        { c: "cs-oop", q: "Какое ключевое слово запрещает наследование от класса?", a: "sealed" },
+        { c: "cs-oop", q: "Какой модификатор доступа делает член класса доступным только внутри этого класса?", a: "private" },
+        { c: "cs-oop", q: "Какой модификатор делает член класса доступным в наследниках, но скрытым для остальных?", a: "protected" },
+        { c: "cs-oop", q: "Какое слово используется для создания объекта (экземпляра) класса?", a: "new" },
+        { c: "cs-oop", q: "Как называется метод, имя которого совпадает с именем класса (вызывается при new)?", a: "Конструктор" },
+        { c: "cs-oop", q: "Какое ключевое слово указывает, что метод можно переопределить в дочернем классе?", a: "virtual" },
+        { c: "cs-oop", q: "Какое ключевое слово используется для переопределения виртуального метода?", a: "override" },
+        { c: "cs-oop", q: "Конструкция, позволяющая читать и записывать поля с логикой (имеет get и set)?", a: "Свойство (Property)" },
+        { c: "cs-oop", q: "Какое ключевое слово позволяет обратиться к методам родительского класса?", a: "base" },
+        { c: "cs-oop", q: "Какое ключевое слово ссылается на текущий экземпляр класса?", a: "this" },
+        { c: "cs-oop", q: "Что такое интерфейс (interface) в C#?", a: "Контракт без реализации, описывающий методы для классов" },
+        { c: "cs-oop", q: "Модификатор, делающий поле/метод общим для всего класса, а не для экземпляра?", a: "static" },
+        { c: "cs-oop", q: "Какое расширение C# позволяет делать выборки из коллекций наподобие SQL-запросов?", a: "LINQ" },
+        { c: "cs-oop", q: "Какой метод LINQ отбирает элементы по условию (аналог WHERE в SQL)?", a: "Where()" }
     ];
 
     let currentQuestionIndex = 0;
     let score = 0;
-    let selectedOptions = [];
+    let activeQuestions = [];
 
-    // Безопасное экранирование HTML тегов для вывода в текст кнопок
+    // Безопасный эскейпинг для вывода кода
     function escapeHtml(text) {
-        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
 
-    // Генерация 5 вариантов (1 правильный + 4 дистрактора)
+    // ИДЕАЛЬНЫЙ АЛГОРИТМ ПЕРЕМЕШИВАНИЯ (Fisher-Yates Shuffle)
+    // Гарантирует абсолютный рандом без предсказуемых паттернов
+    function shuffleArray(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
+    // Генерация 5 вариантов (1 правильный + 4 дистрактора) с идеальным перемешиванием
     function generateFiveOptions(currentQ) {
         let optionsSet = new Set();
         optionsSet.add(currentQ.a);
 
-        // Фильтруем пул ответов из той же категории, чтобы варианты были логичными
-        let sameCategoryPool = rawQuestions.filter(item => item.c === currentQ.c && item.a !== currentQ.a).map(item => item.a);
-        let fallbackPool = rawQuestions.filter(item => item.a !== currentQ.a).map(item => item.a);
+        // Собираем дистракторы из той же категории
+        let sameCategoryPool = questionsDB
+            .filter(item => item.c === currentQ.c && item.a !== currentQ.a)
+            .map(item => item.a);
+            
+        // Если не хватит из одной категории, берем запасной пул
+        let fallbackPool = questionsDB
+            .filter(item => item.a !== currentQ.a)
+            .map(item => item.a);
 
-        // Перемешиваем пулы
-        sameCategoryPool.sort(() => Math.random() - 0.5);
-        fallbackPool.sort(() => Math.random() - 0.5);
+        // Перемешиваем пулы перед выборкой
+        sameCategoryPool = shuffleArray(sameCategoryPool);
+        fallbackPool = shuffleArray(fallbackPool);
 
-        // Пытаемся заполнить из родной категории
         for (let ans of sameCategoryPool) {
             if (optionsSet.size >= 5) break;
             optionsSet.add(ans);
         }
-        // Если не набралось 5, берем из общего котла
         for (let ans of fallbackPool) {
             if (optionsSet.size >= 5) break;
             optionsSet.add(ans);
         }
 
-        let finalOptions = Array.from(optionsSet);
-        return finalOptions.sort(() => Math.random() - 0.5); // окончательный хаотичный заброс
+        // Превращаем Set в массив и еще раз пропускаем через Fisher-Yates, 
+        // чтобы правильный ответ всегда прыгал по разным местам
+        return shuffleArray(Array.from(optionsSet));
     }
 
     function loadQuestion() {
-        const quizScreen = document.getElementById('quiz-screen');
-        const resultsScreen = document.getElementById('results-screen');
-        
-        if (currentQuestionIndex >= rawQuestions.length) {
+        if (currentQuestionIndex >= activeQuestions.length) {
             showResults();
             return;
         }
 
-        // Обновление интерфейса верхних счетчиков
-        document.getElementById('question-counter').innerText = `Вопрос ${currentQuestionIndex + 1} из ${rawQuestions.length}`;
-        document.getElementById('score-counter').innerText = `Очки: ${score}`;
-        document.getElementById('progress-bar').style.width = `${((currentQuestionIndex) / rawQuestions.length) * 100}%`;
+        const currentQ = activeQuestions[currentQuestionIndex];
+        
+        document.getElementById('question-counter').innerText = `Вопрос ${currentQuestionIndex + 1} / ${activeQuestions.length}`;
+        document.getElementById('score-counter').innerText = `Счёт: ${score}`;
+        document.getElementById('progress-bar').style.width = `${((currentQuestionIndex) / activeQuestions.length) * 100}%`;
 
-        const currentQ = rawQuestions[currentQuestionIndex];
         document.getElementById('question-text').innerText = `${currentQuestionIndex + 1}. ${currentQ.q}`;
         
         const optionsContainer = document.getElementById('options-container');
@@ -236,50 +319,56 @@
         explanationBox.classList.remove('show');
         document.getElementById('next-button').style.display = 'none';
 
-        // Генерируем опции для текущего вопроса
+        // Получаем идеально перемешанные варианты ответов
         const options = generateFiveOptions(currentQ);
 
         options.forEach(option => {
             const button = document.createElement('button');
             button.className = 'option-btn';
             button.innerHTML = escapeHtml(option);
-            button.onclick = () => handleAnswerSelect(button, option, currentQ.a);
+            button.onclick = () => handleAnswerSelect(button, option, currentQ.a, currentQ.c);
             optionsContainer.appendChild(button);
         });
     }
 
-    function handleAnswerSelect(selectedBtn, chosenAnswer, correctAnswer) {
+    function getTechName(category) {
+        if (category.startsWith('js')) return "JavaScript";
+        if (category.startsWith('cs')) return "C# / .NET";
+        return "Программирование";
+    }
+
+    function handleAnswerSelect(selectedBtn, chosenAnswer, correctAnswer, category) {
         const buttons = document.querySelectorAll('.option-btn');
-        buttons.forEach(btn => btn.disabled = true); // Блокируем клики по остальным кнопкам
+        buttons.forEach(btn => btn.disabled = true); 
 
         const isCorrect = (chosenAnswer === correctAnswer);
         
         if (isCorrect) {
             selectedBtn.classList.add('correct');
             score++;
-            document.getElementById('score-counter').innerText = `Очки: ${score}`;
+            document.getElementById('score-counter').innerText = `Счёт: ${score}`;
         } else {
             selectedBtn.classList.add('incorrect');
-            // Подсвечиваем верный вариант, чтобы юзер сразу запоминал
             buttons.forEach(btn => {
-                if (btn.innerText === correctAnswer || btn.innerHTML === escapeHtml(correctAnswer)) {
+                if (btn.innerHTML === escapeHtml(correctAnswer) || btn.innerText === correctAnswer) {
                     btn.classList.add('correct');
                 }
             });
         }
 
-        // Вывод подробного пояснения
         const explanationBox = document.getElementById('explanation');
-        let techType = rawQuestions[currentQuestionIndex].c === 'web' ? 'Веб-технологии / Архитектура' : 'C# Windows Forms';
+        const techName = getTechName(category);
         
         if (isCorrect) {
-            explanationBox.innerHTML = `🟢 <strong>Верно!</strong><br>Конструкция <code>${escapeHtml(correctAnswer)}</code> — это абсолютно точный ответ на данный вопрос в рамках дисциплины "${techType}".`;
+            explanationBox.innerHTML = `<strong style="color:var(--success)">✅ Абсолютно верно!</strong><br>В языке <b>${techName}</b> применяется конструкция <code>${escapeHtml(correctAnswer)}</code>.`;
         } else {
-            explanationBox.innerHTML = `🔴 <strong>Неверно.</strong><br>Правильный ответ: <code>${escapeHtml(correctAnswer)}</code>.<br>Твой выбор (<code>${escapeHtml(chosenAnswer)}</code>) не решает поставленную в вопросе задачу согласно спецификации "${techType}".`;
+            explanationBox.innerHTML = `<strong style="color:var(--error)">❌ Ошибка.</strong><br>Твой выбор: <code>${escapeHtml(chosenAnswer)}</code>.<br>Правильно для <b>${techName}</b>: <code>${escapeHtml(correctAnswer)}</code>.`;
         }
         explanationBox.classList.add('show');
 
-        document.getElementById('next-button').style.display = 'block';
+        const nextBtn = document.getElementById('next-button');
+        nextBtn.style.display = 'block';
+        nextBtn.focus();
     }
 
     document.getElementById('next-button').onclick = () => {
@@ -292,14 +381,14 @@
         const resultsScreen = document.getElementById('results-screen');
         resultsScreen.style.display = 'block';
         
-        document.getElementById('final-score').innerText = `${score} / ${rawQuestions.length}`;
+        document.getElementById('final-score').innerText = `${score} / ${activeQuestions.length}`;
         
-        const percent = (score / rawQuestions.length) * 100;
+        const percent = (score / activeQuestions.length) * 100;
         let comment = '';
-        if (percent === 100) comment = 'Идеально! Полное знание всей базы веб-технологий и C#! 🚀';
-        else if (percent >= 85) comment = 'Отличный результат! Большинство модулей пройдены без проблем.🔥';
-        else if (percent >= 50) comment = 'Хорошо, но стоит повторить синтаксис PHP и методы вызова событий в WinForms. 👍';
-        else comment = 'Нужно еще раз внимательно пройтись по ответам. Попробуй заново!';
+        if (percent === 100) comment = 'Идеально! Архитектор 80 уровня. Vibe coding пройдет успешно! 💻🔥';
+        else if (percent >= 85) comment = 'Шикарный результат! Ты отлично понимаешь логику JS и ООП в C#. 🚀';
+        else if (percent >= 60) comment = 'Хорошая база, но в некоторых методах и синтаксисе есть путаница. Повтори коллекции и события. 👍';
+        else comment = 'Это был очень сложный тест. Рекомендую прогнать его еще пару раз для полного закрепления базы!';
         
         document.getElementById('result-comment').innerText = comment;
     }
@@ -309,13 +398,14 @@
         score = 0;
         document.getElementById('results-screen').style.display = 'none';
         document.getElementById('quiz-screen').style.display = 'block';
-        // Перемешаем массив вопросов, чтобы при каждом перезапуске порядок менялся
-        rawQuestions.sort(() => Math.random() - 0.5);
+        
+        // Создаем свежую копию массива и жестко её тасуем
+        activeQuestions = shuffleArray([...questionsDB]);
         loadQuestion();
     }
 
-    // Первый запуск
-    rawQuestions.sort(() => Math.random() - 0.5);
+    // Инициализация при первом запуске
+    activeQuestions = shuffleArray([...questionsDB]);
     loadQuestion();
 </script>
 
