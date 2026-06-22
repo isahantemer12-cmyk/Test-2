@@ -3,491 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>C# & JS Hardcore Test PRO (100 вопросов)</title>
+    <title>Легкий тест JS и C# (80 вопросов)</title>
     <style>
-        :root {
-            --bg-color: #0d1117;
-            --card-bg: #161b22;
-            --text-color: #c9d1d9;
-            --accent: #58a6ff;
-            --success: #3fb950;
-            --error: #f85149;
-            --warning: #d29922;
-            --border-radius: 12px;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .container { background-color: var(--card-bg); width: 100%; max-width: 800px; border-radius: var(--border-radius); padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid #30363d; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background: #1a1a1a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { background: #222; width: 100%; max-width: 700px; border-radius: 8px; padding: 25px; box-shadow: 0 0 30px rgba(0,0,0,0.5); border: 1px solid #444; }
         
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #30363d; padding-bottom: 15px; font-weight: 600; color: #8b949e; flex-wrap: wrap; gap: 10px; }
-        .progress-bar-container { width: 100%; background-color: #21262d; height: 8px; border-radius: 4px; margin-bottom: 25px; overflow: hidden; }
-        .progress-bar { height: 100%; background-color: var(--accent); width: 0%; transition: width 0.3s ease; }
+        .header { display: flex; justify-content: space-between; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #444; }
+        .header span { font-weight: bold; }
         
-        .question-box { font-size: 1.3rem; font-weight: 600; margin-bottom: 25px; line-height: 1.5; color: #e6edf3; }
-        .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        .progress { background: #333; height: 6px; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-bar { background: #4CAF50; height: 100%; transition: width 0.3s; }
         
-        .option-btn { background-color: #21262d; border: 1px solid #30363d; border-radius: 8px; padding: 15px; text-align: left; color: var(--text-color); font-size: 1rem; cursor: pointer; transition: all 0.2s ease; display: block; width: 100%; word-break: break-word; font-family: Consolas, monospace; }
-        .option-btn:hover:not([disabled]) { background-color: #30363d; border-color: #8b949e; }
+        .question { font-size: 18px; font-weight: bold; margin-bottom: 20px; line-height: 1.4; }
+        .category { color: #90CAF9; font-size: 12px; margin-bottom: 10px; }
         
-        .option-btn.correct { background-color: rgba(63, 185, 80, 0.15) !important; border-color: var(--success) !important; color: var(--success); font-weight: bold; }
-        .option-btn.incorrect { background-color: rgba(248, 81, 73, 0.15) !important; border-color: var(--error) !important; color: var(--error); }
+        .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .option { background: #333; border: 2px solid #555; border-radius: 5px; padding: 12px; cursor: pointer; transition: all 0.2s; }
+        .option:hover { border-color: #90CAF9; background: #3a3a3a; }
+        .option.selected { border-color: #4CAF50; background: #2d5a2d; }
+        .option.correct { background: #1b5e20; border-color: #4CAF50; }
+        .option.wrong { background: #c62828; border-color: #ff5252; }
         
-        .hint-box { 
-            background-color: rgba(210, 153, 34, 0.1); 
-            border-left: 4px solid var(--warning); 
-            border-radius: 6px; 
-            padding: 15px; 
-            margin-bottom: 20px; 
-            display: none; 
-            line-height: 1.5; 
-            font-size: 0.95rem;
-            animation: slideDown 0.3s ease;
-        }
-        .hint-box.show { display: block; }
-        .hint-box code { background: #21262d; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; color: #79c0ff; }
-        .hint-box strong { color: var(--warning); }
+        .explanation { background: #1a1a1a; border-left: 4px solid #90CAF9; padding: 12px; margin-bottom: 15px; display: none; font-size: 14px; line-height: 1.5; }
+        .explanation.show { display: block; }
+        .explanation strong { color: #90CAF9; }
         
-        .explanation-box { background-color: #0d1117; border-left: 4px solid var(--accent); border-radius: 6px; padding: 15px; margin-bottom: 20px; display: none; line-height: 1.5; font-size: 0.95rem; }
-        .explanation-box.show { display: block; animation: slideDown 0.4s ease; }
-        .explanation-box code { background: #21262d; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; color: #ff7b72; }
+        .buttons { display: flex; gap: 10px; margin-top: 20px; }
+        button { padding: 10px 20px; font-size: 14px; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; transition: 0.2s; }
+        .btn-hint { background: #FF9800; color: white; flex: 1; }
+        .btn-hint:hover { background: #F57C00; }
+        .btn-hint:disabled { background: #666; cursor: not-allowed; }
+        .btn-next { background: #4CAF50; color: white; flex: 2; }
+        .btn-next:hover { background: #45a049; }
+        .btn-back { background: #666; color: white; flex: 1; }
+        .btn-back:hover { background: #555; }
         
-        .controls-btn-group { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .hint-btn, .next-btn, .restart-btn { background-color: var(--accent); color: #ffffff; border: none; padding: 12px 20px; font-size: 0.95rem; font-weight: bold; border-radius: 8px; cursor: pointer; transition: opacity 0.2s; }
-        .hint-btn:hover, .next-btn:hover, .restart-btn:hover { opacity: 0.9; }
-        .hint-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .next-btn, .restart-btn { background-color: var(--success); width: 100%; }
+        .results { display: none; text-align: center; }
+        .results h2 { font-size: 32px; color: #4CAF50; margin-bottom: 20px; }
+        .score-big { font-size: 48px; font-weight: bold; margin-bottom: 20px; }
+        .result-comment { color: #90CAF9; margin-bottom: 20px; line-height: 1.6; }
         
-        .stats-panel { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 15px; margin-bottom: 20px; font-size: 0.9rem; }
-        .stats-row { display: flex; justify-content: space-around; gap: 10px; margin-bottom: 10px; }
-        .stat-item { text-align: center; }
-        .stat-value { font-size: 1.3rem; font-weight: bold; color: var(--accent); }
-        .stat-label { color: #8b949e; font-size: 0.85rem; }
+        .stats-table { background: #333; border-radius: 5px; padding: 15px; margin: 20px 0; text-align: left; }
+        .stat-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #444; }
+        .stat-row:last-child { border-bottom: none; }
         
-        .results-screen { text-align: center; display: none; }
-        .results-screen h2 { color: var(--accent); margin-bottom: 15px; font-size: 2rem; }
-        .score-text { font-size: 3rem; font-weight: bold; margin-bottom: 20px; color: #e6edf3; }
-        
-        .category-stats { background: #21262d; border-radius: 8px; padding: 15px; margin: 15px 0; }
-        .category-stat-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #30363d; }
-        .category-stat-item:last-child { border-bottom: none; }
-        .category-name { font-weight: 600; }
-        .category-score { color: var(--accent); font-weight: bold; }
-        
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .btn-restart { background: #2196F3; color: white; margin-top: 20px; padding: 12px 30px; }
+        .btn-restart:hover { background: #0b7dda; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="quiz-screen">
+    <div id="quiz">
         <div class="header">
-            <span id="question-counter">Вопрос 1 / 100</span>
-            <span id="score-counter">Счёт: 0</span>
-            <span id="hints-counter">💡 3</span>
-        </div>
-        <div class="progress-bar-container">
-            <div id="progress-bar" class="progress-bar"></div>
+            <span id="counter">Вопрос 1 / 80</span>
+            <span id="score">✓ 0</span>
+            <span id="hints">💡 3</span>
         </div>
         
-        <div class="stats-panel">
-            <div class="stats-row">
-                <div class="stat-item">
-                    <div class="stat-value" id="accuracy-percent">0%</div>
-                    <div class="stat-label">Точность</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="streak-count">0</div>
-                    <div class="stat-label">Серия</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="category-display">-</div>
-                    <div class="stat-label">Категория</div>
-                </div>
-            </div>
+        <div class="progress">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
         </div>
         
-        <div id="question-text" class="question-box">Загрузка...</div>
+        <div id="category" class="category"></div>
+        <div id="question" class="question"></div>
+        <div id="options" class="options"></div>
+        <div id="explanation" class="explanation"></div>
         
-        <div id="hint-box" class="hint-box"></div>
-        
-        <div id="options-container" class="options-list"></div>
-        <div id="explanation" class="explanation-box"></div>
-        
-        <div class="controls-btn-group">
-            <button id="hint-button" class="hint-btn">💡 Подсказка</button>
+        <div class="buttons">
+            <button class="btn-hint" id="hint-btn">💡 Подсказка</button>
+            <button class="btn-back" id="back-btn">← Назад</button>
+            <button class="btn-next" id="next-btn" style="display:none">Дальше →</button>
         </div>
-        <button id="next-button" class="next-btn" style="display: none;">Продолжить →</button>
     </div>
-
-    <div id="results-screen" class="results-screen">
-        <h2>🎯 Итоги тестирования</h2>
-        <div id="final-score" class="score-text">0 / 100</div>
-        <p id="result-comment" style="margin-bottom: 30px; line-height: 1.6; font-size: 1.1rem; color: #8b949e;"></p>
-        
-        <div id="category-stats-container"></div>
-        
-        <button class="restart-btn" onclick="restartQuiz()">🔄 Начать заново</button>
+    
+    <div id="results" class="results">
+        <h2>Результат</h2>
+        <div class="score-big" id="final-score">0 / 80</div>
+        <div id="result-comment" class="result-comment"></div>
+        <div id="stats" class="stats-table"></div>
+        <button class="btn-restart" onclick="restartQuiz()">Начать заново</button>
     </div>
 </div>
 
 <script>
-    const questionsDB = [
-        // === JS: DOM ===
-        { c: "js-dom", q: "Как найти HTML-элемент по ID?", a: "document.getElementById()", h: "ID уникален, метод содержит 'Id' (с большой буквой)", ex: "const el = document.getElementById('myId');", wrong: ["document.getElementByID()", "document.querySelector('#id')", "document.findById()"] },
-        { c: "js-dom", q: "Какой метод находит первый элемент по CSS-селектору?", a: "document.querySelector()", h: "'query' + 'Selector' возвращает 1 элемент", ex: "const el = document.querySelector('.class');", wrong: ["document.querySelectorOne()", "document.getElementByClass()", "document.selectElement()"] },
-        { c: "js-dom", q: "Какой метод возвращает ВСЕ элементы по селектору?", a: "document.querySelectorAll()", h: "'All' в конце = много. Возвращает NodeList", ex: "const els = document.querySelectorAll('.item');", wrong: ["document.querySelectAll()", "document.getElementsByClass()", "document.findAll()"] },
-        { c: "js-dom", q: "Какое свойство меняет HTML с тегами?", a: "innerHTML", h: "Inner (внутри) + HTML = с тегами. Опасно для XSS!", ex: "el.innerHTML = '<p>Hi</p>';", wrong: ["innerText", "textContent", "content"] },
-        { c: "js-dom", q: "Какое свойство меняет только текст?", a: "textContent", h: "'text' = только текст, БЕЗ HTML", ex: "el.textContent = 'Safe';", wrong: ["innerHTML", "innerText", "content"] },
-        { c: "js-dom", q: "Какой метод создает новый элемент?", a: "document.createElement()", h: "'create' + 'Element' = создание", ex: "const div = document.createElement('div');", wrong: ["document.createTag()", "new Element()", "document.newElement()"] },
-        { c: "js-dom", q: "Как добавить элемент в конец?", a: "appendChild()", h: "'append' + 'Child' = добавить потомка", ex: "parent.appendChild(child);", wrong: ["addChild()", "appendElement()", "addElement()"] },
-        { c: "js-dom", q: "Как удалить дочерний элемент?", a: "removeChild()", h: "'remove' + 'Child' = удалить потомка", ex: "parent.removeChild(child);", wrong: ["deleteChild()", "remove()", "destroy()"] },
-        { c: "js-dom", q: "Какое свойство ссылается на родителя?", a: "parentNode", h: "'parent' (родитель) + 'Node' = элемент-родитель", ex: "const parent = el.parentNode;", wrong: ["parentElement", "parent", "owner"] },
-        { c: "js-dom", q: "Какое свойство указывает на следующий элемент?", a: "nextElementSibling", h: "'next' (следующий) + 'Sibling' (сосед)", ex: "const next = el.nextElementSibling;", wrong: ["nextSibling", "nextElement", "sibling"] },
-        { c: "js-dom", q: "Как добавить CSS класс?", a: "classList.add()", h: "'classList' это коллекция классов", ex: "el.classList.add('active');", wrong: ["addClass()", "addClass()", "classList.push()"] },
-        { c: "js-dom", q: "Как переключить класс (toggle)?", a: "classList.toggle()", h: "'toggle' = добавить если нет, убрать если есть", ex: "el.classList.toggle('active');", wrong: ["classList.switch()", "toggleClass()", "classList.flip()"] },
-        { c: "js-dom", q: "Как получить значение атрибута?", a: "getAttribute()", h: "'get' + 'Attribute' = получить значение", ex: "const id = el.getAttribute('id');", wrong: ["getAttr()", "getAttribute", "attr()"] },
-        { c: "js-dom", q: "Как установить значение атрибута?", a: "setAttribute()", h: "'set' + 'Attribute' = установить значение", ex: "el.setAttribute('data-id', '5');", wrong: ["setAttr()", "setAttribute", "attr()"] },
-        { c: "js-dom", q: "Через какое свойство менять инлайн-стили?", a: "element.style", h: "'style' свойство = доступ к CSS", ex: "el.style.color = 'red';", wrong: ["element.css", "element.styles", "element.setStyle()"] },
-
-        // === JS: События ===
-        { c: "js-events", q: "Как назначить слушатель события?", a: "addEventListener()", h: "'add' + 'EventListener' = подписаться", ex: "el.addEventListener('click', handler);", wrong: ["addEventListener", "on()", "attachEvent()"] },
-        { c: "js-events", q: "Как удалить слушатель события?", a: "removeEventListener()", h: "Противоположность add, нужна ссылка на функцию", ex: "el.removeEventListener('click', handler);", wrong: ["deleteEventListener()", "offEventListener()", "detachEvent()"] },
-        { c: "js-events", q: "Какой метод отменяет стандартное поведение?", a: "event.preventDefault()", h: "'prevent' (предотвратить) + 'Default'", ex: "event.preventDefault();", wrong: ["event.stopDefault()", "event.cancelDefault()", "event.blockDefault()"] },
-        { c: "js-events", q: "Какой метод останавливает всплытие?", a: "event.stopPropagation()", h: "'stop' + 'Propagation' (распространение)", ex: "event.stopPropagation();", wrong: ["event.stopBubbling()", "event.preventPropagation()", "event.blockBubbling()"] },
-        { c: "js-events", q: "Какое свойство указывает на целевой элемент?", a: "event.target", h: "'target' (цель) = элемент события", ex: "console.log(event.target);", wrong: ["event.source", "event.origin", "event.element"] },
-        { c: "js-events", q: "Как называется событие клика?", a: "'click'", h: "Событие как строка, в кавычках", ex: "el.addEventListener('click', handler);", wrong: ["'onClick'", "'mouseclick'", "'clicked'"] },
-        { c: "js-events", q: "Событие отправки формы?", a: "'submit'", h: "'submit' нужен preventDefault()", ex: "form.addEventListener('submit', (e) => e.preventDefault());", wrong: ["'send'", "'onsubmit'", "'formsubmit'"] },
-        { c: "js-events", q: "Событие наведения мыши?", a: "'mouseover'", h: "'mouseover' = наведение, 'mouseout' = уход", ex: "el.addEventListener('mouseover', handler);", wrong: ["'hover'", "'mousehover'", "'onmouseover'"] },
-        { c: "js-events", q: "Событие ухода мыши?", a: "'mouseout'", h: "'mouseout' = мышь покидает элемент", ex: "el.addEventListener('mouseout', handler);", wrong: ["'mouseleave'", "'unhover'", "'mouseexit'"] },
-        { c: "js-events", q: "Событие нажатия клавиши?", a: "'keydown'", h: "'keydown' нажатие, 'keyup' отпускание", ex: "el.addEventListener('keydown', handler);", wrong: ["'keypress'", "'onkeydown'", "'keyboard'"] },
-        { c: "js-events", q: "Событие отпускания клавиши?", a: "'keyup'", h: "'keyup' противоположность keydown", ex: "el.addEventListener('keyup', handler);", wrong: ["'keypress'", "'keyrelease'", "'onkeyup'"] },
-        { c: "js-events", q: "Событие загрузки DOM?", a: "'DOMContentLoaded'", h: "'DOMContentLoaded' = HTML загружен", ex: "document.addEventListener('DOMContentLoaded', init);", wrong: ["'load'", "'domready'", "'ready'"] },
-        { c: "js-events", q: "Событие ввода в поле?", a: "'input'", h: "'input' = каждый символ, срабатывает мгновенно", ex: "input.addEventListener('input', handler);", wrong: ["'change'", "'onchange'", "'type'"] },
-
-        // === JS: Массивы ===
-        { c: "js-arrays", q: "Какой метод добавляет в конец массива?", a: "push()", h: "'push' толкать = добавить в конец", ex: "arr.push(1, 2);", wrong: ["add()", "append()", "pop()"] },
-        { c: "js-arrays", q: "Какой метод удаляет последний элемент?", a: "pop()", h: "'pop' вытащить = убрать с конца", ex: "const last = arr.pop();", wrong: ["push()", "remove()", "shift()"] },
-        { c: "js-arrays", q: "Какой метод удаляет первый элемент?", a: "shift()", h: "'shift' сдвинуть = все остальные сдвигаются", ex: "arr.shift();", wrong: ["unshift()", "pop()", "splice(0,1)"] },
-        { c: "js-arrays", q: "Какой метод добавляет в начало?", a: "unshift()", h: "'un' + 'shift' = обратное действие", ex: "arr.unshift(1, 2);", wrong: ["shift()", "push()", "prepend()"] },
-        { c: "js-arrays", q: "Какой метод преобразует каждый элемент?", a: "map()", h: "'map' преобразовать каждый = новый массив", ex: "const squared = arr.map(x => x * x);", wrong: ["forEach()", "filter()", "transform()"] },
-        { c: "js-arrays", q: "Какой метод фильтрует по условию?", a: "filter()", h: "'filter' выбрать нужные = новый массив", ex: "const evens = arr.filter(x => x % 2 === 0);", wrong: ["map()", "find()", "reduce()"] },
-        { c: "js-arrays", q: "Какой метод аккумулирует в одно значение?", a: "reduce()", h: "'reduce' сокращать = свернуть в результат", ex: "const sum = arr.reduce((a,v) => a + v, 0);", wrong: ["fold()", "accumulate()", "aggregate()"] },
-        { c: "js-arrays", q: "Какой метод просто обходит массив?", a: "forEach()", h: "'forEach' для каждого = ничего не возвращает", ex: "arr.forEach(x => console.log(x));", wrong: ["map()", "each()", "forEachElement()"] },
-        { c: "js-arrays", q: "Какой метод копирует часть массива?", a: "slice()", h: "'slice' срезать = новый массив БЕЗ изменения оригинала", ex: "const part = arr.slice(0, 3);", wrong: ["splice()", "substring()", "substring()"] },
-        { c: "js-arrays", q: "Какой метод удаляет/заменяет элементы?", a: "splice()", h: "'splice' = МЕНЯЕТ оригинальный массив", ex: "arr.splice(0, 2, 'new');", wrong: ["slice()", "split()", "replace()"] },
-        { c: "js-arrays", q: "Какой метод ищет индекс элемента?", a: "indexOf()", h: "'indexOf' = возвращает индекс или -1", ex: "const idx = arr.indexOf(5);", wrong: ["find()", "findIndex()", "search()"] },
-        { c: "js-arrays", q: "Какой метод проверяет наличие элемента?", a: "includes()", h: "'includes' = возвращает true/false", ex: "if (arr.includes(5)) { }",wrong: ["contains()", "indexOf()", "some()"] },
-        { c: "js-arrays", q: "Какой метод объединяет массив в строку?", a: "join()", h: "'join' объединить = строка с разделителем", ex: "const str = arr.join(', ');", wrong: ["concat()", "toString()", "merge()"] },
-        { c: "js-arrays", q: "Какой метод объединяет несколько массивов?", a: "concat()", h: "'concat' = новый массив из нескольких", ex: "const all = arr1.concat(arr2);", wrong: ["join()", "merge()", "combine()"] },
-        { c: "js-arrays", q: "Какое свойство показывает размер массива?", a: "length", h: "'length' свойство = количество элементов", ex: "const size = arr.length;", wrong: ["size", "count", "Size()"] },
-        { c: "js-arrays", q: "Какой метод находит первый элемент по условию?", a: "find()", h: "'find' = возвращает ЭЛЕМЕНТ (не индекс)", ex: "const item = arr.find(x => x > 5);", wrong: ["findIndex()", "filter()", "search()"] },
-        { c: "js-arrays", q: "Какой метод находит индекс по условию?", a: "findIndex()", h: "'findIndex' = возвращает ИНДЕКС", ex: "const idx = arr.findIndex(x => x > 5);", wrong: ["find()", "indexOf()", "search()"] },
-        { c: "js-arrays", q: "Какой метод проверяет ВСЕ элементы?", a: "every()", h: "'every' все ли? = true если все прошли проверку", ex: "const allGood = arr.every(x => x > 0);", wrong: ["some()", "all()", "check()"] },
-        { c: "js-arrays", q: "Какой метод проверяет ЛЮБОЙ элемент?", a: "some()", h: "'some' хотя бы один? = true если хоть один прошел", ex: "const anyGood = arr.some(x => x > 5);", wrong: ["every()", "any()", "check()"] },
-
-        // === JS: Циклы ===
-        { c: "js-loops", q: "Какой цикл со счетчиком?", a: "for", h: "'for' классический цикл", ex: "for (let i = 0; i < 10; i++) { }", wrong: ["while", "do...while", "forEach"] },
-        { c: "js-loops", q: "Какой цикл с проверкой условия?", a: "while", h: "'while' проверка ПЕРЕД каждой итерацией", ex: "while (condition) { }", wrong: ["for", "do...while", "until"] },
-        { c: "js-loops", q: "Какой цикл выполнится хотя бы раз?", a: "do...while", h: "'do' сначала, потом 'while' = минимум 1 раз", ex: "do { } while (condition);", wrong: ["while", "for", "until"] },
-        { c: "js-loops", q: "Цикл для перечисляемых свойств объекта?", a: "for...in", h: "'for...in' = ключи объекта", ex: "for (let key in obj) { }", wrong: ["for...of", "forEach", "for"] },
-        { c: "js-loops", q: "Цикл для значений итерируемых объектов?", a: "for...of", h: "'for...of' = значения массива/строки", ex: "for (let val of arr) { }", wrong: ["for...in", "forEach", "for"] },
-        { c: "js-loops", q: "Какой оператор прерывает цикл?", a: "break", h: "'break' выход из цикла полностью", ex: "for(...) { if (x) break; }", wrong: ["continue", "return", "exit"] },
-        { c: "js-loops", q: "Какой оператор пропускает итерацию?", a: "continue", h: "'continue' пропустить текущий шаг", ex: "for(...) { if (x) continue; }", wrong: ["break", "skip", "next"] },
-        { c: "js-loops", q: "Как бесконечный цикл while?", a: "while(true)", h: "'true' всегда истина = бесконечный цикл", ex: "while(true) { if (exit) break; }", wrong: ["while(1)", "while(1 > 0)", "while()"] },
-        { c: "js-loops", q: "Синтаксис switch?", a: "Строгого (===)", h: "'switch' использует === (строгое сравнение)", ex: "switch(x) { case 1: ... }", wrong: ["Нестрогого (==)", "case и if", "||"] },
-        { c: "js-loops", q: "Что если забыть break в case?", a: "Код 'провалится' в следующий case", h: "'fall-through' = выполнится код следующего case", ex: "case 1: code; // без break идет дальше", wrong: ["Ошибка", "Ничего", "Выход"] },
-
-        // === JS: Функции ===
-        { c: "js-functions", q: "Как называется '() => {}'?", a: "Стрелочная функция (Arrow function)", h: "'=>' стрелка = Arrow function. Лексический this", ex: "const add = (a,b) => a + b;", wrong: ["Лямбда", "Анонимная", "Выражение"] },
-        { c: "js-functions", q: "Какой ключ объявляет переменную?", a: "var", h: "'var' функциональная область видимости (устарела)", ex: "var x = 5;", wrong: ["let", "const", "int"] },
-        { c: "js-functions", q: "Что возвращает функция без return?", a: "undefined", h: "'undefined' = без return всегда undefined", ex: "function test() {} // undefined", wrong: ["null", "0", "пусто"] },
-        { c: "js-functions", q: "Как объект в JSON?", a: "JSON.stringify()", h: "'stringify' = превратить в строку", ex: "const str = JSON.stringify(obj);", wrong: ["JSON.serialize()", "JSON.encode()", "toString()"] },
-        { c: "js-functions", q: "Как JSON в объект?", a: "JSON.parse()", h: "'parse' разобрать = противоположность stringify", ex: "const obj = JSON.parse(str);", wrong: ["JSON.decode()", "JSON.deserialize()", "eval()"] },
-        { c: "js-functions", q: "Функция отложенного выполнения?", a: "setTimeout()", h: "'setTimeout' = выполнить через N миллисекунд", ex: "setTimeout(() => {}, 1000);", wrong: ["setInterval()", "setDelay()", "delay()"] },
-        { c: "js-functions", q: "Функция циклического выполнения?", a: "setInterval()", h: "'setInterval' = повторять через N миллисекунд", ex: "setInterval(() => {}, 1000);", wrong: ["setTimeout()", "setDelay()", "repeat()"] },
-        { c: "js-functions", q: "Как остановить setInterval?", a: "clearInterval()", h: "'clearInterval' = остановить интервал", ex: "clearInterval(timerId);", wrong: ["clearTimeout()", "stopInterval()", "cancel()"] },
-        { c: "js-functions", q: "Структура для асинхронных операций?", a: "Promise", h: "'Promise' = обещание результата", ex: "const p = new Promise((resolve) => {});", wrong: ["async", "await", "callback"] },
-        { c: "js-functions", q: "Ключевое слово ожидания Promise?", a: "await", h: "'await' = дождаться выполнения Promise", ex: "const result = await promise;", wrong: ["wait", "then", "async"] },
-        { c: "js-functions", q: "На что ссылается this в стрелке?", a: "На лексический контекст (где была создана)", h: "Стрелочная функция = лексический this (НЕ меняется)", ex: "const obj = { m: function() { const f = () => this; } };", wrong: ["this вызывающего объекта", "глобальный window", "undefined"] },
-        { c: "js-functions", q: "Способность функции запомнить область?", a: "Замыкание (Closure)", h: "'Closure' = функция помнит область видимости", ex: "function outer() { let x = 1; return () => x; }", wrong: ["Наследование", "Прототип", "Область"] },
-        { c: "js-functions", q: "Оператор собрать остаток аргументов?", a: "Rest-оператор", h: "'...' rest-оператор = собрать в массив", ex: "function f(...args) { }", wrong: ["Spread", "Destructuring", "Spread-оператор"] },
-        { c: "js-functions", q: "Оператор развернуть элементы массива?", a: "Spread-оператор", h: "'...' spread = развернуть элементы", ex: "const newArr = [...arr, 4];", wrong: ["Rest", "Destructuring", "Rest-оператор"] },
-        { c: "js-functions", q: "Привязать контекст this без вызова?", a: "bind()", h: "'bind' привязать = возвращает новую функцию", ex: "const bound = func.bind(obj);", wrong: ["call()", "apply()", "this()"] },
-        { c: "js-functions", q: "Вызвать функцию с контекстом сразу?", a: "call()", h: "'call' вызвать = сразу с контекстом", ex: "func.call(obj, arg1, arg2);", wrong: ["bind()", "apply()", "invoke()"] },
-
-        // === C#: Массивы ===
-        { c: "cs-arrays", q: "Объявить массив int из 5 элементов?", a: "int[] arr = new int[5];", h: "Квадратные скобки в типе + new + размер", ex: "int[] numbers = new int[10];", wrong: ["int[5] arr;", "int* arr = new int[5];", "Array<int> arr;"] },
-        { c: "cs-arrays", q: "Свойство количества элементов массива?", a: "Length", h: "'Length' с БОЛЬШОЙ буквы (свойство, не метод)", ex: "int count = arr.Length;", wrong: ["length", "Size", "Count()"] },
-        { c: "cs-arrays", q: "Отсортировать массив по возрастанию?", a: "Array.Sort(arr);", h: "'Sort' встроенный метод класса Array", ex: "Array.Sort(numbers);", wrong: ["arr.Sort();", "Sort(arr);", "array.Sort()"] },
-        { c: "cs-arrays", q: "Перевернуть порядок элементов?", a: "Array.Reverse(arr);", h: "'Reverse' = развернуть порядок", ex: "Array.Reverse(numbers);", wrong: ["arr.Reverse();", "Reverse(arr);", "array.Flip()"] },
-        { c: "cs-arrays", q: "Объявить двумерный массив?", a: "int[,] arr", h: "'[,]' запятая = двумерный (прямоугольный)", ex: "int[,] matrix = new int[3, 3];", wrong: ["int[][] arr", "int[3,3] arr", "Array[,] arr"] },
-        { c: "cs-arrays", q: "Объявить зубчатый массив?", a: "int[][] arr", h: "'[][]' две скобки = массив массивов (jagged)", ex: "int[][] jagged = new int[3][];", wrong: ["int[,] arr", "int[3,3]", "Array[][] arr"] },
-        { c: "cs-arrays", q: "Можно ли менять размер массива?", a: "Нет, их размер фиксирован", h: "Размер задается при создании и НЕ меняется", ex: "int[] arr = new int[5]; // размер 5", wrong: ["Да", "Только уменьшать", "Через методы"] },
-        { c: "cs-arrays", q: "Очистить элементы массива?", a: "Array.Clear()", h: "'Clear' сбросить в дефолт значения", ex: "Array.Clear(arr, 0, arr.Length);", wrong: ["arr.Clear();", "Clear(arr);", "array.Reset()"] },
-        { c: "cs-arrays", q: "Копировать элементы между массивами?", a: "Array.Copy()", h: "'Copy' = скопировать элементы", ex: "Array.Copy(source, dest, length);", wrong: ["Copy()", "arr.Copy()", "CopyTo()"] },
-        { c: "cs-arrays", q: "Найти индекс первого вхождения?", a: "Array.IndexOf()", h: "'IndexOf' = найти индекс элемента", ex: "int idx = Array.IndexOf(arr, value);", wrong: ["Array.Find()", "arr.IndexOf()", "Array.Search()"] },
-        { c: "cs-arrays", q: "Изменить размер массива?", a: "Array.Resize()", h: "'Resize' СОЗДАЕТ новый массив другого размера", ex: "Array.Resize(ref arr, newSize);", wrong: ["arr.Resize()", "Resize(arr)", "array.Grow()"] },
-        { c: "cs-arrays", q: "Коллекция с динамическим размером?", a: "List<T>", h: "'List<T>' = динамический размер, методы Add/Remove", ex: "List<int> list = new List<int>();", wrong: ["Array", "Collection", "Set<T>"] },
-        { c: "cs-arrays", q: "Инициализировать массив значениями?", a: "int[] arr = { 1, 2, 3 };", h: "Фигурные скобки = инициализатор", ex: "string[] names = { \"A\", \"B\" };", wrong: ["int[] arr = [1, 2, 3];", "new int[] { 1 }", "arr = (1,2,3)"] },
-        { c: "cs-arrays", q: "Значение bool массива по умолчанию?", a: "false", h: "'bool' по умолчанию false", ex: "bool[] flags = new bool[3]; // [false, false, false]", wrong: ["true", "null", "0"] },
-        { c: "cs-arrays", q: "Значение объекта массива по умолчанию?", a: "null", h: "Объекты по умолчанию null", ex: "string[] arr = new string[3]; // [null, null, null]", wrong: ["\"\"", "0", "false"] },
-
-        // === C#: Коллекции ===
-        { c: "cs-lists", q: "Добавить элемент в List<T>?", a: "Add()", h: "'Add' добавить 1 элемент", ex: "list.Add(item);", wrong: ["Append()", "Push()", "Insert()"] },
-        { c: "cs-lists", q: "Вставить элемент по индексу?", a: "Insert()", h: "'Insert' = вставить в позицию", ex: "list.Insert(0, item);", wrong: ["Add()", "AddAt()", "Set()"] },
-        { c: "cs-lists", q: "Свойство количества элементов?", a: "Count", h: "'Count' свойство (не Method!) у List<T>", ex: "int size = list.Count;", wrong: ["Length", "Size", "Count()"] },
-        { c: "cs-lists", q: "Удалить элемент по значению?", a: "Remove()", h: "'Remove' = удалить первое вхождение", ex: "list.Remove(item);", wrong: ["Delete()", "RemoveAt()", "RemoveValue()"] },
-        { c: "cs-lists", q: "Удалить элемент по индексу?", a: "RemoveAt()", h: "'RemoveAt' = удалить по индексу", ex: "list.RemoveAt(0);", wrong: ["Remove()", "Delete()", "DeleteAt()"] },
-        { c: "cs-lists", q: "Очистить List<T> полностью?", a: "Clear()", h: "'Clear' удалить все элементы", ex: "list.Clear();", wrong: ["Remove()", "RemoveAll()", "Reset()"] },
-        { c: "cs-lists", q: "Проверить наличие элемента?", a: "Contains()", h: "'Contains' возвращает true/false", ex: "if (list.Contains(item)) { }", wrong: ["Exists()", "Any()", "Has()"] },
-        { c: "cs-lists", q: "Преобразовать List в массив?", a: "ToArray()", h: "'ToArray' = превратить в array[]", ex: "int[] arr = list.ToArray();", wrong: ["Cast()", "Convert()", "CastArray()"] },
-        { c: "cs-lists", q: "Пространство имен для List?", a: "System.Collections.Generic", h: "'Generic' = для List<T>", ex: "using System.Collections.Generic;", wrong: ["System.Collections", "System.Generic", "System.Linq"] },
-        { c: "cs-lists", q: "Добавить несколько элементов?", a: "AddRange()", h: "'AddRange' добавить коллекцию", ex: "list.AddRange(new[] { 1, 2, 3 });", wrong: ["Add()", "AddAll()", "AddItems()"] },
-        { c: "cs-lists", q: "Dictionary хранит данные как?", a: "Ключ-Значение (Key-Value)", h: "'Key' уникален, 'Value' = данные", ex: "Dictionary<string, int> d = new();", wrong: ["Массив пар", "Отсортированные", "Связанный список"] },
-        { c: "cs-lists", q: "Queue<T> работает по принципу?", a: "FIFO (Первым пришел - первым ушел)", h: "'First In First Out' очередь", ex: "Queue<int> q = new(); q.Enqueue(1);", wrong: ["LIFO", "Random", "Sorted"] },
-        { c: "cs-lists", q: "Stack<T> работает по принципу?", a: "LIFO (Последним пришел - первым ушел)", h: "'Last In First Out' стопка", ex: "Stack<int> s = new(); s.Push(1);", wrong: ["FIFO", "Random", "Sorted"] },
-        { c: "cs-lists", q: "Извлечь элемент из Queue?", a: "Dequeue()", h: "'Dequeue' = вытащить из очереди", ex: "int val = queue.Dequeue();", wrong: ["Dequeue", "Pop()", "Remove()"] },
-        { c: "cs-lists", q: "Положить элемент на Stack?", a: "Push()", h: "'Push' толкать = положить на стопку", ex: "stack.Push(item);", wrong: ["Add()", "Enqueue()", "Put()"] },
-
-        // === C#: Циклы ===
-        { c: "cs-loops", q: "Цикл для перебора без индекса?", a: "foreach", h: "'foreach' каждому элементу автоматически", ex: "foreach (int item in arr) { }", wrong: ["for", "while", "for...in"] },
-        { c: "cs-loops", q: "Можно ли менять коллекцию в foreach?", a: "Нет, вызовет InvalidOperationException", h: "'foreach' читает коллекцию = запрет на изменения", ex: "// нельзя list.Add/Remove в foreach", wrong: ["Да", "Только добавлять", "Игнорируется"] },
-        { c: "cs-loops", q: "Бесконечный цикл for?", a: "for(;;)", h: "Три части пусты = условие всегда true", ex: "for(;;) { if (exit) break; }", wrong: ["for(true)", "for(*)", "for()"] },
-        { c: "cs-loops", q: "Сколько раз выполнится while(false)?", a: "0 раз", h: "'while' проверка ПЕРЕД = если условие false, не выполнится", ex: "while(false) { } // не выполнится", wrong: ["1 раз", "Бесконечно", "2 раза"] },
-        { c: "cs-loops", q: "Что делает continue?", a: "Перепрыгивает к следующей итерации цикла", h: "'continue' пропустить текущий шаг", ex: "for(...) { if (skip) continue; }", wrong: ["Выходит", "Возвращает", "Закрывает"] },
-        { c: "cs-loops", q: "Что делает break?", a: "Полностью выходит из текущего цикла", h: "'break' полный выход из цикла", ex: "for(...) { if (exit) break; }", wrong: ["К следующему", "Пропускает", "Перезагружает"] },
-        { c: "cs-loops", q: "Проверка условия do...while где?", a: "В конце (после выполнения тела)", h: "'do' сначала, 'while' проверка ПОСЛЕ = минимум 1 раз", ex: "do { } while (condition);", wrong: ["В начале", "В цикле", "Не проверяется"] },
-        { c: "cs-loops", q: "Тип переменной для List<string>?", a: "string", h: "'string' элемент List<string>", ex: "foreach (string item in list) { }", wrong: ["object", "var", "List<string>"] },
-        { c: "cs-loops", q: "Несколько счетчиков в for?", a: "Да, через запятую", h: "',' разделитель для нескольких переменных", ex: "for(int i=0, j=10; i<j; i++, j--) { }", wrong: ["Нет", "Нужны скобки", "Через точку"] },
-        { c: "cs-loops", q: "Ключевое слово вместо явного типа?", a: "var", h: "'var' = компилятор определит тип", ex: "foreach (var item in list) { }", wrong: ["object", "dynamic", "auto"] },
-    ];
-
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let activeQuestions = [];
-    let hintsLeft = 3;
-    let hintUsed = false;
-    let streak = 0;
-    let categoryStats = {};
-
-    function escapeHtml(text) {
-        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-    }
-
-    function shuffleArray(array) {
-        let currentIndex = array.length, randomIndex;
-        while (currentIndex !== 0) {
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
-            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-        }
-        return array;
-    }
-
-    function generateOptions(currentQ) {
-        let options = [currentQ.a, ...currentQ.wrong];
-        return shuffleArray(options);
-    }
-
-    function getCategoryName(cat) {
-        const names = {
-            'js-dom': 'JS: DOM',
-            'js-events': 'JS: События',
-            'js-arrays': 'JS: Массивы',
-            'js-loops': 'JS: Циклы',
-            'js-functions': 'JS: Функции',
-            'cs-arrays': 'C#: Массивы',
-            'cs-lists': 'C#: Коллекции',
-            'cs-loops': 'C#: Циклы',
-        };
-        return names[cat] || cat;
-    }
-
-    function updateStats() {
-        const answered = currentQuestionIndex;
-        const acc = answered > 0 ? Math.round((score / answered) * 100) : 0;
-        document.getElementById('accuracy-percent').textContent = acc + '%';
-        document.getElementById('streak-count').textContent = streak;
-        
-        const currentQ = activeQuestions[currentQuestionIndex];
-        if (currentQ) {
-            document.getElementById('category-display').textContent = getCategoryName(currentQ.c);
-        }
-    }
-
-    function loadQuestion() {
-        if (currentQuestionIndex >= activeQuestions.length) {
-            showResults();
-            return;
-        }
-
-        const currentQ = activeQuestions[currentQuestionIndex];
-        
-        document.getElementById('question-counter').innerText = `Вопрос ${currentQuestionIndex + 1} / ${activeQuestions.length}`;
-        document.getElementById('score-counter').innerText = `Счёт: ${score}`;
-        document.getElementById('hints-counter').innerText = `💡 ${hintsLeft}`;
-        document.getElementById('progress-bar').style.width = `${((currentQuestionIndex) / activeQuestions.length) * 100}%`;
-        
-        document.getElementById('question-text').innerText = `${currentQuestionIndex + 1}. ${currentQ.q}`;
-        
-        const optionsContainer = document.getElementById('options-container');
-        optionsContainer.innerHTML = '';
-        
-        const hintBox = document.getElementById('hint-box');
-        hintBox.classList.remove('show');
-        hintUsed = false;
-        
-        const explanationBox = document.getElementById('explanation');
-        explanationBox.classList.remove('show');
-        document.getElementById('next-button').style.display = 'none';
-        
-        document.getElementById('hint-button').disabled = false;
-        document.getElementById('hint-button').innerText = `💡 Подсказка (${hintsLeft})`;
-
-        const options = generateOptions(currentQ);
-
-        options.forEach(option => {
-            const button = document.createElement('button');
-            button.className = 'option-btn';
-            button.innerHTML = escapeHtml(option);
-            button.onclick = () => handleAnswerSelect(button, option, currentQ);
-            optionsContainer.appendChild(button);
-        });
-        
-        updateStats();
-    }
-
-    function showHint(currentQ) {
-        if (hintUsed || hintsLeft <= 0) return;
-        
-        const hintBox = document.getElementById('hint-box');
-        hintBox.innerHTML = `
-            <strong>💡 Подсказка:</strong> ${escapeHtml(currentQ.h)}<br>
-            <strong>Пример:</strong> <code>${escapeHtml(currentQ.ex)}</code>
-        `;
-        hintBox.classList.add('show');
-        
-        hintsLeft--;
-        hintUsed = true;
-        document.getElementById('hint-button').disabled = true;
-        document.getElementById('hints-counter').innerText = `💡 ${hintsLeft}`;
-    }
-
-    function handleAnswerSelect(selectedBtn, chosenAnswer, currentQ) {
-        const buttons = document.querySelectorAll('.option-btn');
-        buttons.forEach(btn => btn.disabled = true);
-
-        const isCorrect = (chosenAnswer === currentQ.a);
-        
-        if (isCorrect) {
-            selectedBtn.classList.add('correct');
-            score++;
-            streak++;
-        } else {
-            selectedBtn.classList.add('incorrect');
-            streak = 0;
-            buttons.forEach(btn => {
-                if (btn.innerHTML === escapeHtml(currentQ.a)) {
-                    btn.classList.add('correct');
-                }
-            });
-        }
-        
-        if (!categoryStats[currentQ.c]) {
-            categoryStats[currentQ.c] = { total: 0, correct: 0 };
-        }
-        categoryStats[currentQ.c].total++;
-        if (isCorrect) categoryStats[currentQ.c].correct++;
-
-        document.getElementById('score-counter').innerText = `Счёт: ${score}`;
-        
-        const explanationBox = document.getElementById('explanation');
-        const techName = currentQ.c.startsWith('js') ? "JavaScript" : "C# / .NET";
-        
-        if (isCorrect) {
-            explanationBox.innerHTML = `
-                <strong style="color:var(--success)">✅ Абсолютно верно!</strong><br>
-                В ${techName}: <code>${escapeHtml(currentQ.a)}</code><br>
-                <strong>Помни:</strong> ${escapeHtml(currentQ.h)}
-            `;
-        } else {
-            explanationBox.innerHTML = `
-                <strong style="color:var(--error)">❌ Ошибка.</strong><br>
-                Твой выбор: <code>${escapeHtml(chosenAnswer)}</code><br>
-                Правильно: <code>${escapeHtml(currentQ.a)}</code><br>
-                <strong>Объяснение:</strong> ${escapeHtml(currentQ.h)}<br>
-                <strong>Пример:</strong> <code>${escapeHtml(currentQ.ex)}</code>
-            `;
-        }
-        explanationBox.classList.add('show');
-
-        const nextBtn = document.getElementById('next-button');
-        nextBtn.style.display = 'block';
-        nextBtn.focus();
-        
-        updateStats();
-    }
-
-    document.getElementById('hint-button').onclick = () => {
-        const currentQ = activeQuestions[currentQuestionIndex];
-        showHint(currentQ);
-    };
-
-    document.getElementById('next-button').onclick = () => {
-        currentQuestionIndex++;
-        loadQuestion();
-    };
-
-    function showResults() {
-        document.getElementById('quiz-screen').style.display = 'none';
-        const resultsScreen = document.getElementById('results-screen');
-        resultsScreen.style.display = 'block';
-        
-        document.getElementById('final-score').innerText = `${score} / ${activeQuestions.length}`;
-        
-        const percent = (score / activeQuestions.length) * 100;
-        let comment = '';
-        if (percent === 100) comment = '🔥 Идеально! Архитектор 100 уровня!';
-        else if (percent >= 90) comment = '🚀 Отлично! Ты мастер JS и C#!';
-        else if (percent >= 80) comment = '👍 Очень хорошо! Сильная база!';
-        else if (percent >= 70) comment = '💪 Хороший результат! Повтори слабые места.';
-        else if (percent >= 60) comment = '📚 Неплохо, но есть что улучшать. Еще один раз!';
-        else comment = '🔄 Повтори материал и попробуй снова!';
-        
-        document.getElementById('result-comment').innerText = comment;
-        
-        let statsHtml = '<h3 style="color: var(--accent); margin-top: 20px;">📊 Статистика по категориям:</h3><div class="category-stats">';
-        for (const [cat, stats] of Object.entries(categoryStats)) {
-            const catPercent = Math.round((stats.correct / stats.total) * 100);
-            const catName = getCategoryName(cat);
-            statsHtml += `
-                <div class="category-stat-item">
-                    <span class="category-name">${catName}</span>
-                    <span class="category-score">${stats.correct}/${stats.total} (${catPercent}%)</span>
-                </div>
-            `;
-        }
-        statsHtml += '</div>';
-        document.getElementById('category-stats-container').innerHTML = statsHtml;
-    }
-
-    function restartQuiz() {
-        currentQuestionIndex = 0;
-        score = 0;
-        hintsLeft = 3;
-        streak = 0;
-        categoryStats = {};
-        document.getElementById('results-screen').style.display = 'none';
-        document.getElementById('quiz-screen').style.display = 'block';
-        
-        activeQuestions = shuffleArray([...questionsDB]);
-        loadQuestion();
-    }
-
-    activeQuestions = shuffleArray([...questionsDB]);
-    loadQuestion();
-</script>
-
-</body>
-</html>
+const questions = [
+    // === JS DOM ===
+    { cat: "JS DOM", q: "Метод поиска элемента по ID?", a: "getElementById()", h: "get + Element + ById", w: ["querySelector()", "getElement('id')", "find()"] },
+    { cat: "JS DOM", q: "Найти первый элемент по селектору?", a: "querySelector()", h: "query + Selector = первый", w: ["querySelectorAll()", "getElementById()", "getElement()"] },
+    { cat: "JS DOM", q: "Найти ВСЕ элементы по селектору?", a: "querySelectorAll()", h: "All = все элементы", w: ["querySelector()", "getElements()", "findAll()"] },
+    { cat: "JS DOM", q: "Изменить HTML элемента?", a: "innerHTML", h: "inner = внутри, HTML = с тегами", w: ["textContent", "text", "innerText"] },
+    { cat: "JS DOM", q: "Изменить только текст?", a: "textContent", h: "text = только текст, БЕЗ HTML", w: ["innerHTML", "innerText", "content"] },
+    { cat: "JS DOM", q: "Создать новый элемент?", a: "createElement()", h: "create = создать", w: ["newElement()", "makeElement()", "addElement()"] },
+    { cat: "JS DOM", q: "Добавить элемент в конец?", a: "appendChild()", h: "append = добавить", w: ["addChild()", "insertChild()", "addElement()"] },
+    { cat: "JS DOM", q: "Удалить элемент из DOM?", a: "removeChild()", h: "remove = удалить", w: ["deleteChild()", "remove()", "destroy()"] },
+    { cat: "JS DOM", q: "Получить класс элемента?", a: "classList", h: "list = список классов", w: ["class", "classes", "className"] },
+    { cat: "JS DOM", q: "Добавить класс?", a: "classList.add()", h: "add = добавить класс", w: ["classList.push()", "addClass()", "setClass()"] },
+    { cat: "JS DOM", q: "Убрать класс?", a: "classList.remove()", h: "remove = удалить класс", w: ["classList.delete()", "removeClass()", "deleteClass()"] },
+    { cat: "JS DOM", q: "Включить/выключить класс?", a: "classList.toggle()", h: "toggle = вкл/выкл", w: ["classList.switch()", "toggleClass()", "flip()"] },
+    { cat: "JS DOM", q: "Получить значение атрибута?", a: "getAttribute()", h: "get + Attribute", w: ["getAttr()", "attr()", "getAttribute"] },
+    { cat: "JS DOM", q: "Установить атрибут?", a: "setAttribute()", h: "set + Attribute", w: ["setAttr()", "attr()", "setAttribute"] },
+    { cat: "JS DOM", q: "Менять стили элемента?", a: "element.style", h: "style = доступ к CSS", w: ["element.css", "element.styles", "setStyle()"] },
+    
+    // === JS События ===
+    { cat: "JS События", q: "Назначить слушатель события?", a: "addEventListener()", h: "add + EventListener", w: ["on()", "attachEvent()", "listen()"] },
+    { cat: "JS События", q: "Удалить слушатель события?", a: "removeEventListener()", h: "remove + EventListener", w: ["detachEvent()", "offEventListener()", "unlisten()"] },
+    { cat: "JS События", q: "Отменить стандартное действие?", a: "preventDefault()", h: "prevent = отменить", w: ["stopDefault()", "cancelDefault()", "blockDefault()"] },
+    { cat: "JS События", q: "Остановить распространение события?", a: "stopPropagation()", h: "stop = остановить", w: ["stopBubbling()", "preventPropagation()", "blockBubbling()"] },
+    { cat: "JS События", q: "Какой элемент вызвал событие?", a: "event.target", h: "target = целевой элемент", w: ["event.source", "event.element", "event.origin"] },
+    { cat: "JS События", q: "Событие клика мышью?", a: "'click'", h: "самое обычное событие", w: ["'mouseclick'", "'onclick'", "'clicked'"] },
+    { cat: "JS События", q: "Событие отправки формы?", a: "'submit'", h: "submit = отправка", w: ["'send'", "'onsubmit'", "'form'"] },
+    { cat: "JS События", q: "Событие наведения мыши?", a: "'mouseover'", h: "mouse + over = наведение", w: ["'hover'", "'mousehover'", "'onmouse'"] },
+    { cat: "JS События", q: "Событие клавиши нажата?", a: "'keydown'", h: "key + down = нажата", w: ["'keypress'", "'keyup'", "'keyboard'"] },
+    { cat: "JS События", q: "Событие клавиши отпущена?", a: "'keyup'", h: "key + up = отпущена", w: ["'keypress'", "'keydown'", "'key'"] },
+    { cat: "JS События", q: "Событие ввода в поле?", a: "'input'", h: "input = ввод текста", w: ["'change'", "'onchange'", "'type'"] },
+    { cat: "JS События", q: "Событие изменения значения?", a: "'change'", h: "change = изменение", w: ["'input'", "'onchange'", "'update'"] },
+    { cat: "JS События", q: "Событие загрузки страницы?", a: "'DOMContentLoaded'", h: "DOM загружен и готов", w: ["'load'", "'ready'", "'domready'"] },
+    
+    // === JS Массивы ===
+    { cat: "JS Массивы", q: "Добавить в конец массива?", a: "push()", h: "push = толкать в конец", w: ["add()", "append()", "insert()"] },
+    { cat: "JS Массивы", q: "Удалить с конца массива?", a: "pop()", h: "pop = вытащить с конца", w: ["push()", "shift()", "remove()"] },
+    { cat: "JS Массивы", q: "Удалить с начала массива?", a: "shift()", h: "shift = сдвинуть", w: ["unshift()", "pop()", "remove()"] },
+    { cat: "JS Массивы", q: "Добавить в начало массива?", a: "unshift()", h: "un + shift = обратное", w: ["shift()", "push()", "prepend()"] },
+    { cat: "JS Массивы", q: "Преобразовать каждый элемент?", a: "map()", h: "map = изменить каждый", w: ["forEach()", "filter()", "transform()"] },
+    { cat: "JS Массивы", q: "Отфильтровать элементы?", a: "filter()", h: "filter = выбрать нужные", w: ["map()", "find()", "search()"] },
+    { cat: "JS Массивы", q: "Сумма всех элементов?", a: "reduce()", h: "reduce = свернуть в одно", w: ["sum()", "accumulate()", "total()"] },
+    { cat: "JS Массивы", q: "Обойти все элементы?", a: "forEach()", h: "forEach = для каждого", w: ["map()", "for()", "while()"] },
+    { cat: "JS Массивы", q: "Копировать часть массива?", a: "slice()", h: "slice = срезать", w: ["splice()", "substring()", "copy()"] },
+    { cat: "JS Массивы", q: "Удалить/заменить элементы?", a: "splice()", h: "splice = менять оригинал", w: ["slice()", "split()", "replace()"] },
+    { cat: "JS Массивы", q: "Найти индекс элемента?", a: "indexOf()", h: "index = позиция", w: ["find()", "search()", "position()"] },
+    { cat: "JS Массивы", q: "Есть ли элемент в массиве?", a: "includes()", h: "includes = содержит", w: ["contains()", "indexOf()", "has()"] },
+    { cat: "JS Массивы", q: "Объединить в строку?", a: "join()", h: "join = соединить", w: ["concat()", "toString()", "merge()"] },
+    { cat: "JS Массивы", q: "Объединить два массива?", a: "concat()", h: "concat = слепить", w: ["join()", "merge()", "combine()"] },
+    { cat: "JS Массивы", q: "Размер массива?", a: "length", h: "length = длина", w: ["size", "count", "size()"] },
+    { cat: "JS Массивы", q: "Найти первый элемент?", a: "find()", h: "find = найти один", w: ["filter()", "findIndex()", "search()"] },
+    { cat: "JS Массивы", q: "Найти индекс по условию?", a: "findIndex()", h: "findIndex = индекс", w: ["find()", "indexOf()", "search()"] },
+    { cat: "JS Массивы", q: "ВСЕ ли элементы подходят?", a: "every()", h: "every = все ли?", w: ["some()", "all()", "check()"] },
+    { cat: "JS Массивы", q: "ХОТЯ БЫ один подходит?", a: "some()", h: "some = хоть один?", w: ["every()", "any()", "check()"] },
+    
+    // === JS Циклы ===
+    { cat: "JS Циклы", q: "Цикл со счетчиком?", a: "for", h: "for i = 0; i < n; i++", w: ["while", "do...while", "forEach"] },
+    { cat: "JS Циклы", q: "Цикл с условием?", a: "while", h: "while = проверка в начале", w: ["for", "do...while", "until"] },
+    { cat: "JS Циклы", q: "Цикл выполнится хотя бы раз?", a: "do...while", h: "do = сначала, while = потом", w: ["while", "for", "repeat"] },
+    { cat: "JS Циклы", q: "Перебрать ключи объекта?", a: "for...in", h: "for...in = ключи", w: ["for...of", "forEach", "for"] },
+    { cat: "JS Циклы", q: "Перебрать значения?", a: "for...of", h: "for...of = значения", w: ["for...in", "forEach", "for"] },
+    { cat: "JS Циклы", q: "Выйти из цикла полностью?", a: "break", h: "break = выход", w: ["continue", "return", "exit"] },
+    { cat: "JS Циклы", q: "Пропустить итерацию?", a: "continue", h: "continue = дальше", w: ["break", "skip", "next"] },
+    { cat: "JS Циклы", q: "Бесконечный цикл?", a: "while(true)", h: "true = всегда верно", w: ["while(1)", "for(;;)", "loop()"] },
+    { cat: "JS Циклы", q: "Switch использует?", a: "===", h: "=== = строгое сравнение", w: ["==", "if", "!="] },
+    
+    // === JS Функции ===
+    { cat: "JS Функции", q: "Функция со стрелкой?", a: "() => {}", h: "arrow function", w: ["function() {}", "-> {}", "lambda() {}"] },
+    { cat: "JS Функции", q: "Преобразовать в JSON?", a: "JSON.stringify()", h: "stringify = в строку", w: ["JSON.parse()", "JSON.encode()", "toString()"] },
+    { cat: "JS Функции", q: "Парсить JSON?", a: "JSON.parse()", h: "parse = разобрать", w: ["JSON.stringify()", "JSON.decode()", "eval()"] },
+    { cat: "JS Функции", q: "От
