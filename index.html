@@ -3,66 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PSL Aesthetics Analyzer</title>
+    <title>Advanced PSL Aesthetics Analyzer</title>
     <style>
         :root {
-            --bg-color: #0d0d0d;
-            --surface-color: #1a1a1a;
-            --primary-color: #00ffcc;
-            --text-main: #f0f0f0;
-            --text-muted: #888;
-            --border-color: #333;
+            --bg-color: #0a0a0a;
+            --surface-color: #141414;
+            --surface-light: #1f1f1f;
+            --primary-color: #00e6b8;
+            --chad-color: #ffaa00;
+            --text-main: #e0e0e0;
+            --text-muted: #777;
+            --border-color: #2a2a2a;
         }
 
         body {
             margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             display: flex;
             justify-content: center;
-            align-items: center;
+            padding: 2rem 1rem;
             min-height: 100vh;
         }
 
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             background-color: var(--surface-color);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            font-size: 1.6rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary-color);
+        }
+
+        /* Табы */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 0.8rem;
+            text-align: center;
+            background: var(--surface-light);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .tab.active {
+            background: var(--primary-color);
+            color: var(--bg-color);
+            border-color: var(--primary-color);
+        }
+
+        .content-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2rem;
         }
 
         @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
+            .content-grid { grid-template-columns: 1fr; }
         }
 
-        h1 {
-            grid-column: 1 / -1;
-            text-align: center;
-            margin-top: 0;
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1rem;
-        }
-
-        /* Зона загрузки и фото */
-        .upload-section {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
+        /* Загрузка фото */
         .image-container {
             position: relative;
             width: 100%;
@@ -83,13 +106,9 @@
             display: none;
         }
 
-        /* Анимация сканера */
         .scanner {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
+            top: 0; left: 0; width: 100%; height: 2px;
             background-color: var(--primary-color);
             box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
             display: none;
@@ -103,25 +122,25 @@
             100% { top: 100%; opacity: 0; }
         }
 
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            text-align: center;
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
         }
 
         .btn {
             background-color: transparent;
             color: var(--primary-color);
             border: 1px solid var(--primary-color);
-            padding: 0.8rem 1.5rem;
-            font-size: 1rem;
+            padding: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
-            transition: all 0.3s ease;
-            width: 100%;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn:hover {
@@ -129,38 +148,34 @@
             color: var(--bg-color);
         }
 
-        input[type=file] {
-            font-size: 100px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            cursor: pointer;
+        .btn input[type=file] {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; cursor: pointer;
         }
 
-        #analyzeBtn {
-            margin-top: 1rem;
-            display: none;
-        }
+        #analyzeBtn { display: none; }
 
-        /* Зона результатов */
-        .results-section {
+        /* Метрики */
+        .metrics-container {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.2rem;
         }
 
         .metric {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            background: var(--surface-light);
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
         }
 
         .metric-header {
             display: flex;
             justify-content: space-between;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            color: #aaa;
         }
 
         .metric-value {
@@ -168,234 +183,235 @@
             font-weight: bold;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background-color: #333;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background-color: var(--primary-color);
-            width: 0%;
-            transition: width 1s ease-out;
-        }
-
-        .status-text {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            text-align: center;
-            min-height: 1.2rem;
-        }
-
-        .clinical-notes {
+        /* Итоговый рейтинг */
+        .rating-box {
+            grid-column: 1 / -1;
             background: #111;
-            padding: 1rem;
-            border-left: 3px solid var(--primary-color);
-            font-size: 0.85rem;
-            color: #ccc;
-            margin-top: auto;
-            line-height: 1.5;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 8px;
             display: none;
+            margin-top: 1rem;
+        }
+
+        .rating-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .tier-badge {
+            background: var(--primary-color);
+            color: #000;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 900;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .psl-score {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        .psl-score span {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .analysis-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #ccc;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Клинический Анализ Лица</h1>
+        <h1>Клинический PSL Анализатор</h1>
         
-        <div class="upload-section">
-            <div class="image-container" id="imageContainer">
-                <span id="placeholderText" style="color: var(--text-muted); font-size: 0.9rem;">Загрузите фото (анфас)</span>
-                <img id="preview" alt="Preview">
-                <div class="scanner" id="scanner"></div>
-            </div>
-            
-            <div class="file-input-wrapper">
-                <button class="btn">Выбрать фото</button>
-                <input type="file" id="imageInput" accept="image/*">
-            </div>
-            
-            <button class="btn" id="analyzeBtn">Запустить анализ</button>
-            <div class="status-text" id="statusText"></div>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('front')" id="tab-front">Анфас (Front)</div>
+            <div class="tab" onclick="switchTab('side')" id="tab-side">Профиль (Side)</div>
         </div>
 
-        <div class="results-section">
-            <div class="metric">
-                <div class="metric-header">
-                    <span>Гармония лицевых третей</span>
-                    <span class="metric-value" id="val-harmony">--%</span>
+        <div class="content-grid">
+            <!-- Левая колонка: Фото -->
+            <div>
+                <div class="image-container">
+                    <span id="placeholderText" style="color: var(--text-muted); font-size: 0.9rem;">Загрузите фото</span>
+                    <img id="preview" alt="Preview">
+                    <div class="scanner" id="scanner"></div>
                 </div>
-                <div class="progress-bar"><div class="progress-fill" id="bar-harmony"></div></div>
-            </div>
-
-            <div class="metric">
-                <div class="metric-header">
-                    <span>Сексуальный диморфизм</span>
-                    <span class="metric-value" id="val-dimorphism">--%</span>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" id="bar-dimorphism"></div></div>
-            </div>
-
-            <div class="metric">
-                <div class="metric-header">
-                    <span>Четкость линии челюсти (Jawline)</span>
-                    <span class="metric-value" id="val-jawline">--%</span>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" id="bar-jawline"></div></div>
-            </div>
-
-            <div class="metric">
-                <div class="metric-header">
-                    <span>Кантальный наклон (Canthal Tilt)</span>
-                    <span class="metric-value" id="val-canthal">--</span>
+                
+                <div class="controls">
+                    <button class="btn">
+                        Выбрать фото
+                        <input type="file" id="imageInput" accept="image/*">
+                    </button>
+                    <button class="btn" id="analyzeBtn">Запустить анализ</button>
+                    <div id="statusText" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; height: 1rem;"></div>
                 </div>
             </div>
 
-            <div class="metric">
-                <div class="metric-header">
-                    <span>Развитие максиллы</span>
-                    <span class="metric-value" id="val-maxilla">--</span>
-                </div>
+            <!-- Правая колонка: Метрики -->
+            <div class="metrics-container" id="metricsPanel">
+                <!-- Сюда будут инжектиться метрики в зависимости от выбранного таба -->
+                <div style="text-align:center; color:var(--text-muted); margin-top: 50%;">Загрузите фото для расчета метрик</div>
             </div>
 
-            <div class="clinical-notes" id="clinicalNotes">
-                <strong>Заключение:</strong> <span id="notesText"></span>
+            <!-- Итоговый блок -->
+            <div class="rating-box" id="ratingBox">
+                <div class="rating-header">
+                    <div class="tier-badge" id="tierBadge">HTN</div>
+                    <div class="psl-score" id="pslScore">6.2<span> / 10 PSL</span></div>
+                </div>
+                <div class="analysis-text" id="analysisText"></div>
             </div>
         </div>
     </div>
 
     <script>
-        const imageInput = document.getElementById('imageInput');
-        const preview = document.getElementById('preview');
-        const placeholderText = document.getElementById('placeholderText');
-        const analyzeBtn = document.getElementById('analyzeBtn');
-        const scanner = document.getElementById('scanner');
-        const statusText = document.getElementById('statusText');
-        const clinicalNotes = document.getElementById('clinicalNotes');
-        const notesText = document.getElementById('notesText');
+        let currentTab = 'front';
+        
+        const ui = {
+            imageInput: document.getElementById('imageInput'),
+            preview: document.getElementById('preview'),
+            placeholderText: document.getElementById('placeholderText'),
+            analyzeBtn: document.getElementById('analyzeBtn'),
+            scanner: document.getElementById('scanner'),
+            statusText: document.getElementById('statusText'),
+            metricsPanel: document.getElementById('metricsPanel'),
+            ratingBox: document.getElementById('ratingBox'),
+            tierBadge: document.getElementById('tierBadge'),
+            pslScore: document.getElementById('pslScore'),
+            analysisText: document.getElementById('analysisText'),
+            tabFront: document.getElementById('tab-front'),
+            tabSide: document.getElementById('tab-side')
+        };
 
-        // Обработка загрузки изображения
-        imageInput.addEventListener('change', function(e) {
+        // База знаний для рандомизации
+        const data = {
+            front: {
+                canthal: ["Нейтральный", "Слегка положительный", "Положительный (Hunter)", "Слегка отрицательный"],
+                eyeArea: ["Миндалевидные, глубокая посадка", "Круглые, верхнее веко открыто (Upper Eyelid Exposure)", "Hunter Eyes (компактные)"],
+                jawSymmetry: ["Асимметрия < 2% (Идеал)", "Легкая асимметрия", "Заметная асимметрия левой стороны"],
+                fwRatio: ["1.85 (Высокий диморфизм)", "1.75 (Норма)", "1.90+ (Широкое лицо)"]
+            },
+            side: {
+                gonial: ["~120° (Идеал, квадратная челюсть)", "~130° (Норма)", "~115° (Компактная ветвь)", ">135° (Слабый угол)"],
+                maxilla: ["Отличный Forward Growth", "Среднее развитие", "Слегка плоская максилла", "Ретрузия верхней челюсти"],
+                ramus: ["Длинная ветвь (Маскулинно)", "Средняя длина", "Короткая ветвь"],
+                browRidge: ["Выраженные супраорбитальные валики", "Средняя проекция", "Плоский лоб (Низкий диморфизм)"]
+            }
+        };
+
+        function switchTab(tab) {
+            currentTab = tab;
+            ui.tabFront.classList.toggle('active', tab === 'front');
+            ui.tabSide.classList.toggle('active', tab === 'side');
+            resetUI();
+            
+            ui.placeholderText.innerText = tab === 'front' ? "Загрузите фото (анфас)" : "Загрузите фото (профиль сбоку)";
+        }
+
+        ui.imageInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    preview.src = event.target.result;
-                    preview.style.display = 'block';
-                    placeholderText.style.display = 'none';
-                    analyzeBtn.style.display = 'block';
-                    
-                    // Сброс результатов
-                    resetResults();
+                    ui.preview.src = event.target.result;
+                    ui.preview.style.display = 'block';
+                    ui.placeholderText.style.display = 'none';
+                    ui.analyzeBtn.style.display = 'block';
+                    resetUI();
                 }
                 reader.readAsDataURL(file);
             }
         });
 
-        // Функция сброса UI
-        function resetResults() {
-            document.querySelectorAll('.progress-fill').forEach(el => el.style.width = '0%');
-            document.querySelectorAll('.metric-value').forEach(el => el.innerText = '--');
-            clinicalNotes.style.display = 'none';
-            statusText.innerText = '';
+        function resetUI() {
+            ui.ratingBox.style.display = 'none';
+            ui.statusText.innerText = '';
+            ui.metricsPanel.innerHTML = '<div style="text-align:center; color:var(--text-muted); margin-top: 50%;">Ожидание запуска анализа...</div>';
         }
 
-        // Рандомизатор для мок-данных (имитация работы модели)
-        function getRandomInt(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
         }
 
-        function getCanthalTilt() {
-            const tilts = ["Нейтральный (Neutral)", "Слегка положительный", "Положительный (Hunter)", "Отрицательный (Negative)"];
-            return tilts[Math.floor(Math.random() * tilts.length)];
+        function calculateTier(score) {
+            if (score >= 8.0) return { tier: "CHAD", color: "#ffaa00", desc: "Генетическая элита. Идеальное костное развитие, топовый диморфизм." };
+            if (score >= 6.5) return { tier: "CHADLITE", color: "#00e6b8", desc: "Топ 10-15%. Отличная база, выраженные маскулинные черты, привлекает внимание." };
+            if (score >= 5.5) return { tier: "HTN", color: "#33ccff", desc: "High Tier Normie. Выше среднего. Хорошая гармония, с небольшими луксмакс-доработками (сушка, груминг) легко прыгает в Chadlite." };
+            if (score >= 4.5) return { tier: "MTN", color: "#aadd00", desc: "Mid Tier Normie. База большинства. Нормальное развитие, но есть зоны для улучшения (нужен хардмакс или жесткий джимселл)." };
+            return { tier: "LTN", color: "#ff4444", desc: "Low Tier Normie. Есть заметные недостатки в костной структуре. Рекомендуется фокус на физ. форму, хирургию (при необходимости) и стиль." };
         }
 
-        function getMaxilla() {
-            const types = ["Отличное развитие (Forward growth)", "Среднее развитие", "Плоское (Flat)", "Ретрузия"];
-            return types[Math.floor(Math.random() * types.length)];
-        }
-
-        // Обработка кнопки анализа
-        analyzeBtn.addEventListener('click', function() {
-            // Запуск UI сканирования
-            scanner.style.display = 'block';
-            analyzeBtn.disabled = true;
-            statusText.innerText = 'Измерение межзрачкового расстояния (IPD)...';
+        ui.analyzeBtn.addEventListener('click', function() {
+            ui.scanner.style.display = 'block';
+            ui.analyzeBtn.disabled = true;
+            ui.metricsPanel.innerHTML = '';
             
-            let progress = 0;
-            const steps = [
-                'Анализ симметрии лицевых третей...',
-                'Оценка проекции максиллы и мандибулы...',
-                'Вычисление гониального угла...',
-                'Анализ соотношения средних зон...',
-                'Компиляция результатов...'
-            ];
+            const isFront = currentTab === 'front';
+            ui.statusText.innerText = isFront ? 'Построение карты лица...' : 'Трекинг профиля (гонион, назион)...';
 
-            // Имитация асинхронного процесса (задержки)
-            const interval = setInterval(() => {
-                if (progress < steps.length) {
-                    statusText.innerText = steps[progress];
-                    progress++;
-                } else {
-                    clearInterval(interval);
-                    showResults();
-                }
-            }, 800); // каждые 800мс меняем статус
+            setTimeout(() => {
+                ui.scanner.style.display = 'none';
+                ui.analyzeBtn.disabled = false;
+                ui.statusText.innerText = 'Анализ завершен.';
+                
+                generateReport(isFront);
+            }, 2000);
         });
 
-        function showResults() {
-            scanner.style.display = 'none';
-            analyzeBtn.disabled = false;
-            statusText.innerText = 'Анализ завершен.';
+        function generateReport(isFront) {
+            let metricsHTML = '';
+            let score = (Math.random() * (7.5 - 4.5) + 4.5).toFixed(1); // Рандомная база от MTN до Chadlite
 
-            // Генерация результатов
-            const harmonyScore = getRandomInt(65, 95);
-            const dimorphismScore = getRandomInt(60, 98);
-            const jawlineScore = getRandomInt(55, 99);
+            if (isFront) {
+                metricsHTML = `
+                    <div class="metric"><div class="metric-header"><span>Eye Area (Глаза)</span><span class="metric-value">${getRandomItem(data.front.eyeArea)}</span></div></div>
+                    <div class="metric"><div class="metric-header"><span>Canthal Tilt</span><span class="metric-value">${getRandomItem(data.front.canthal)}</span></div></div>
+                    <div class="metric"><div class="metric-header"><span>FWHR (Ширина/Высота)</span><span class="metric-value">${getRandomItem(data.front.fwRatio)}</span></div></div>
+                    <div class="metric"><div class="metric-header"><span>Нижняя треть (Челюсть)</span><span class="metric-value">${getRandomItem(data.front.jawSymmetry)}</span></div></div>
+                `;
+            } else {
+                metricsHTML = `
+                    <div class="metric"><div class="metric-header"><span>Гониальный угол</span><span class="metric-value">${getRandomItem(data.side.gonial)}</span></div></div>
+                    <div class="metric"><div class="metric-header"><span>Forward Growth</span><span class="metric-value">${getRandomItem(data.side.maxilla)}</span></div></div>
+                    <div class="metric"><div class="metric-header"><span>Длина ветви челюсти (Ramus)</span><span class="metric-value">${getRandomItem(data.side.ramus)}</span></div></div>
+                    <div class="metric"><div class="metric-header"><span>Бровные дуги</span><span class="metric-value">${getRandomItem(data.side.browRidge)}</span></div></div>
+                `;
+            }
+
+            ui.metricsPanel.innerHTML = metricsHTML;
+
+            // Рейтинг
+            const tierInfo = calculateTier(score);
+            ui.tierBadge.innerText = tierInfo.tier;
+            ui.tierBadge.style.backgroundColor = tierInfo.color;
+            ui.tierBadge.style.color = (tierInfo.tier === 'CHAD' || tierInfo.tier === 'LTN') ? '#fff' : '#000';
             
-            // Анимация баров и значений
-            animateValue("val-harmony", harmonyScore, "%");
-            document.getElementById('bar-harmony').style.width = harmonyScore + '%';
+            ui.pslScore.innerHTML = `${score}<span> / 10 PSL</span>`;
             
-            setTimeout(() => {
-                animateValue("val-dimorphism", dimorphismScore, "%");
-                document.getElementById('bar-dimorphism').style.width = dimorphismScore + '%';
-            }, 300);
+            // Генерация клинического текста
+            let analysisNotes = `<strong>Вердикт (${tierInfo.tier}):</strong> ${tierInfo.desc} `;
+            if (isFront) {
+                analysisNotes += `<br><br><strong>Детали (Анфас):</strong> Костная структура читается хорошо. Если есть излишки лицевого жира — сушка (cardio + дефицит калорий) сделает углы резче. Глазная зона играет решающую роль: при hunter eyes баллы сразу растут вверх.`;
+            } else {
+                analysisNotes += `<br><br><strong>Детали (Профиль):</strong> В движении профиль решает многое. Если гониальный угол в районе 120-130 градусов (как у того же Василия Степанова в лучшие годы) и ветвь челюсти длинная — это мощный маскулинный маркер. Если есть ретрузия максиллы — стоит изучить мьюинг (mewing) для правильной позиции языка.`;
+            }
 
-            setTimeout(() => {
-                animateValue("val-jawline", jawlineScore, "%");
-                document.getElementById('bar-jawline').style.width = jawlineScore + '%';
-            }, 600);
-
-            setTimeout(() => {
-                document.getElementById('val-canthal').innerText = getCanthalTilt();
-                document.getElementById('val-maxilla').innerText = getMaxilla();
-                
-                // Вывод клинического заключения
-                clinicalNotes.style.display = 'block';
-                notesText.innerText = `База хорошая. Общая пропорциональная гармония оценена в ${harmonyScore}%. Рекомендуется поддержание низкого процента жира (около 10-12%) для максимизации угловатости челюсти.`;
-            }, 900);
-        }
-
-        // Плавное начисление чисел
-        function animateValue(id, end, suffix) {
-            let startTimestamp = null;
-            const duration = 1000;
-            const obj = document.getElementById(id);
-            
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                obj.innerHTML = Math.floor(progress * end) + suffix;
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
+            ui.analysisText.innerHTML = analysisNotes;
+            ui.ratingBox.style.display = 'block';
         }
     </script>
 </body>
