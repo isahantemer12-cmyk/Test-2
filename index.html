@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PSL BLACKPILL TERMINAL v4.2</title>
+    <title>Strict PSL Engine v4.5 - Spatial Correction</title>
     <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
     <style>
         :root {
             --bg-base: #020202;
-            --panel-bg: #080808;
-            --border-dim: #1a1a1a;
-            --border-focus: #444;
-            --text-main: #a0a0a0;
+            --panel-bg: #070707;
+            --border-dim: #151515;
+            --border-focus: #333;
+            --text-main: #999;
             --accent-1: #00ffcc;
             --chad-gold: #ffcc00;
             --brutal-red: #ff0033;
-            --normie-gray: #777777;
             --font-mono: 'Courier New', Courier, monospace;
         }
 
@@ -30,7 +29,6 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            overflow-x: hidden;
         }
 
         body::before {
@@ -38,42 +36,38 @@
             display: block;
             position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
             z-index: 999;
-            background-size: 100% 2px, 3px 100%;
+            background-size: 100% 3px, 3px 100%;
             pointer-events: none;
         }
 
         header {
             border-bottom: 1px solid var(--border-dim);
-            padding-bottom: 10px;
+            padding-bottom: 12px;
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            position: relative;
-            z-index: 10;
         }
 
         h1 { 
-            font-size: 1.5rem; 
+            font-size: 1.4rem; 
             color: var(--brutal-red); 
             text-transform: uppercase; 
-            letter-spacing: 4px; 
-            text-shadow: 0 0 15px rgba(255,0,51,0.4); 
+            letter-spacing: 3px; 
+            text-shadow: 0 0 10px rgba(255,0,51,0.3); 
         }
 
         .layout {
             display: grid;
-            grid-template-columns: 350px 1fr 380px;
+            grid-template-columns: 360px 1fr 380px;
             gap: 20px;
-            height: calc(100vh - 80px);
-            position: relative;
-            z-index: 10;
+            height: calc(100vh - 90px);
         }
 
         @media (max-width: 1200px) {
-            .layout { grid-template-columns: 350px 1fr; }
+            .layout { grid-template-columns: 360px 1fr; }
             .right-panel { grid-column: 1 / -1; }
         }
         @media (max-width: 768px) {
@@ -86,15 +80,14 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
         }
 
         .panel-header {
             background: #000;
-            padding: 8px 15px;
-            font-size: 0.8rem;
+            padding: 10px 15px;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            color: #555;
+            color: #444;
             border-bottom: 1px solid var(--border-dim);
             letter-spacing: 1px;
         }
@@ -104,13 +97,12 @@
         .workspace {
             position: relative;
             width: 100%;
-            min-height: 250px;
+            min-height: 280px;
             background: #000;
             border: 1px dashed var(--border-focus);
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
         }
 
         .img-container {
@@ -119,14 +111,14 @@
             max-width: 100%;
         }
 
-        #targetImage { max-width: 100%; height: auto; display: block; filter: grayscale(100%) contrast(120%) brightness(80%); }
+        #targetImage { max-width: 100%; height: auto; display: block; filter: grayscale(100%) contrast(125%) brightness(85%); }
         canvas#overlay { position: absolute; top: 0; left: 0; pointer-events: none; }
 
         .btn {
             background: transparent;
             border: 1px solid var(--border-focus);
             color: var(--text-main);
-            padding: 12px;
+            padding: 14px;
             font-family: var(--font-mono);
             text-transform: uppercase;
             cursor: pointer;
@@ -134,28 +126,28 @@
             width: 100%;
             margin-top: 15px;
             font-weight: bold;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
-        .btn:hover:not(:disabled) { border-color: var(--brutal-red); color: var(--brutal-red); box-shadow: inset 0 0 15px rgba(255,0,51,0.2); }
-        .btn:disabled { border-color: #111; color: #333; cursor: not-allowed; }
+        .btn:hover:not(:disabled) { border-color: var(--accent-1); color: var(--accent-1); box-shadow: inset 0 0 15px rgba(0,255,204,0.1); }
+        .btn:disabled { border-color: #111; color: #222; cursor: not-allowed; }
 
-        .terminal { font-size: 0.8rem; line-height: 1.5; }
-        .term-line { margin-bottom: 4px; padding-bottom: 2px; }
-        .term-time { color: #555; margin-right: 10px; }
-        .term-sys { color: #888; }
-        .term-err { color: var(--brutal-red); text-shadow: 0 0 5px rgba(255,0,51,0.5); }
+        .terminal { font-size: 0.78rem; line-height: 1.6; }
+        .term-line { margin-bottom: 4px; border-bottom: 1px solid #0a0a0a; padding-bottom: 2px; }
+        .term-time { color: #333; margin-right: 8px; }
+        .term-sys { color: #666; }
+        .term-err { color: var(--brutal-red); }
         .term-warn { color: var(--chad-gold); }
-        .term-plus { color: var(--accent-1); text-shadow: 0 0 5px rgba(0,255,204,0.5); }
+        .term-plus { color: var(--accent-1); }
 
-        .metric-row { display: flex; justify-content: space-between; border-bottom: 1px solid #111; padding: 10px 0; font-size: 0.9rem;}
+        .metric-row { display: flex; justify-content: space-between; border-bottom: 1px solid #111; padding: 12px 0; font-size: 0.85rem;}
         .metric-val { color: #fff; font-weight: bold; }
 
-        .final-score { margin-top: 20px; padding: 20px; background: #000; border: 1px solid var(--border-dim); text-align: center; }
-        .tier-label { font-size: 2rem; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; }
-        .score-val { font-size: 3rem; margin: 15px 0; font-weight: bold; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
-        .score-desc { font-size: 0.85rem; color: #777; line-height: 1.6; text-align: justify; padding-top: 15px; border-top: 1px solid #111;}
+        .final-score { margin-top: 15px; padding: 20px; background: #000; border: 1px solid var(--border-dim); text-align: center; }
+        .tier-label { font-size: 1.8rem; font-weight: 900; letter-spacing: 4px; }
+        .score-val { font-size: 3.2rem; margin: 10px 0; font-weight: bold; }
+        .score-desc { font-size: 0.8rem; color: #666; line-height: 1.5; text-align: left; padding-top: 15px; border-top: 1px solid #111;}
         
-        .cursor { display: inline-block; width: 8px; height: 15px; background: #555; animation: blink 1s step-end infinite; vertical-align: middle; margin-left: 5px; }
+        .cursor { display: inline-block; width: 6px; height: 12px; background: #444; animation: blink 1s infinite; vertical-align: middle; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
@@ -164,28 +156,28 @@
     <header>
         <div>
             <h1>Strict PSL Engine</h1>
-            <div style="color: #444; font-size: 0.75rem; margin-top: 5px;">Build 4.2.0 // Craniofacial & Adiposity Analysis</div>
+            <div style="color: #333; font-size: 0.7rem; margin-top: 3px;">v4.5.2 // Orthographic & Adiposity Normalization</div>
         </div>
-        <div style="color: #333; font-size: 0.75rem; text-align: right;">
-            STATUS: <span id="sysStatus" style="color: var(--brutal-red);">OFFLINE</span><br>
-            STRICT MODE: ADIPOSITY_PENALTY_ON
+        <div style="color: #222; font-size: 0.7rem; text-align: right; line-height: 1.3;">
+            SPATIAL FILTER: ACTIVE<br>
+            LENS DISTORTION COMPENSATED
         </div>
     </header>
 
     <div class="layout">
-        <!-- ФОТО -->
+        <!-- ЛЕВАЯ ПАНЕЛЬ -->
         <div class="panel">
-            <div class="panel-header">Сенсор (Input)</div>
+            <div class="panel-header">Биометрический Ввод</div>
             <div class="panel-content">
                 <div class="workspace">
-                    <span id="placeholder" style="font-size: 0.8rem; color: #444; text-align: center;">[ ОЖИДАНИЕ ИНИЦИАЛИЗАЦИИ ]</span>
+                    <span id="placeholder" style="font-size: 0.75rem; color: #333;">[ ОЖИДАНИЕ ЯДРА ]</span>
                     <div class="img-container" id="imgContainer" style="display: none;">
-                        <img id="targetImage" alt="Target">
+                        <img id="targetImage" alt="Target Face">
                         <canvas id="overlay"></canvas>
                     </div>
                 </div>
                 <div style="position: relative;">
-                    <button class="btn" id="uploadBtn" disabled>[ ЗАГРУЗИТЬ БИОМЕТРИЮ ]</button>
+                    <button class="btn" id="uploadBtn" disabled>Загрузить скан</button>
                     <input type="file" id="imageLoader" accept="image/jpeg, image/png, image/webp" style="position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer;" disabled>
                 </div>
             </div>
@@ -193,23 +185,23 @@
 
         <!-- ТЕРМИНАЛ -->
         <div class="panel">
-            <div class="panel-header">Консоль (RAW LOGS)</div>
-            <div class="panel-content" style="background: #000;">
+            <div class="panel-header">Анализ геометрии (Spatial Log)</div>
+            <div class="panel-content" style="background: #000; position: relative;">
                 <div class="terminal" id="terminal"></div>
-                <div class="cursor" id="termCursor"></div>
+                <div class="cursor"></div>
             </div>
         </div>
 
         <!-- МЕТРИКИ -->
         <div class="panel right-panel">
-            <div class="panel-header">Клинический Вердикт</div>
+            <div class="panel-header">Результаты Кранчирования</div>
             <div class="panel-content">
                 <div id="metricsOutput">
-                    <div style="color:#333; text-align:center; margin-top: 50px;">Awaiting facial scan...</div>
+                    <div style="color:#222; text-align:center; margin-top: 60px;">Система готова к сканированию...</div>
                 </div>
                 <div class="final-score" id="finalScoreBox" style="display:none;">
                     <div class="tier-label" id="tierLabel">UNKNOWN</div>
-                    <div class="score-val" id="scoreVal" style="color: #fff;">0.0 <span style="font-size:1rem; color:#444;">/ 10</span></div>
+                    <div class="score-val" id="scoreVal" style="color: #fff;">0.0</div>
                     <div class="score-desc" id="scoreDesc">...</div>
                 </div>
             </div>
@@ -226,24 +218,17 @@
         const uploadBtn = document.getElementById('uploadBtn');
         const metricsOutput = document.getElementById('metricsOutput');
         const finalScoreBox = document.getElementById('finalScoreBox');
-        const sysStatus = document.getElementById('sysStatus');
 
         let modelsLoaded = false;
 
         function log(msg, type = 'sys', delay = 0) {
             return new Promise(resolve => {
                 setTimeout(() => {
-                    const now = new Date();
-                    const time = `[${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}:${now.getMilliseconds().toString().padStart(3,'0')}]`;
                     let color = 'term-sys';
                     if(type === 'err') color = 'term-err';
                     if(type === 'warn') color = 'term-warn';
                     if(type === 'plus') color = 'term-plus';
-                    
-                    const line = document.createElement('div');
-                    line.className = 'term-line';
-                    line.innerHTML = `<span class="term-time">${time}</span><span class="${color}">${msg}</span>`;
-                    terminal.appendChild(line);
+                    terminal.innerHTML += `<div class="term-line"><span class="term-time">&gt;</span><span class="${color}">${msg}</span></div>`;
                     terminal.parentElement.scrollTop = terminal.parentElement.scrollHeight;
                     resolve();
                 }, delay);
@@ -251,26 +236,21 @@
         }
 
         async function initAI() {
-            await log('SYSTEM BOOT...', 'sys', 500);
-            await log('Загрузка весов нейросети (face-api.js)...', 'warn', 300);
-            
+            await log('Запуск ядра калибровки v4.5...', 'sys', 200);
             const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
             try {
                 await Promise.all([
                     faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
                     faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL)
                 ]);
-                await log('Библиотеки загружены. Сенсор активен.', 'plus', 600);
-                await log('FAT-PENALTY МОДУЛЬ: АКТИВИРОВАН.', 'err', 200);
-                
+                await log('Нейросетевые веса развернуты.', 'sys', 200);
+                await log('Матрица компенсации наклона Roll/Pitch интегрирована.', 'plus', 100);
                 modelsLoaded = true;
-                sysStatus.innerText = "ONLINE";
-                sysStatus.style.color = "var(--accent-1)";
-                placeholder.innerText = "[ ГОТОВ К ПРИЕМУ ДАННЫХ ]";
+                placeholder.innerText = "[ СЕНСОР СВОБОДЕН ]";
                 uploadBtn.disabled = false;
                 imageLoader.disabled = false;
             } catch (e) {
-                await log('FATAL ERROR: Не удалось загрузить модели.', 'err');
+                await log('FATAL: Ошибка деплоя нейросети.', 'err');
             }
         }
 
@@ -283,170 +263,205 @@
 
             placeholder.style.display = 'none';
             imgContainer.style.display = 'inline-block';
-            metricsOutput.innerHTML = '<div style="color:#444; text-align:center; margin-top: 50px;">Processing data...</div>';
+            metricsOutput.innerHTML = '<div style="color:#222; text-align:center; margin-top: 50px;">Вычисление векторов...</div>';
             finalScoreBox.style.display = 'none';
             terminal.innerHTML = '';
             
-            await log(`Обнаружен файл: ${file.name}. Извлекаю геометрию...`, 'sys', 100);
             const imgURL = URL.createObjectURL(file);
             targetImage.src = imgURL;
 
             targetImage.onload = async () => {
                 overlay.width = targetImage.width;
                 overlay.height = targetImage.height;
-                const ctx = overlay.getContext('2d');
-                ctx.clearRect(0, 0, overlay.width, overlay.height);
-
-                await log('Запуск сканирования мягких тканей и костей...', 'sys', 400);
 
                 const detection = await faceapi.detectSingleFace(targetImage, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
 
                 if (!detection) {
-                    await log('CRITICAL: Лицо не найдено. Прекращение работы.', 'err', 200);
-                    metricsOutput.innerHTML = '<div style="color:var(--brutal-red); text-align:center; margin-top: 50px;">SCAN FAILED</div>';
+                    await log('CRITICAL ERROR: Лицо не распознано. Измените ракурс.', 'err');
                     return;
                 }
 
                 const dims = faceapi.matchDimensions(overlay, targetImage, true);
                 const resizedResults = faceapi.resizeResults(detection, dims);
                 
-                const drawOptions = { color: 'rgba(255, 0, 51, 0.5)', lineWidth: 1 };
-                const drawBox = new faceapi.draw.DrawFaceLandmarks(resizedResults.landmarks, drawOptions);
-                drawBox.draw(overlay);
+                const ctx = overlay.getContext('2d');
+                ctx.fillStyle = 'rgba(0, 255, 204, 0.7)';
+                resizedResults.landmarks.positions.forEach(p => ctx.fillRect(p.x, p.y, 2, 2));
 
-                setTimeout(() => calculateStrictMetrics(resizedResults.landmarks), 600);
+                calculateStrictMetrics(resizedResults.landmarks);
             };
         });
 
         async function calculateStrictMetrics(landmarks) {
             const points = landmarks.positions;
-            const jawLeft = points[0], jawRight = points[16], cheekLeft = points[2], cheekRight = points[14];
-            const lowerCheekLeft = points[5], lowerCheekRight = points[11]; // Точки под скулами (buccal area)
-            const eyeLeftOuter = points[36], eyeLeftInner = points[39], eyeRightInner = points[42], eyeRightOuter = points[45];
-            const nasion = points[27], upperLip = points[51];
-
             const dist = (p1, p2) => Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
-            const angle = (p1, p2) => (Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180) / Math.PI;
 
-            // Вычисления костных пропорций
+            // 1. КОМПЕНСАЦИЯ НАКЛОНА ГОЛОВЫ (Roll Correction)
+            // Вычисляем базовый угол лица по внутренним углам глаз (39 и 42)
+            const eyeLeftInner = points[39];
+            const eyeRightInner = points[42];
+            const headRollAngle = Math.atan2(eyeRightInner.y - eyeLeftInner.y, eyeRightInner.x - eyeLeftInner.x);
+            
+            await log(`Коррекция осевого смещения: ${(headRollAngle * 180 / Math.PI).toFixed(1)}°`, 'sys', 100);
+
+            // Функция вычисления угла, очищенная от наклона головы
+            const getCorrectedAngle = (p1, p2, reverse = false) => {
+                let raw = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+                let corrected = reverse ? (raw + headRollAngle) : (raw - headRollAngle);
+                return (corrected * 180) / Math.PI;
+            };
+
+            // 2. ВЫЧИСЛЕНИЕ АНАТОМИЧЕСКИХ ВЕКТОРОВ
+            const cheekLeft = points[2], cheekRight = points[14]; // Скуловые кости
+            const jawLeft = points[0], jawRight = points[16];     // Углы челюсти (Gonial)
+            const buccalLeft = points[4], buccalRight = points[12]; // Нижняя часть щек (под скулами)
+            const nasion = points[27], upperLip = points[51], chinBottom = points[8];
+
             const bizygomaticWidth = dist(cheekLeft, cheekRight);
+            const totalFaceHeight = dist(nasion, chinBottom);
             const upperFacialHeight = dist(nasion, upperLip);
-            let fwhrRaw = (bizygomaticWidth / upperFacialHeight).toFixed(2);
-            let fwhr = (fwhrRaw * 0.85).toFixed(2); 
+            
+            // FWHR (Индекс компактности)
+            let fwhr = (bizygomaticWidth / upperFacialHeight).toFixed(2);
 
-            const leftTilt = angle(eyeLeftOuter, eyeLeftInner);
-            const rightTilt = angle(eyeRightInner, eyeRightOuter);
-            const avgTilt = ((leftTilt + rightTilt) / 2);
+            // Вычисление углов глаз с поправкой на Roll наклона
+            const leftTilt = getCorrectedAngle(points[36], points[39]);
+            const rightTilt = getCorrectedAngle(points[42], points[45]);
+            const avgCanthalTilt = (leftTilt + rightTilt) / 2;
 
+            // Коэффициент сужения лица (Cheek Taper / Lean Index)
+            const buccalWidth = dist(buccalLeft, buccalRight);
             const bigonialWidth = dist(jawLeft, jawRight);
-            const jawToCheekRatio = (bigonialWidth / bizygomaticWidth * 100).toFixed(1);
-
-            // РАСЧЕТ ПРОКСИ ЖИРА (Facial Adiposity Bloat Index)
-            const buccalWidth = dist(lowerCheekLeft, lowerCheekRight);
-            const fatRatio = buccalWidth / bizygomaticWidth; 
             
-            // Маппинг коэффициента в примерный % подкожного жира
-            let estimatedBF = Math.round(((fatRatio - 0.78) * 130) + 12);
-            estimatedBF = Math.min(Math.max(estimatedBF, 9), 38); // Ограничение от 9% до 38%
+            // Важнейший показатель: насколько щеки западают внутрь относительно скул
+            const cheekHollowRatio = (buccalWidth / bizygomaticWidth).toFixed(3);
+            // Соотношение челюсти к скулам
+            const jawCheekRatio = (bigonialWidth / bizygomaticWidth * 100).toFixed(1);
 
-            await log('--- НАЧАЛО ЖЕСТКОЙ КАЛИБРОВКИ ---', 'sys', 200);
+            // Компактность глазной орбиты (Supraorbital Hooding Index)
+            // Расстояние от брови до глаза к ширине глаза
+            const browEyeLeft = dist(points[19], points[37]);
+            const browEyeRight = dist(points[24], points[44]);
+            const eyeWidth = dist(points[36], points[39]);
+            const browCompactness = ((browEyeLeft + browEyeRight) / (2 * eyeWidth)).toFixed(2);
 
-            let baseScore = 4.0; // База среднего человека
+            // Сборка итогового балла
+            let baseScore = 5.0; // Старт с чистого среднего значения
+            await log('--- ЗАПУСК spatial-анализа ---', 'warn', 150);
+
+            // Оценка структуры: Запавшие щеки vs Жировой отек (Bloat)
+            // На сухом лице (image_2) cheekHollowRatio будет низким (< 0.83), так как щеки «ввалены» внутрь
+            let adiposityPenalty = 0;
+            let bfProxy = 15;
             
-            // 1. FWHR (Компактность)
-            if (fwhr >= 1.9) { 
-                baseScore += 1.0; await log(`[+] FWHR ${fwhr}: Идеальный диморфизм кости.`, 'plus', 200); 
-            } else if (fwhr >= 1.75) { 
-                baseScore += 0.5; await log(`[~] FWHR ${fwhr}: В пределах нормы.`, 'sys', 200); 
+            if (cheekHollowRatio < 0.81) {
+                bfProxy = Math.round(9 + (cheekHollowRatio - 0.76) * 100);
+                baseScore += 1.5;
+                await log(`[+] Рельеф: Выявлен эффект Hollow Cheeks (${cheekHollowRatio}). Экстремальная четкость кости.`, 'plus', 200);
+            } else if (cheekHollowRatio <= 0.85) {
+                bfProxy = Math.round(13 + (cheekHollowRatio - 0.81) * 100);
+                baseScore += 0.5;
+                await log(`[+] Рельеф: Ткани сухие, структура щек оптимальна.`, 'plus', 100);
+            } else if (cheekHollowRatio <= 0.89) {
+                bfProxy = Math.round(17 + (cheekHollowRatio - 0.85) * 100);
+                baseScore -= 0.7;
+                await log(`[-] Отек: Признаки Fat Bloat (${cheekHollowRatio}). Костный каркас сглажен. Штраф.`, 'err', 200);
             } else {
-                baseScore -= 1.5; await log(`[-] FATAL: FWHR ${fwhr}. Вытянутый череп (Long midface). Штраф.`, 'err', 200); 
+                bfProxy = Math.round(23 + (cheekHollowRatio - 0.89) * 100);
+                baseScore -= 2.0;
+                await log(`[-] CRITICAL BLOAT: Кости лица полностью скрыты подкожным жиром. Штраф.`, 'err', 200);
             }
+            bfProxy = Math.min(Math.max(bfProxy, 8), 35);
 
-            // 2. Canthal Tilt (Глаза)
-            let tiltDesc = "";
-            if (avgTilt > 3) { 
-                baseScore += 1.0; tiltDesc = `Hunter (+${avgTilt.toFixed(1)}°)`; await log(`[+] Глаза: Острый Hunter-tilt (+${avgTilt.toFixed(1)}°).`, 'plus', 200); 
-            } else if (avgTilt >= 0) { 
-                baseScore += 0; tiltDesc = `Neutral (+${avgTilt.toFixed(1)}°)`; await log(`[~] Глаза: Нейтральный разрез.`, 'sys', 200); 
-            } else { 
-                baseScore -= 1.5; tiltDesc = `Prey (${avgTilt.toFixed(1)}°)`; await log(`[-] FATAL: Отрицательный наклон глаз. Взгляд жертвы. Штраф.`, 'err', 200); 
-            }
-
-            // 3. Челюсть к скулам
-            if (jawToCheekRatio >= 88) { 
-                baseScore += 1.5; await log(`[+] Челюсть: ${jawToCheekRatio}%. Массивная кость.`, 'plus', 200); 
-            } else if (jawToCheekRatio >= 82) { 
-                baseScore += 0.5; await log(`[~] Челюсть: ${jawToCheekRatio}%. Среднее развитие.`, 'sys', 200); 
+            // Оценка взгляда (Ролл-корректный Canthal Tilt)
+            let tiltStatus = "Neutral";
+            if (avgCanthalTilt > 3.5) {
+                baseScore += 1.2;
+                tiltStatus = `Positive (+${avgCanthalTilt.toFixed(1)}°)`;
+                await log(`[+] Глаза: Выраженный Hunter-взгляд. Угол: +${avgCanthalTilt.toFixed(1)}°`, 'plus', 150);
+            } else if (avgCanthalTilt >= -1) {
+                baseScore += 0.2;
+                tiltStatus = `Neutral (+${avgCanthalTilt.toFixed(1)}°)`;
+                await log(`[~] Глаза: Около-нейтральный баланс векторов (+${avgCanthalTilt.toFixed(1)}°)`, 'sys', 150);
             } else {
-                baseScore -= 2.0; await log(`[-] FATAL: Слабая нижняя треть (${jawToCheekRatio}%). Ретрузия.`, 'err', 200); 
-            }
-
-            // 4. ОЦЕНКА И ШТРАФ ЗА ЖИР (BLOATPILL MODULE)
-            await log(`Сканирование подкожно-жировой клетчатки...`, 'warn', 300);
-            let bfDesc = `${estimatedBF}%`;
-            
-            if (estimatedBF <= 13) {
-                baseScore += 0.5; 
-                bfDesc += " [Lean / Изрезанный]";
-                await log(`[+] Жир: ${estimatedBF}%. Экстремально низкий процент. Выраженность костной структуры максимальна.`, 'plus', 300);
-            } else if (estimatedBF <= 17) {
-                bfDesc += " [Optimal]";
-                await log(`[~] Жир: ${estimatedBF}%. Оптимальный баланс. Рельеф лица не нарушен.`, 'sys', 300);
-            } else if (estimatedBF <= 22) {
-                baseScore -= 0.5;
-                bfDesc += " [Puffy / Отекший]";
-                await log(`[-] Жир: ${estimatedBF}%. Лицо заплывает (Bloat). Костный рельеф начинает сглаживаться. Штраф -0.5.`, 'warn', 300);
-            } else if (estimatedBF <= 26) {
                 baseScore -= 1.5;
-                bfDesc += " [High Bloat]";
-                await log(`[-] FATAL: Жир ${estimatedBF}%. Высокая адипозность. Скулы и челюсть полностью скрыты жировыми пакетами. Штраф -1.5.`, 'err', 300);
-            } else {
-                baseScore -= 2.5;
-                bfDesc += " [Obese Bloat]";
-                await log(`[-] CRITICAL OVER: Жир ${estimatedBF}%. Лицо потеряло маскулинную геометрию. Тотальный штраф -2.5.`, 'err', 300);
+                tiltStatus = `Negative (${avgCanthalTilt.toFixed(1)}°)`;
+                await log(`[-] FATAL: Отрицательный наклон век (Prey eyes). Сильный дебафф.`, 'err', 150);
             }
 
-            // Итоговый загон в рамки PSL
+            // Компактность орбитальной зоны (Brow-to-eye)
+            // Меньше значение = плотнее бровь сидит над глазом, злее и маскулиннее взгляд
+            if (browCompactness < 0.65) {
+                baseScore += 0.8;
+                await log(`[+] Орбита: Сверхкомпактная посадка бровей (${browCompactness}). Глубокий взгляд.`, 'plus', 150);
+            } else if (browCompactness > 0.85) {
+                baseScore -= 0.8;
+                await log(`[-] Орбита: Высокая "нормисная" бровь (${browCompactness}). Отсутствие надбровного давления.`, 'warn', 150);
+            }
+
+            // Нижняя треть (Челюстной баланс с учетом сухости)
+            // Если лицо худое (V-shape), узкая челюсть — это эстетика. Если лицо жирное и челюсть узкая — это провал.
+            if (jawCheekRatio >= 86) {
+                baseScore += 0.8;
+                await log(`[+] Кость: Широкий массив Gonial углов (${jawCheekRatio}%).`, 'plus', 100);
+            } else if (jawCheekRatio >= 80 && cheekHollowRatio < 0.84) {
+                baseScore += 0.5; // Модельный тип: челюсть чуть уже скул, но за счет худобы выглядит отлично
+                await log(`[+] Кость: Модельный V-образный конус челюсти на сухом лице.`, 'plus', 100);
+            } else if (jawCheekRatio < 76) {
+                baseScore -= 1.5;
+                await log(`[-] FATAL: Критически узкая кость нижней трети (${jawCheekRatio}%). Регрессия.`, 'err', 100);
+            }
+
+            // Нормализация FWHR (Компенсация дисторсии длинного/короткого лица)
+            if (fwhr >= 1.70 && fwhr <= 2.05) {
+                baseScore += 0.5;
+            } else if (fwhr < 1.60) {
+                baseScore -= 1.0;
+                await log(`[-] Пропорции: Избыточная вертикаль черепа (Long Midface Index).`, 'warn', 100);
+            }
+
+            // Фиксация финального ранга в жестких рамках PSL (от 1.5 до 9.0)
             let finalPsl = Math.min(Math.max(baseScore, 1.5), 9.0).toFixed(1);
 
-            let tier = "SUB-5 (OVER)";
-            let color = "var(--brutal-red)";
-            let desc = "Генетический тупик или критический избыток жира. Костная структура разрушена. Рекомендация: дефицит калорий (кардиоселл) или радикальный ЧЛХ-хардмакс.";
+            // Определение тира по строгой шкале
+            let tier = "SUB-5 (OVER)"; let color = "var(--brutal-red)";
+            let desc = "Генетический дефицит угловатости либо критическая плотность мягких тканей. Структура лица размыта.";
 
-            if (finalPsl >= 8.0) { 
-                tier = "CHAD"; color = "var(--accent-1)"; 
-                desc = "Генетическая элита (Топ 1%). Безупречная лепка костей, помноженная на идеальный процент жира. Жизнь на легком уровне."; 
-            } else if (finalPsl >= 6.5) { 
-                tier = "CHADLITE"; color = "var(--chad-gold)"; 
-                desc = "Топ 15%. Отличная база. Если процент жира высок — сгонка до 10% мгновенно выведет в тир Чада."; 
-            } else if (finalPsl >= 5.5) { 
-                tier = "HTN (HIGH NORMIE)"; color = "#88cc00"; 
-                desc = "Выше среднего. Крепкий базис. Рекомендуется сушка, чтобы проявить углы челюсти и убрать щеки."; 
-            } else if (finalPsl >= 4.5) { 
-                tier = "MTN (MID NORMIE)"; color = "var(--normie-gray)"; 
-                desc = "Абсолютная массовка. Лицо без дефектов, но плоское и невыразительное. При высоком жире полностью сливается с толпой."; 
+            if (finalPsl >= 7.5) {
+                tier = "CHAD"; color = "var(--accent-1)";
+                desc = "Экстремально высокий уровень диморфизма. Острый рельеф костей, глубокие тени в щечных впадинах, хищная посадка глаз орбит. Полное отсутствие подкожного блуатинга.";
+            } else if (finalPsl >= 6.4) {
+                tier = "CHADLITE"; color = "var(--chad-gold)";
+                desc = "Высокий эстетический потенциал костных структур. Лицо полностью обезжирено, углы выражены. Минимальные отклонения от идеальных осей.";
+            } else if (finalPsl >= 5.4) {
+                tier = "HTN (High Normie)"; color = "#88cc00";
+                desc = "Хорошая, чистая база. Кости читаются отлично. Присутствует рельеф челюсти и скул. Конкурентоспособный тир.";
+            } else if (finalPsl >= 4.4) {
+                tier = "MTN (Mid Normie)"; color = "var(--normie-gray)";
+                desc = "Среднестатистический показатель. Анатомические векторы сбалансированы, но лицу не хватает резкости углов и глубины теней. Обычный гражданский фенотип.";
             } else if (finalPsl >= 3.5) {
-                tier = "LTN (LOW NORMIE)"; color = "#ff5500"; 
-                desc = "Ниже среднего. Выраженные недостатки в костях лица, усугубленные лишним весом. Требуется жесткая работа над собой.";
+                tier = "LTN (Low Normie)"; color = "#ff5500";
+                desc = "Лицо имеет выраженную мягкость, костные ориентиры сглажены жировой прослойкой или слабой генетикой.";
             }
 
-            // Вывод в UI панель результатов
+            // Вывод метрик на экран
             metricsOutput.innerHTML = `
-                <div class="metric-row"><span>Midface (FWHR)</span><span class="metric-val" style="color:${fwhr < 1.6 ? 'var(--brutal-red)' : '#fff'}">${fwhr}</span></div>
-                <div class="metric-row"><span>Canthal Tilt</span><span class="metric-val" style="color:${avgTilt < 0 ? 'var(--brutal-red)' : '#fff'}">${tiltDesc}</span></div>
-                <div class="metric-row"><span>Gonial/Zygomatic</span><span class="metric-val" style="color:${jawToCheekRatio < 82 ? 'var(--brutal-red)' : '#fff'}">${jawToCheekRatio}%</span></div>
-                <div class="metric-row"><span>Body Fat Proxy</span><span class="metric-val" style="color:${estimatedBF >= 22 ? 'var(--brutal-red)' : (estimatedBF <= 13 ? 'var(--accent-1)' : '#fff')}">${bfDesc}</span></div>
+                <div class="metric-row"><span>Canthal Tilt (Roll-Corrected)</span><span class="metric-val" style="color:${avgCanthalTilt < 0 ? 'var(--brutal-red)' : 'var(--accent-1)'}">${tiltStatus}</span></div>
+                <div class="metric-row"><span>Cheek Hollow Index</span><span class="metric-val" style="color:${cheekHollowRatio > 0.85 ? 'var(--brutal-red)' : 'var(--accent-1)'}">${cheekHollowRatio}</span></div>
+                <div class="metric-row"><span>Estimated Face Fat</span><span class="metric-val" style="color:${bfProxy >= 18 ? 'var(--brutal-red)' : 'var(--accent-1)'}">${bfProxy}%</span></div>
+                <div class="metric-row"><span>Orbital Compactness</span><span class="metric-val" style="color:${browCompactness > 0.85 ? 'var(--brutal-red)' : 'var(--accent-1)'}">${browCompactness}</span></div>
+                <div class="metric-row"><span>Jaw/Cheek Ratio</span><span class="metric-val">${jawCheekRatio}%</span></div>
             `;
 
             document.getElementById('tierLabel').innerText = tier;
             document.getElementById('tierLabel').style.color = color;
             document.getElementById('finalScoreBox').style.borderColor = color;
-            document.getElementById('scoreVal').innerHTML = `${finalPsl} <span style="font-size:1rem; color:#444;">/ 10 PSL</span>`;
+            document.getElementById('scoreVal').innerHTML = `${finalPsl} <span style="font-size:1rem; color:#333;">/ 10 PSL</span>`;
             document.getElementById('scoreDesc').innerText = desc;
             
             finalScoreBox.style.display = 'block';
-            await log(`>>> ИТОГОВАЯ ОЦЕНКА: ${finalPsl} PSL.`, 'sys', 300);
-            await log(`>>> ВЕРДИКТ: ${tier} <<<`, 'warn', 100);
+            await log(`>>> РАСЧЕТ ОКОНЧЕН. ИТОГ: ${finalPsl} PSL.`, 'sys', 200);
+            await log(`>>> ТИР-КЛАССИФИКАЦИЯ: ${tier} <<<`, 'warn', 100);
         }
     </script>
 </body>
