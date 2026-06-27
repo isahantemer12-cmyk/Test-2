@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PSL BLACKPILL TERMINAL v4.0</title>
+    <title>PSL BLACKPILL TERMINAL v4.2</title>
     <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
     <style>
         :root {
@@ -33,7 +33,6 @@
             overflow-x: hidden;
         }
 
-        /* Эффект ЭЛТ-монитора */
         body::before {
             content: " ";
             display: block;
@@ -156,7 +155,6 @@
         .score-val { font-size: 3rem; margin: 15px 0; font-weight: bold; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
         .score-desc { font-size: 0.85rem; color: #777; line-height: 1.6; text-align: justify; padding-top: 15px; border-top: 1px solid #111;}
         
-        /* Мигающий курсор в консоли */
         .cursor { display: inline-block; width: 8px; height: 15px; background: #555; animation: blink 1s step-end infinite; vertical-align: middle; margin-left: 5px; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
@@ -166,15 +164,16 @@
     <header>
         <div>
             <h1>Strict PSL Engine</h1>
-            <div style="color: #444; font-size: 0.75rem; margin-top: 5px;">Build 4.0.1 // Raw Craniofacial Analysis</div>
+            <div style="color: #444; font-size: 0.75rem; margin-top: 5px;">Build 4.2.0 // Craniofacial & Adiposity Analysis</div>
         </div>
         <div style="color: #333; font-size: 0.75rem; text-align: right;">
             STATUS: <span id="sysStatus" style="color: var(--brutal-red);">OFFLINE</span><br>
-            STRICT MODE: ENABLED
+            STRICT MODE: ADIPOSITY_PENALTY_ON
         </div>
     </header>
 
     <div class="layout">
+        <!-- ФОТО -->
         <div class="panel">
             <div class="panel-header">Сенсор (Input)</div>
             <div class="panel-content">
@@ -192,6 +191,7 @@
             </div>
         </div>
 
+        <!-- ТЕРМИНАЛ -->
         <div class="panel">
             <div class="panel-header">Консоль (RAW LOGS)</div>
             <div class="panel-content" style="background: #000;">
@@ -200,6 +200,7 @@
             </div>
         </div>
 
+        <!-- МЕТРИКИ -->
         <div class="panel right-panel">
             <div class="panel-header">Клинический Вердикт</div>
             <div class="panel-content">
@@ -259,8 +260,8 @@
                     faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
                     faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL)
                 ]);
-                await log('Библиотеки загружены. Сенсор активен.', 'plus', 800);
-                await log('ПРЕДУПРЕЖДЕНИЕ: Включен строгий режим. Иллюзии отключены.', 'err', 200);
+                await log('Библиотеки загружены. Сенсор активен.', 'plus', 600);
+                await log('FAT-PENALTY МОДУЛЬ: АКТИВИРОВАН.', 'err', 200);
                 
                 modelsLoaded = true;
                 sysStatus.innerText = "ONLINE";
@@ -284,7 +285,7 @@
             imgContainer.style.display = 'inline-block';
             metricsOutput.innerHTML = '<div style="color:#444; text-align:center; margin-top: 50px;">Processing data...</div>';
             finalScoreBox.style.display = 'none';
-            terminal.innerHTML = ''; // Очистка логов для нового скана
+            terminal.innerHTML = '';
             
             await log(`Обнаружен файл: ${file.name}. Извлекаю геометрию...`, 'sys', 100);
             const imgURL = URL.createObjectURL(file);
@@ -296,40 +297,38 @@
                 const ctx = overlay.getContext('2d');
                 ctx.clearRect(0, 0, overlay.width, overlay.height);
 
-                await log('Запуск модуля FaceLandmark68...', 'sys', 400);
+                await log('Запуск сканирования мягких тканей и костей...', 'sys', 400);
 
                 const detection = await faceapi.detectSingleFace(targetImage, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
 
                 if (!detection) {
-                    await log('CRITICAL: Лицо не найдено или ракурс не подходит. Прекращение работы.', 'err', 200);
+                    await log('CRITICAL: Лицо не найдено. Прекращение работы.', 'err', 200);
                     metricsOutput.innerHTML = '<div style="color:var(--brutal-red); text-align:center; margin-top: 50px;">SCAN FAILED</div>';
                     return;
                 }
 
-                await log('Точки лица захвачены. Анализ пропорций...', 'warn', 500);
-
                 const dims = faceapi.matchDimensions(overlay, targetImage, true);
                 const resizedResults = faceapi.resizeResults(detection, dims);
                 
-                // Рендер кроваво-красных точек и линий
-                const drawOptions = { color: 'rgba(255, 0, 51, 0.6)', lineWidth: 1 };
+                const drawOptions = { color: 'rgba(255, 0, 51, 0.5)', lineWidth: 1 };
                 const drawBox = new faceapi.draw.DrawFaceLandmarks(resizedResults.landmarks, drawOptions);
                 drawBox.draw(overlay);
 
-                setTimeout(() => calculateStrictMetrics(resizedResults.landmarks), 800);
+                setTimeout(() => calculateStrictMetrics(resizedResults.landmarks), 600);
             };
         });
 
         async function calculateStrictMetrics(landmarks) {
             const points = landmarks.positions;
             const jawLeft = points[0], jawRight = points[16], cheekLeft = points[2], cheekRight = points[14];
+            const lowerCheekLeft = points[5], lowerCheekRight = points[11]; // Точки под скулами (buccal area)
             const eyeLeftOuter = points[36], eyeLeftInner = points[39], eyeRightInner = points[42], eyeRightOuter = points[45];
             const nasion = points[27], upperLip = points[51];
 
             const dist = (p1, p2) => Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
             const angle = (p1, p2) => (Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180) / Math.PI;
 
-            // Вычисления
+            // Вычисления костных пропорций
             const bizygomaticWidth = dist(cheekLeft, cheekRight);
             const upperFacialHeight = dist(nasion, upperLip);
             let fwhrRaw = (bizygomaticWidth / upperFacialHeight).toFixed(2);
@@ -342,71 +341,101 @@
             const bigonialWidth = dist(jawLeft, jawRight);
             const jawToCheekRatio = (bigonialWidth / bizygomaticWidth * 100).toFixed(1);
 
+            // РАСЧЕТ ПРОКСИ ЖИРА (Facial Adiposity Bloat Index)
+            const buccalWidth = dist(lowerCheekLeft, lowerCheekRight);
+            const fatRatio = buccalWidth / bizygomaticWidth; 
+            
+            // Маппинг коэффициента в примерный % подкожного жира
+            let estimatedBF = Math.round(((fatRatio - 0.78) * 130) + 12);
+            estimatedBF = Math.min(Math.max(estimatedBF, 9), 38); // Ограничение от 9% до 38%
+
             await log('--- НАЧАЛО ЖЕСТКОЙ КАЛИБРОВКИ ---', 'sys', 200);
 
-            // База: 4.0 - это жестокая реальность (Mid Normie). Большинство людей здесь.
-            let baseScore = 4.0; 
+            let baseScore = 4.0; // База среднего человека
             
-            // 1. FWHR
+            // 1. FWHR (Компактность)
             if (fwhr >= 1.9) { 
-                baseScore += 1.0; await log(`[+] FWHR ${fwhr}: Идеальная ширина. Высокий диморфизм.`, 'plus', 300); 
+                baseScore += 1.0; await log(`[+] FWHR ${fwhr}: Идеальный диморфизм кости.`, 'plus', 200); 
             } else if (fwhr >= 1.75) { 
-                baseScore += 0.5; await log(`[~] FWHR ${fwhr}: Выше среднего. Хорошая база.`, 'warn', 300); 
-            } else if (fwhr >= 1.6) { 
-                baseScore -= 0.5; await log(`[-] FWHR ${fwhr}: Субоптимально. Слегка вытянуто.`, 'sys', 300); 
+                baseScore += 0.5; await log(`[~] FWHR ${fwhr}: В пределах нормы.`, 'sys', 200); 
             } else {
-                baseScore -= 1.5; await log(`[-] FATAL: FWHR ${fwhr}. Лошадиное лицо (Long midface). Грубая генетическая ошибка.`, 'err', 300); 
+                baseScore -= 1.5; await log(`[-] FATAL: FWHR ${fwhr}. Вытянутый череп (Long midface). Штраф.`, 'err', 200); 
             }
 
-            // 2. Canthal Tilt
+            // 2. Canthal Tilt (Глаза)
             let tiltDesc = "";
             if (avgTilt > 3) { 
-                baseScore += 1.0; tiltDesc = `Hunter (+${avgTilt.toFixed(1)}°)`; await log(`[+] Глаза: Острый хищный угол (+${avgTilt.toFixed(1)}°).`, 'plus', 300); 
+                baseScore += 1.0; tiltDesc = `Hunter (+${avgTilt.toFixed(1)}°)`; await log(`[+] Глаза: Острый Hunter-tilt (+${avgTilt.toFixed(1)}°).`, 'plus', 200); 
             } else if (avgTilt >= 0) { 
-                baseScore += 0; tiltDesc = `Neutral (+${avgTilt.toFixed(1)}°)`; await log(`[~] Глаза: Нейтральный наклон. Ничего выдающегося.`, 'sys', 300); 
+                baseScore += 0; tiltDesc = `Neutral (+${avgTilt.toFixed(1)}°)`; await log(`[~] Глаза: Нейтральный разрез.`, 'sys', 200); 
             } else { 
-                baseScore -= 1.5; tiltDesc = `Prey (${avgTilt.toFixed(1)}°)`; await log(`[-] FATAL: Отрицательный наклон (${avgTilt.toFixed(1)}°). Глаза жертвы. Инстинктивное отторжение.`, 'err', 300); 
+                baseScore -= 1.5; tiltDesc = `Prey (${avgTilt.toFixed(1)}°)`; await log(`[-] FATAL: Отрицательный наклон глаз. Взгляд жертвы. Штраф.`, 'err', 200); 
             }
 
-            // 3. Jaw
+            // 3. Челюсть к скулам
             if (jawToCheekRatio >= 88) { 
-                baseScore += 1.5; await log(`[+] Челюсть: ${jawToCheekRatio}%. Массивная, доминирующая структура.`, 'plus', 300); 
+                baseScore += 1.5; await log(`[+] Челюсть: ${jawToCheekRatio}%. Массивная кость.`, 'plus', 200); 
             } else if (jawToCheekRatio >= 82) { 
-                baseScore += 0.5; await log(`[~] Челюсть: ${jawToCheekRatio}%. В пределах хорошей нормы.`, 'sys', 300); 
-            } else if (jawToCheekRatio >= 75) { 
-                baseScore -= 1.0; await log(`[-] Челюсть: ${jawToCheekRatio}%. Недостаток угловатости, слабое развитие.`, 'warn', 300); 
+                baseScore += 0.5; await log(`[~] Челюсть: ${jawToCheekRatio}%. Среднее развитие.`, 'sys', 200); 
             } else {
-                baseScore -= 2.0; await log(`[-] FATAL: Челюсть ${jawToCheekRatio}%. Ретрузия. Полное отсутствие нижней трети.`, 'err', 300); 
+                baseScore -= 2.0; await log(`[-] FATAL: Слабая нижняя треть (${jawToCheekRatio}%). Ретрузия.`, 'err', 200); 
             }
 
-            // Лимиты: оценка не может быть ниже 1.5 и выше 9.0 (10 не существует).
+            // 4. ОЦЕНКА И ШТРАФ ЗА ЖИР (BLOATPILL MODULE)
+            await log(`Сканирование подкожно-жировой клетчатки...`, 'warn', 300);
+            let bfDesc = `${estimatedBF}%`;
+            
+            if (estimatedBF <= 13) {
+                baseScore += 0.5; 
+                bfDesc += " [Lean / Изрезанный]";
+                await log(`[+] Жир: ${estimatedBF}%. Экстремально низкий процент. Выраженность костной структуры максимальна.`, 'plus', 300);
+            } else if (estimatedBF <= 17) {
+                bfDesc += " [Optimal]";
+                await log(`[~] Жир: ${estimatedBF}%. Оптимальный баланс. Рельеф лица не нарушен.`, 'sys', 300);
+            } else if (estimatedBF <= 22) {
+                baseScore -= 0.5;
+                bfDesc += " [Puffy / Отекший]";
+                await log(`[-] Жир: ${estimatedBF}%. Лицо заплывает (Bloat). Костный рельеф начинает сглаживаться. Штраф -0.5.`, 'warn', 300);
+            } else if (estimatedBF <= 26) {
+                baseScore -= 1.5;
+                bfDesc += " [High Bloat]";
+                await log(`[-] FATAL: Жир ${estimatedBF}%. Высокая адипозность. Скулы и челюсть полностью скрыты жировыми пакетами. Штраф -1.5.`, 'err', 300);
+            } else {
+                baseScore -= 2.5;
+                bfDesc += " [Obese Bloat]";
+                await log(`[-] CRITICAL OVER: Жир ${estimatedBF}%. Лицо потеряло маскулинную геометрию. Тотальный штраф -2.5.`, 'err', 300);
+            }
+
+            // Итоговый загон в рамки PSL
             let finalPsl = Math.min(Math.max(baseScore, 1.5), 9.0).toFixed(1);
 
             let tier = "SUB-5 (OVER)";
             let color = "var(--brutal-red)";
-            let desc = "Генетический тупик. Костная структура разрушена отрицательным канталом или отсутствием челюсти. Внимание женщин недоступно на инстинктивном уровне. Рекомендация: радикальный хардмакс (ЧЛХ) или принятие реальности.";
+            let desc = "Генетический тупик или критический избыток жира. Костная структура разрушена. Рекомендация: дефицит калорий (кардиоселл) или радикальный ЧЛХ-хардмакс.";
 
             if (finalPsl >= 8.0) { 
                 tier = "CHAD"; color = "var(--accent-1)"; 
-                desc = "Элита (Топ 1%). Экстремальный половой диморфизм. Идеальная костная масса. Жизнь на абсолютном легком уровне, ореол (halo effect) покрывает любые личностные недостатки."; 
+                desc = "Генетическая элита (Топ 1%). Безупречная лепка костей, помноженная на идеальный процент жира. Жизнь на легком уровне."; 
             } else if (finalPsl >= 6.5) { 
                 tier = "CHADLITE"; color = "var(--chad-gold)"; 
-                desc = "Топ 15%. Мощная генетическая база, прощающая мелкие недостатки. С низким bodyfat (8-10%) вызывает мгновенное влечение. Доминирует в любой социальной группе."; 
+                desc = "Топ 15%. Отличная база. Если процент жира высок — сгонка до 10% мгновенно выведет в тир Чада."; 
             } else if (finalPsl >= 5.5) { 
                 tier = "HTN (HIGH NORMIE)"; color = "#88cc00"; 
-                desc = "Выше среднего. Лицо имеет потенциал, но не дотягивает до элиты. Конкуренция высока. Требуется жесткий луксмакс, джимселлинг и безупречный стиль для успешной игры."; 
+                desc = "Выше среднего. Крепкий базис. Рекомендуется сушка, чтобы проявить углы челюсти и убрать щеки."; 
             } else if (finalPsl >= 4.5) { 
                 tier = "MTN (MID NORMIE)"; color = "var(--normie-gray)"; 
-                desc = "База. Абсолютная массовка (NPC). Черты лица не развиты для доминации, но и отторжения не вызывают. Невидим для топовых женщин. Выбор — ставки на статус (бетта-провайдер)."; 
+                desc = "Абсолютная массовка. Лицо без дефектов, но плоское и невыразительное. При высоком жире полностью сливается с толпой."; 
             } else if (finalPsl >= 3.5) {
                 tier = "LTN (LOW NORMIE)"; color = "#ff5500"; 
-                desc = "Ниже среднего. Жесткие структурные недостатки. Биологический фильтр отсеивает вас на раннем этапе. Отношения возможны только при экстремальной компенсации деньгами или статусом.";
+                desc = "Ниже среднего. Выраженные недостатки в костях лица, усугубленные лишним весом. Требуется жесткая работа над собой.";
             }
 
+            // Вывод в UI панель результатов
             metricsOutput.innerHTML = `
-                <div class="metric-row"><span>Midface (FWHR)</span><span class="metric-val" style="color:${fwhr < 1.6 ? 'var(--brutal-red)' : (fwhr >= 1.9 ? 'var(--accent-1)' : '#fff')}">${fwhr}</span></div>
-                <div class="metric-row"><span>Canthal Tilt</span><span class="metric-val" style="color:${avgTilt < 0 ? 'var(--brutal-red)' : (avgTilt > 3 ? 'var(--accent-1)' : '#fff')}">${tiltDesc}</span></div>
-                <div class="metric-row"><span>Gonial/Zygomatic</span><span class="metric-val" style="color:${jawToCheekRatio < 75 ? 'var(--brutal-red)' : (jawToCheekRatio >= 88 ? 'var(--accent-1)' : '#fff')}">${jawToCheekRatio}%</span></div>
+                <div class="metric-row"><span>Midface (FWHR)</span><span class="metric-val" style="color:${fwhr < 1.6 ? 'var(--brutal-red)' : '#fff'}">${fwhr}</span></div>
+                <div class="metric-row"><span>Canthal Tilt</span><span class="metric-val" style="color:${avgTilt < 0 ? 'var(--brutal-red)' : '#fff'}">${tiltDesc}</span></div>
+                <div class="metric-row"><span>Gonial/Zygomatic</span><span class="metric-val" style="color:${jawToCheekRatio < 82 ? 'var(--brutal-red)' : '#fff'}">${jawToCheekRatio}%</span></div>
+                <div class="metric-row"><span>Body Fat Proxy</span><span class="metric-val" style="color:${estimatedBF >= 22 ? 'var(--brutal-red)' : (estimatedBF <= 13 ? 'var(--accent-1)' : '#fff')}">${bfDesc}</span></div>
             `;
 
             document.getElementById('tierLabel').innerText = tier;
@@ -416,8 +445,8 @@
             document.getElementById('scoreDesc').innerText = desc;
             
             finalScoreBox.style.display = 'block';
-            await log(`>>> ИТОГОВАЯ ОЦЕНКА: ${finalPsl} PSL.`, 'sys', 400);
-            await log(`>>> ВЕРДИКТ: ${tier} <<<`, 'warn', 200);
+            await log(`>>> ИТОГОВАЯ ОЦЕНКА: ${finalPsl} PSL.`, 'sys', 300);
+            await log(`>>> ВЕРДИКТ: ${tier} <<<`, 'warn', 100);
         }
     </script>
 </body>
