@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PSL Blackpill Terminal</title>
+    <title>PSL BLACKPILL TERMINAL v4.0</title>
     <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.min.js"></script>
     <style>
         :root {
-            --bg-base: #030303;
-            --panel-bg: #0a0a0a;
+            --bg-base: #020202;
+            --panel-bg: #080808;
             --border-dim: #1a1a1a;
-            --border-focus: #333;
-            --text-main: #c0c0c0;
+            --border-focus: #444;
+            --text-main: #a0a0a0;
             --accent-1: #00ffcc;
-            --chad-gold: #ffb700;
+            --chad-gold: #ffcc00;
             --brutal-red: #ff0033;
-            --normie-gray: #888888;
+            --normie-gray: #777777;
             --font-mono: 'Courier New', Courier, monospace;
-            --font-ui: -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,29 +24,53 @@
         body {
             background-color: var(--bg-base);
             color: var(--text-main);
-            font-family: var(--font-ui);
+            font-family: var(--font-mono);
             padding: 20px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Эффект ЭЛТ-монитора */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 999;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
         }
 
         header {
             border-bottom: 1px solid var(--border-dim);
-            padding-bottom: 15px;
+            padding-bottom: 10px;
             margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
+            position: relative;
+            z-index: 10;
         }
 
-        h1 { font-size: 1.4rem; color: var(--brutal-red); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,0,51,0.3); }
+        h1 { 
+            font-size: 1.5rem; 
+            color: var(--brutal-red); 
+            text-transform: uppercase; 
+            letter-spacing: 4px; 
+            text-shadow: 0 0 15px rgba(255,0,51,0.4); 
+        }
 
         .layout {
             display: grid;
-            grid-template-columns: 350px 1fr 350px;
+            grid-template-columns: 350px 1fr 380px;
             gap: 20px;
             height: calc(100vh - 80px);
+            position: relative;
+            z-index: 10;
         }
 
         @media (max-width: 1200px) {
@@ -61,20 +84,20 @@
         .panel {
             background: var(--panel-bg);
             border: 1px solid var(--border-dim);
-            border-radius: 4px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
         }
 
         .panel-header {
-            background: #050505;
+            background: #000;
             padding: 8px 15px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             color: #555;
             border-bottom: 1px solid var(--border-dim);
-            font-family: var(--font-mono);
+            letter-spacing: 1px;
         }
 
         .panel-content { padding: 15px; overflow-y: auto; flex: 1; }
@@ -82,11 +105,13 @@
         .workspace {
             position: relative;
             width: 100%;
+            min-height: 250px;
             background: #000;
             border: 1px dashed var(--border-focus);
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
 
         .img-container {
@@ -95,7 +120,7 @@
             max-width: 100%;
         }
 
-        #targetImage { max-width: 100%; height: auto; display: block; filter: grayscale(20%) contrast(110%); }
+        #targetImage { max-width: 100%; height: auto; display: block; filter: grayscale(100%) contrast(120%) brightness(80%); }
         canvas#overlay { position: absolute; top: 0; left: 0; pointer-events: none; }
 
         .btn {
@@ -108,73 +133,82 @@
             cursor: pointer;
             transition: 0.2s;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 15px;
             font-weight: bold;
+            letter-spacing: 2px;
         }
-        .btn:hover:not(:disabled) { border-color: var(--brutal-red); color: var(--brutal-red); box-shadow: inset 0 0 10px rgba(255,0,51,0.2); }
-        .btn:disabled { border-color: #222; color: #444; cursor: not-allowed; }
+        .btn:hover:not(:disabled) { border-color: var(--brutal-red); color: var(--brutal-red); box-shadow: inset 0 0 15px rgba(255,0,51,0.2); }
+        .btn:disabled { border-color: #111; color: #333; cursor: not-allowed; }
 
-        .terminal { font-family: var(--font-mono); font-size: 0.8rem; color: #888; line-height: 1.4; }
-        .term-line { margin-bottom: 6px; border-bottom: 1px solid #111; padding-bottom: 4px; }
-        .term-time { color: #444; margin-right: 8px; }
-        .term-sys { color: #aaa; }
-        .term-err { color: var(--brutal-red); font-weight: bold; }
+        .terminal { font-size: 0.8rem; line-height: 1.5; }
+        .term-line { margin-bottom: 4px; padding-bottom: 2px; }
+        .term-time { color: #555; margin-right: 10px; }
+        .term-sys { color: #888; }
+        .term-err { color: var(--brutal-red); text-shadow: 0 0 5px rgba(255,0,51,0.5); }
         .term-warn { color: var(--chad-gold); }
-        .term-plus { color: var(--accent-1); }
+        .term-plus { color: var(--accent-1); text-shadow: 0 0 5px rgba(0,255,204,0.5); }
 
-        .metric-row { display: flex; justify-content: space-between; border-bottom: 1px dotted #222; padding: 8px 0; font-size: 0.85rem;}
-        .metric-val { color: #fff; font-weight: bold; font-family: var(--font-mono);}
+        .metric-row { display: flex; justify-content: space-between; border-bottom: 1px solid #111; padding: 10px 0; font-size: 0.9rem;}
+        .metric-val { color: #fff; font-weight: bold; }
 
-        .final-score { margin-top: 20px; padding: 20px; background: #050505; border: 1px solid var(--border-dim); text-align: center; }
-        .tier-label { font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; }
-        .score-val { font-size: 2.5rem; font-family: var(--font-mono); margin: 10px 0; font-weight: bold; }
-        .score-desc { font-size: 0.85rem; color: #888; line-height: 1.5; text-align: left; padding-top: 10px; border-top: 1px solid #222;}
+        .final-score { margin-top: 20px; padding: 20px; background: #000; border: 1px solid var(--border-dim); text-align: center; }
+        .tier-label { font-size: 2rem; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; }
+        .score-val { font-size: 3rem; margin: 15px 0; font-weight: bold; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        .score-desc { font-size: 0.85rem; color: #777; line-height: 1.6; text-align: justify; padding-top: 15px; border-top: 1px solid #111;}
+        
+        /* Мигающий курсор в консоли */
+        .cursor { display: inline-block; width: 8px; height: 15px; background: #555; animation: blink 1s step-end infinite; vertical-align: middle; margin-left: 5px; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Strict PSL Engine</h1>
-        <div style="font-family: var(--font-mono); color: #444; font-size: 0.75rem;">Build 4.0 // Uncensored Blackpill Logic</div>
+        <div>
+            <h1>Strict PSL Engine</h1>
+            <div style="color: #444; font-size: 0.75rem; margin-top: 5px;">Build 4.0.1 // Raw Craniofacial Analysis</div>
+        </div>
+        <div style="color: #333; font-size: 0.75rem; text-align: right;">
+            STATUS: <span id="sysStatus" style="color: var(--brutal-red);">OFFLINE</span><br>
+            STRICT MODE: ENABLED
+        </div>
     </header>
 
     <div class="layout">
-        <!-- ФОТО -->
         <div class="panel">
             <div class="panel-header">Сенсор (Input)</div>
             <div class="panel-content">
                 <div class="workspace">
-                    <span id="placeholder" style="font-family: var(--font-mono); font-size: 0.8rem;">[ Загрузка нейросети ]</span>
+                    <span id="placeholder" style="font-size: 0.8rem; color: #444; text-align: center;">[ ОЖИДАНИЕ ИНИЦИАЛИЗАЦИИ ]</span>
                     <div class="img-container" id="imgContainer" style="display: none;">
                         <img id="targetImage" alt="Target">
                         <canvas id="overlay"></canvas>
                     </div>
                 </div>
-                <div style="position: relative; margin-top: 15px;">
-                    <button class="btn" id="uploadBtn" disabled>Загрузить фото</button>
+                <div style="position: relative;">
+                    <button class="btn" id="uploadBtn" disabled>[ ЗАГРУЗИТЬ БИОМЕТРИЮ ]</button>
                     <input type="file" id="imageLoader" accept="image/jpeg, image/png, image/webp" style="position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer;" disabled>
                 </div>
             </div>
         </div>
 
-        <!-- ТЕРМИНАЛ -->
         <div class="panel">
             <div class="panel-header">Консоль (RAW LOGS)</div>
-            <div class="panel-content" style="padding: 10px;">
+            <div class="panel-content" style="background: #000;">
                 <div class="terminal" id="terminal"></div>
+                <div class="cursor" id="termCursor"></div>
             </div>
         </div>
 
-        <!-- МЕТРИКИ -->
         <div class="panel right-panel">
             <div class="panel-header">Клинический Вердикт</div>
             <div class="panel-content">
                 <div id="metricsOutput">
-                    <div style="color:#444; text-align:center; margin-top: 50px; font-family: var(--font-mono);">Awaiting scan...</div>
+                    <div style="color:#333; text-align:center; margin-top: 50px;">Awaiting facial scan...</div>
                 </div>
                 <div class="final-score" id="finalScoreBox" style="display:none;">
                     <div class="tier-label" id="tierLabel">UNKNOWN</div>
-                    <div class="score-val" id="scoreVal" style="color: #fff;">0.0 <span style="font-size:1rem; color:#555;">/ 10</span></div>
+                    <div class="score-val" id="scoreVal" style="color: #fff;">0.0 <span style="font-size:1rem; color:#444;">/ 10</span></div>
                     <div class="score-desc" id="scoreDesc">...</div>
                 </div>
             </div>
@@ -191,35 +225,51 @@
         const uploadBtn = document.getElementById('uploadBtn');
         const metricsOutput = document.getElementById('metricsOutput');
         const finalScoreBox = document.getElementById('finalScoreBox');
+        const sysStatus = document.getElementById('sysStatus');
 
         let modelsLoaded = false;
 
-        function log(msg, type = 'sys') {
-            const now = new Date();
-            const time = `[${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}]`;
-            let color = 'term-sys';
-            if(type === 'err') color = 'term-err';
-            if(type === 'warn') color = 'term-warn';
-            if(type === 'plus') color = 'term-plus';
-            terminal.innerHTML += `<div class="term-line"><span class="term-time">${time}</span><span class="${color}">${msg}</span></div>`;
-            terminal.parentElement.scrollTop = terminal.parentElement.scrollHeight;
+        function log(msg, type = 'sys', delay = 0) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const now = new Date();
+                    const time = `[${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}:${now.getMilliseconds().toString().padStart(3,'0')}]`;
+                    let color = 'term-sys';
+                    if(type === 'err') color = 'term-err';
+                    if(type === 'warn') color = 'term-warn';
+                    if(type === 'plus') color = 'term-plus';
+                    
+                    const line = document.createElement('div');
+                    line.className = 'term-line';
+                    line.innerHTML = `<span class="term-time">${time}</span><span class="${color}">${msg}</span>`;
+                    terminal.appendChild(line);
+                    terminal.parentElement.scrollTop = terminal.parentElement.scrollHeight;
+                    resolve();
+                }, delay);
+            });
         }
 
         async function initAI() {
-            log('Инициализация face-api.js...', 'warn');
+            await log('SYSTEM BOOT...', 'sys', 500);
+            await log('Загрузка весов нейросети (face-api.js)...', 'warn', 300);
+            
             const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
             try {
                 await Promise.all([
                     faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
                     faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL)
                 ]);
-                log('Сенсор активен. Ограничения сняты.', 'sys');
+                await log('Библиотеки загружены. Сенсор активен.', 'plus', 800);
+                await log('ПРЕДУПРЕЖДЕНИЕ: Включен строгий режим. Иллюзии отключены.', 'err', 200);
+                
                 modelsLoaded = true;
-                placeholder.innerText = "[ ОЖИДАНИЕ ДАННЫХ ]";
+                sysStatus.innerText = "ONLINE";
+                sysStatus.style.color = "var(--accent-1)";
+                placeholder.innerText = "[ ГОТОВ К ПРИЕМУ ДАННЫХ ]";
                 uploadBtn.disabled = false;
                 imageLoader.disabled = false;
             } catch (e) {
-                log('FATAL ERROR: Не удалось загрузить веса.', 'err');
+                await log('FATAL ERROR: Не удалось загрузить модели.', 'err');
             }
         }
 
@@ -232,37 +282,45 @@
 
             placeholder.style.display = 'none';
             imgContainer.style.display = 'inline-block';
-            metricsOutput.innerHTML = '';
+            metricsOutput.innerHTML = '<div style="color:#444; text-align:center; margin-top: 50px;">Processing data...</div>';
             finalScoreBox.style.display = 'none';
+            terminal.innerHTML = ''; // Очистка логов для нового скана
             
-            log(`Скан: ${file.name}. Извлекаю геометрию...`, 'sys');
+            await log(`Обнаружен файл: ${file.name}. Извлекаю геометрию...`, 'sys', 100);
             const imgURL = URL.createObjectURL(file);
             targetImage.src = imgURL;
 
             targetImage.onload = async () => {
                 overlay.width = targetImage.width;
                 overlay.height = targetImage.height;
+                const ctx = overlay.getContext('2d');
+                ctx.clearRect(0, 0, overlay.width, overlay.height);
+
+                await log('Запуск модуля FaceLandmark68...', 'sys', 400);
 
                 const detection = await faceapi.detectSingleFace(targetImage, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
 
                 if (!detection) {
-                    log('CRITICAL: Лицо не найдено. Прекращение работы.', 'err');
+                    await log('CRITICAL: Лицо не найдено или ракурс не подходит. Прекращение работы.', 'err', 200);
+                    metricsOutput.innerHTML = '<div style="color:var(--brutal-red); text-align:center; margin-top: 50px;">SCAN FAILED</div>';
                     return;
                 }
+
+                await log('Точки лица захвачены. Анализ пропорций...', 'warn', 500);
 
                 const dims = faceapi.matchDimensions(overlay, targetImage, true);
                 const resizedResults = faceapi.resizeResults(detection, dims);
                 
-                // Рисуем кроваво-красные точки для стиля
-                const drawOptions = { color: 'rgba(255, 0, 51, 0.8)', lineWidth: 1 };
+                // Рендер кроваво-красных точек и линий
+                const drawOptions = { color: 'rgba(255, 0, 51, 0.6)', lineWidth: 1 };
                 const drawBox = new faceapi.draw.DrawFaceLandmarks(resizedResults.landmarks, drawOptions);
                 drawBox.draw(overlay);
 
-                calculateStrictMetrics(resizedResults.landmarks);
+                setTimeout(() => calculateStrictMetrics(resizedResults.landmarks), 800);
             };
         });
 
-        function calculateStrictMetrics(landmarks) {
+        async function calculateStrictMetrics(landmarks) {
             const points = landmarks.positions;
             const jawLeft = points[0], jawRight = points[16], cheekLeft = points[2], cheekRight = points[14];
             const eyeLeftOuter = points[36], eyeLeftInner = points[39], eyeRightInner = points[42], eyeRightOuter = points[45];
@@ -271,7 +329,7 @@
             const dist = (p1, p2) => Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
             const angle = (p1, p2) => (Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180) / Math.PI;
 
-            // Сырые данные
+            // Вычисления
             const bizygomaticWidth = dist(cheekLeft, cheekRight);
             const upperFacialHeight = dist(nasion, upperLip);
             let fwhrRaw = (bizygomaticWidth / upperFacialHeight).toFixed(2);
@@ -284,80 +342,82 @@
             const bigonialWidth = dist(jawLeft, jawRight);
             const jawToCheekRatio = (bigonialWidth / bizygomaticWidth * 100).toFixed(1);
 
-            log('--- НАЧАЛО ЖЕСТКОЙ КАЛИБРОВКИ ---', 'warn');
+            await log('--- НАЧАЛО ЖЕСТКОЙ КАЛИБРОВКИ ---', 'sys', 200);
 
-            let baseScore = 4.5; // Базовый старт ниже среднего (строгий стандарт)
+            // База: 4.0 - это жестокая реальность (Mid Normie). Большинство людей здесь.
+            let baseScore = 4.0; 
             
-            // 1. Оценка FWHR (Компактность лица)
-            if (fwhr >= 1.85 && fwhr <= 2.1) { 
-                baseScore += 1.0; log(`[+] FWHR ${fwhr}: Топ диморфизм, широкое лицо.`, 'plus'); 
-            } else if (fwhr >= 1.7) { 
-                baseScore += 0.0; log(`[~] FWHR ${fwhr}: Норма, ничего выдающегося.`, 'sys'); 
-            } else if (fwhr < 1.6) { 
-                baseScore -= 1.5; log(`[-] FATAL: FWHR ${fwhr}. Вытянутое "лошадиное" лицо (Long midface). Жесткий штраф.`, 'err'); 
+            // 1. FWHR
+            if (fwhr >= 1.9) { 
+                baseScore += 1.0; await log(`[+] FWHR ${fwhr}: Идеальная ширина. Высокий диморфизм.`, 'plus', 300); 
+            } else if (fwhr >= 1.75) { 
+                baseScore += 0.5; await log(`[~] FWHR ${fwhr}: Выше среднего. Хорошая база.`, 'warn', 300); 
+            } else if (fwhr >= 1.6) { 
+                baseScore -= 0.5; await log(`[-] FWHR ${fwhr}: Субоптимально. Слегка вытянуто.`, 'sys', 300); 
             } else {
-                baseScore -= 0.5; log(`[-] FWHR ${fwhr}: Субоптимально.`, 'warn');
+                baseScore -= 1.5; await log(`[-] FATAL: FWHR ${fwhr}. Лошадиное лицо (Long midface). Грубая генетическая ошибка.`, 'err', 300); 
             }
 
-            // 2. Оценка кантального наклона (Глаза)
+            // 2. Canthal Tilt
             let tiltDesc = "";
             if (avgTilt > 3) { 
-                baseScore += 1.0; tiltDesc = "Positive (Hunter)"; log(`[+] Eyes: Положительный наклон (${avgTilt.toFixed(1)}°). Хищный взгляд.`, 'plus'); 
-            } else if (avgTilt < -2) { 
-                baseScore -= 1.5; tiltDesc = "Negative (Prey)"; log(`[-] FATAL: Отрицательный наклон (${avgTilt.toFixed(1)}°). Взгляд жертвы (Prey eyes). Штраф.`, 'err'); 
+                baseScore += 1.0; tiltDesc = `Hunter (+${avgTilt.toFixed(1)}°)`; await log(`[+] Глаза: Острый хищный угол (+${avgTilt.toFixed(1)}°).`, 'plus', 300); 
+            } else if (avgTilt >= 0) { 
+                baseScore += 0; tiltDesc = `Neutral (+${avgTilt.toFixed(1)}°)`; await log(`[~] Глаза: Нейтральный наклон. Ничего выдающегося.`, 'sys', 300); 
             } else { 
-                baseScore -= 0.2; tiltDesc = "Neutral / Boring"; log(`[-] Eyes: Нейтрально (${avgTilt.toFixed(1)}°). Не выделяется из толпы.`, 'warn'); 
+                baseScore -= 1.5; tiltDesc = `Prey (${avgTilt.toFixed(1)}°)`; await log(`[-] FATAL: Отрицательный наклон (${avgTilt.toFixed(1)}°). Глаза жертвы. Инстинктивное отторжение.`, 'err', 300); 
             }
 
-            // 3. Челюсть к скулам (Маскулинность)
+            // 3. Jaw
             if (jawToCheekRatio >= 88) { 
-                baseScore += 1.5; log(`[+] Jaw: Ширина ${jawToCheekRatio}%. Массивная, доминирующая челюсть.`, 'plus'); 
-            } else if (jawToCheekRatio >= 80) { 
-                baseScore += 0.2; log(`[~] Jaw: Ширина ${jawToCheekRatio}%. В пределах нормы.`, 'sys'); 
-            } else if (jawToCheekRatio < 75) { 
-                baseScore -= 2.0; log(`[-] FATAL: Jaw ${jawToCheekRatio}%. Слабая нижняя треть, ретрузия / узкая кость.`, 'err'); 
+                baseScore += 1.5; await log(`[+] Челюсть: ${jawToCheekRatio}%. Массивная, доминирующая структура.`, 'plus', 300); 
+            } else if (jawToCheekRatio >= 82) { 
+                baseScore += 0.5; await log(`[~] Челюсть: ${jawToCheekRatio}%. В пределах хорошей нормы.`, 'sys', 300); 
+            } else if (jawToCheekRatio >= 75) { 
+                baseScore -= 1.0; await log(`[-] Челюсть: ${jawToCheekRatio}%. Недостаток угловатости, слабое развитие.`, 'warn', 300); 
             } else {
-                baseScore -= 0.8; log(`[-] Jaw: Ширина ${jawToCheekRatio}%. Недостаток угловатости.`, 'warn');
+                baseScore -= 2.0; await log(`[-] FATAL: Челюсть ${jawToCheekRatio}%. Ретрузия. Полное отсутствие нижней трети.`, 'err', 300); 
             }
 
-            // Жесткое ограничение оценки от 2.0 до 9.0
-            let finalPsl = Math.min(Math.max(baseScore, 2.0), 9.0).toFixed(1);
+            // Лимиты: оценка не может быть ниже 1.5 и выше 9.0 (10 не существует).
+            let finalPsl = Math.min(Math.max(baseScore, 1.5), 9.0).toFixed(1);
 
             let tier = "SUB-5 (OVER)";
             let color = "var(--brutal-red)";
-            let desc = "Полный провал генетической лотереи. Женщины инстинктивно игнорируют. Требуется хардмакс (челюстно-лицевая хирургия) или смирение.";
+            let desc = "Генетический тупик. Костная структура разрушена отрицательным канталом или отсутствием челюсти. Внимание женщин недоступно на инстинктивном уровне. Рекомендация: радикальный хардмакс (ЧЛХ) или принятие реальности.";
 
             if (finalPsl >= 8.0) { 
                 tier = "CHAD"; color = "var(--accent-1)"; 
-                desc = "Генетическая элита (Топ 1%). Экстремальный диморфизм. Жизнь на легком уровне."; 
+                desc = "Элита (Топ 1%). Экстремальный половой диморфизм. Идеальная костная масса. Жизнь на абсолютном легком уровне, ореол (halo effect) покрывает любые личностные недостатки."; 
             } else if (finalPsl >= 6.5) { 
                 tier = "CHADLITE"; color = "var(--chad-gold)"; 
-                desc = "Топ 15%. Мощная база, прощает мелкие недостатки. С низким процентом жира легко доминирует."; 
+                desc = "Топ 15%. Мощная генетическая база, прощающая мелкие недостатки. С низким bodyfat (8-10%) вызывает мгновенное влечение. Доминирует в любой социальной группе."; 
             } else if (finalPsl >= 5.5) { 
-                tier = "HTN (High Normie)"; color = "#88cc00"; 
-                desc = "Выше среднего. Можно бороться за внимание, но конкуренция высока. Обязателен жесткий луксмакс (груминг, стиль, джимселл)."; 
+                tier = "HTN (HIGH NORMIE)"; color = "#88cc00"; 
+                desc = "Выше среднего. Лицо имеет потенциал, но не дотягивает до элиты. Конкуренция высока. Требуется жесткий луксмакс, джимселлинг и безупречный стиль для успешной игры."; 
             } else if (finalPsl >= 4.5) { 
-                tier = "MTN (Mid Normie)"; color = "var(--normie-gray)"; 
-                desc = "База. Обычная массовка. Кости не развиты для доминации, но и отторжения не вызывают. Невидимый для элитных девушек."; 
+                tier = "MTN (MID NORMIE)"; color = "var(--normie-gray)"; 
+                desc = "База. Абсолютная массовка (NPC). Черты лица не развиты для доминации, но и отторжения не вызывают. Невидим для топовых женщин. Выбор — ставки на статус (бетта-провайдер)."; 
             } else if (finalPsl >= 3.5) {
-                tier = "BRUTAL LTN"; color = "#ff5500"; 
-                desc = "Ниже среднего. Жесткие недостатки в костной структуре. Выживание возможно только через статус или экстремальную компенсацию.";
+                tier = "LTN (LOW NORMIE)"; color = "#ff5500"; 
+                desc = "Ниже среднего. Жесткие структурные недостатки. Биологический фильтр отсеивает вас на раннем этапе. Отношения возможны только при экстремальной компенсации деньгами или статусом.";
             }
 
             metricsOutput.innerHTML = `
-                <div class="metric-row"><span>FWHR Ratio</span><span class="metric-val" style="color:${fwhr < 1.7 ? 'var(--brutal-red)' : '#fff'}">${fwhr}</span></div>
-                <div class="metric-row"><span>Canthal Tilt</span><span class="metric-val" style="color:${avgTilt < -2 ? 'var(--brutal-red)' : '#fff'}">${tiltDesc}</span></div>
-                <div class="metric-row"><span>Jaw/Cheek Ratio</span><span class="metric-val" style="color:${jawToCheekRatio < 80 ? 'var(--brutal-red)' : '#fff'}">${jawToCheekRatio}%</span></div>
+                <div class="metric-row"><span>Midface (FWHR)</span><span class="metric-val" style="color:${fwhr < 1.6 ? 'var(--brutal-red)' : (fwhr >= 1.9 ? 'var(--accent-1)' : '#fff')}">${fwhr}</span></div>
+                <div class="metric-row"><span>Canthal Tilt</span><span class="metric-val" style="color:${avgTilt < 0 ? 'var(--brutal-red)' : (avgTilt > 3 ? 'var(--accent-1)' : '#fff')}">${tiltDesc}</span></div>
+                <div class="metric-row"><span>Gonial/Zygomatic</span><span class="metric-val" style="color:${jawToCheekRatio < 75 ? 'var(--brutal-red)' : (jawToCheekRatio >= 88 ? 'var(--accent-1)' : '#fff')}">${jawToCheekRatio}%</span></div>
             `;
 
             document.getElementById('tierLabel').innerText = tier;
             document.getElementById('tierLabel').style.color = color;
             document.getElementById('finalScoreBox').style.borderColor = color;
-            document.getElementById('scoreVal').innerHTML = `${finalPsl} <span style="font-size:1rem; color:#555;">/ 10 PSL</span>`;
+            document.getElementById('scoreVal').innerHTML = `${finalPsl} <span style="font-size:1rem; color:#444;">/ 10 PSL</span>`;
             document.getElementById('scoreDesc').innerText = desc;
             
             finalScoreBox.style.display = 'block';
-            log(`>>> ИТОГ: ${finalPsl} PSL. Вердикт: ${tier} <<<`, 'sys');
+            await log(`>>> ИТОГОВАЯ ОЦЕНКА: ${finalPsl} PSL.`, 'sys', 400);
+            await log(`>>> ВЕРДИКТ: ${tier} <<<`, 'warn', 200);
         }
     </script>
 </body>
