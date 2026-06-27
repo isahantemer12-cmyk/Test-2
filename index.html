@@ -3,415 +3,550 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced PSL Aesthetics Analyzer</title>
+    <title>PSL Clinical Terminal V2.0</title>
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --surface-color: #141414;
-            --surface-light: #1f1f1f;
-            --primary-color: #00e6b8;
-            --chad-color: #ffaa00;
-            --text-main: #e0e0e0;
-            --text-muted: #777;
-            --border-color: #2a2a2a;
+            --bg-base: #050505;
+            --panel-bg: #111111;
+            --border-dim: #222;
+            --border-focus: #444;
+            --text-main: #d0d0d0;
+            --accent-1: #00ffcc; /* Cyan */
+            --accent-2: #ff3366; /* Red/Pink */
+            --chad-gold: #ffb700;
+            --font-mono: 'Courier New', Courier, monospace;
+            --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            margin: 0;
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--bg-color);
+            background-color: var(--bg-base);
             color: var(--text-main);
+            font-family: var(--font-ui);
+            padding: 20px;
+            height: 100vh;
             display: flex;
-            justify-content: center;
-            padding: 2rem 1rem;
-            min-height: 100vh;
+            flex-direction: column;
+            overflow-x: hidden;
         }
 
-        .container {
-            width: 100%;
-            max-width: 900px;
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        header {
+            border-bottom: 1px solid var(--border-dim);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
         }
 
         h1 {
-            text-align: center;
-            margin-top: 0;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--primary-color);
+            letter-spacing: 3px;
+            color: var(--accent-1);
+            margin: 0;
         }
 
-        /* Табы */
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1rem;
-        }
+        .version { font-family: var(--font-mono); font-size: 0.8rem; color: #666; }
 
-        .tab {
-            flex: 1;
-            padding: 0.8rem;
-            text-align: center;
-            background: var(--surface-light);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            cursor: pointer;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .tab.active {
-            background: var(--primary-color);
-            color: var(--bg-color);
-            border-color: var(--primary-color);
-        }
-
-        .content-grid {
+        .layout {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            grid-template-columns: 350px 1fr 300px;
+            gap: 20px;
+            height: calc(100vh - 80px);
         }
 
+        @media (max-width: 1200px) {
+            .layout { grid-template-columns: 300px 1fr; }
+            .right-panel { grid-column: 1 / -1; }
+        }
         @media (max-width: 768px) {
-            .content-grid { grid-template-columns: 1fr; }
+            .layout { grid-template-columns: 1fr; height: auto; }
         }
 
-        /* Загрузка фото */
-        .image-container {
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .panel-header {
+            background: #1a1a1a;
+            padding: 8px 15px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border-dim);
+            color: #888;
+        }
+
+        .panel-content { padding: 15px; overflow-y: auto; flex: 1; }
+
+        /* Left Panel - Image & Upload */
+        .workspace {
             position: relative;
             width: 100%;
             aspect-ratio: 3/4;
-            background-color: #000;
-            border: 2px dashed var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
+            background: #000;
+            border: 1px dashed var(--border-focus);
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-
-        #preview {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-
-        .scanner {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background-color: var(--primary-color);
-            box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
-            display: none;
-            animation: scan 2s linear infinite;
-        }
-
-        @keyframes scan {
-            0% { top: 0; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-        }
-
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .btn {
-            background-color: transparent;
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            padding: 0.8rem;
-            text-transform: uppercase;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: 0.3s;
-            position: relative;
             overflow: hidden;
         }
 
-        .btn:hover {
-            background-color: var(--primary-color);
-            color: var(--bg-color);
+        canvas#overlay {
+            position: absolute;
+            top: 0; left: 0;
+            pointer-events: none;
+            z-index: 10;
         }
 
-        .btn input[type=file] {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0; cursor: pointer;
+        #targetImage {
+            max-width: 100%; max-height: 100%;
+            object-fit: contain; display: none;
         }
 
-        #analyzeBtn { display: none; }
-
-        /* Метрики */
-        .metrics-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-        }
-
-        .metric {
-            background: var(--surface-light);
-            padding: 1rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-        }
-
-        .metric-header {
-            display: flex;
-            justify-content: space-between;
+        .btn {
+            background: transparent;
+            border: 1px solid var(--accent-1);
+            color: var(--accent-1);
+            padding: 10px 15px;
+            font-family: var(--font-mono);
             font-size: 0.85rem;
             text-transform: uppercase;
-            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn:hover { background: var(--accent-1); color: #000; }
+        .btn:disabled { border-color: #333; color: #555; cursor: not-allowed; }
+        .btn:disabled:hover { background: transparent; color: #555; }
+
+        .upload-wrapper { position: relative; margin-top: 15px; }
+        .upload-wrapper input[type="file"] {
+            position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer;
+        }
+
+        /* Center Panel - Console & Terminal */
+        .terminal {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
             color: #aaa;
+            line-height: 1.5;
+            background: #080808;
+            padding: 10px;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .term-line { margin-bottom: 4px; }
+        .term-time { color: #555; margin-right: 8px; }
+        .term-sys { color: var(--accent-1); }
+        .term-err { color: var(--accent-2); }
+        .term-warn { color: var(--chad-gold); }
+
+        /* Right Panel - Analytics & Radar */
+        .radar-container {
+            width: 100%;
+            aspect-ratio: 1;
+            margin-bottom: 20px;
         }
 
-        .metric-value {
-            color: var(--primary-color);
-            font-weight: bold;
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
         }
 
-        /* Итоговый рейтинг */
-        .rating-box {
-            grid-column: 1 / -1;
-            background: #111;
-            border: 1px solid var(--border-color);
-            border-left: 4px solid var(--primary-color);
-            padding: 1.5rem;
-            border-radius: 8px;
-            display: none;
-            margin-top: 1rem;
-        }
-
-        .rating-header {
+        .metric-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1rem;
-            margin-bottom: 1rem;
+            border-bottom: 1px dotted #333;
+            padding-bottom: 4px;
+            font-size: 0.85rem;
         }
+        .metric-label { color: #888; }
+        .metric-val { font-family: var(--font-mono); color: var(--accent-1); font-weight: bold; }
 
-        .tier-badge {
-            background: var(--primary-color);
-            color: #000;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            font-weight: 900;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
+        .final-score {
+            margin-top: 20px;
+            padding: 15px;
+            background: #151515;
+            border: 1px solid var(--chad-gold);
+            text-align: center;
+            display: none;
         }
+        .tier-label { font-size: 1.5rem; font-weight: 900; color: var(--chad-gold); letter-spacing: 2px; }
+        .score-val { font-size: 2.5rem; font-family: var(--font-mono); margin: 10px 0; }
+        .score-desc { font-size: 0.8rem; color: #aaa; line-height: 1.4; text-align: left; }
 
-        .psl-score {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--text-main);
-        }
-
-        .psl-score span {
-            font-size: 1rem;
-            color: var(--text-muted);
-        }
-
-        .analysis-text {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #ccc;
-        }
+        /* Helpers */
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Клинический PSL Анализатор</h1>
-        
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('front')" id="tab-front">Анфас (Front)</div>
-            <div class="tab" onclick="switchTab('side')" id="tab-side">Профиль (Side)</div>
+    <header>
+        <h1>PSL / Facial Biometrics Analyzer</h1>
+        <div class="version">Build 2.0.4 // Deterministic Engine</div>
+    </header>
+
+    <div class="layout">
+        <div class="panel">
+            <div class="panel-header">Визуальные данные (Input)</div>
+            <div class="panel-content" style="display:flex; flex-direction:column;">
+                <div class="workspace" id="workspace">
+                    <span id="placeholder">NO SIGNAL</span>
+                    <img id="targetImage" alt="Target">
+                    <canvas id="overlay"></canvas>
+                </div>
+                <div class="upload-wrapper">
+                    <button class="btn">Выбрать файл</button>
+                    <input type="file" id="imageLoader" accept="image/jpeg, image/png, image/webp">
+                </div>
+                <button class="btn" id="btnAnalyze" disabled>Инициализировать анализ</button>
+            </div>
         </div>
 
-        <div class="content-grid">
-            <!-- Левая колонка: Фото -->
-            <div>
-                <div class="image-container">
-                    <span id="placeholderText" style="color: var(--text-muted); font-size: 0.9rem;">Загрузите фото</span>
-                    <img id="preview" alt="Preview">
-                    <div class="scanner" id="scanner"></div>
+        <div class="panel">
+            <div class="panel-header">Протокол вычислений (Terminal)</div>
+            <div class="panel-content" style="padding: 0;">
+                <div class="terminal" id="terminal">
+                    <div class="term-line"><span class="term-time">[00:00.00]</span><span class="term-sys">Система готова. Ожидание ввода данных...</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel right-panel">
+            <div class="panel-header">Метрики и Вердикт (Output)</div>
+            <div class="panel-content">
+                <div class="radar-container">
+                    <canvas id="radarChart"></canvas>
                 </div>
                 
-                <div class="controls">
-                    <button class="btn">
-                        Выбрать фото
-                        <input type="file" id="imageInput" accept="image/*">
-                    </button>
-                    <button class="btn" id="analyzeBtn">Запустить анализ</button>
-                    <div id="statusText" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; height: 1rem;"></div>
+                <div class="metrics-grid" id="metricsOutput">
+                    <div style="color:#555; text-align:center; font-size: 0.8rem; margin-top:50px;">Данные отсутствуют. Запустите анализ.</div>
                 </div>
-            </div>
 
-            <!-- Правая колонка: Метрики -->
-            <div class="metrics-container" id="metricsPanel">
-                <!-- Сюда будут инжектиться метрики в зависимости от выбранного таба -->
-                <div style="text-align:center; color:var(--text-muted); margin-top: 50%;">Загрузите фото для расчета метрик</div>
-            </div>
-
-            <!-- Итоговый блок -->
-            <div class="rating-box" id="ratingBox">
-                <div class="rating-header">
-                    <div class="tier-badge" id="tierBadge">HTN</div>
-                    <div class="psl-score" id="pslScore">6.2<span> / 10 PSL</span></div>
+                <div class="final-score" id="finalScoreBox">
+                    <div class="tier-label" id="tierLabel">UNKNOWN</div>
+                    <div class="score-val" id="scoreVal">0.0 / 10</div>
+                    <div class="score-desc" id="scoreDesc">...</div>
                 </div>
-                <div class="analysis-text" id="analysisText"></div>
             </div>
         </div>
     </div>
 
     <script>
-        let currentTab = 'front';
-        
-        const ui = {
-            imageInput: document.getElementById('imageInput'),
-            preview: document.getElementById('preview'),
-            placeholderText: document.getElementById('placeholderText'),
-            analyzeBtn: document.getElementById('analyzeBtn'),
-            scanner: document.getElementById('scanner'),
-            statusText: document.getElementById('statusText'),
-            metricsPanel: document.getElementById('metricsPanel'),
-            ratingBox: document.getElementById('ratingBox'),
-            tierBadge: document.getElementById('tierBadge'),
-            pslScore: document.getElementById('pslScore'),
-            analysisText: document.getElementById('analysisText'),
-            tabFront: document.getElementById('tab-front'),
-            tabSide: document.getElementById('tab-side')
-        };
+        // ЭЛЕМЕНТЫ DOM
+        const imageLoader = document.getElementById('imageLoader');
+        const targetImage = document.getElementById('targetImage');
+        const overlay = document.getElementById('overlay');
+        const ctxOverlay = overlay.getContext('2d');
+        const placeholder = document.getElementById('placeholder');
+        const btnAnalyze = document.getElementById('btnAnalyze');
+        const terminal = document.getElementById('terminal');
+        const radarCanvas = document.getElementById('radarChart');
+        const ctxRadar = radarCanvas.getContext('2d');
+        const metricsOutput = document.getElementById('metricsOutput');
+        const finalScoreBox = document.getElementById('finalScoreBox');
 
-        // База знаний для рандомизации
-        const data = {
-            front: {
-                canthal: ["Нейтральный", "Слегка положительный", "Положительный (Hunter)", "Слегка отрицательный"],
-                eyeArea: ["Миндалевидные, глубокая посадка", "Круглые, верхнее веко открыто (Upper Eyelid Exposure)", "Hunter Eyes (компактные)"],
-                jawSymmetry: ["Асимметрия < 2% (Идеал)", "Легкая асимметрия", "Заметная асимметрия левой стороны"],
-                fwRatio: ["1.85 (Высокий диморфизм)", "1.75 (Норма)", "1.90+ (Широкое лицо)"]
-            },
-            side: {
-                gonial: ["~120° (Идеал, квадратная челюсть)", "~130° (Норма)", "~115° (Компактная ветвь)", ">135° (Слабый угол)"],
-                maxilla: ["Отличный Forward Growth", "Среднее развитие", "Слегка плоская максилла", "Ретрузия верхней челюсти"],
-                ramus: ["Длинная ветвь (Маскулинно)", "Средняя длина", "Короткая ветвь"],
-                browRidge: ["Выраженные супраорбитальные валики", "Средняя проекция", "Плоский лоб (Низкий диморфизм)"]
+        let imageSeed = 0; // Глобальный сид, зависящий от пикселей фото
+        let uploadedImageWidth = 0;
+        let uploadedImageHeight = 0;
+
+        // ПСЕВДОСЛУЧАЙНЫЙ ГЕНЕРАТОР НА ОСНОВЕ СИДА (Детерминированность)
+        // Гарантирует, что одни и те же числа выпадают для одной и той же фотографии
+        class PRNG {
+            constructor(seed) { this.seed = seed; }
+            next() {
+                this.seed = (this.seed * 1664525 + 1013904223) % 4294967296;
+                return this.seed / 4294967296;
             }
-        };
-
-        function switchTab(tab) {
-            currentTab = tab;
-            ui.tabFront.classList.toggle('active', tab === 'front');
-            ui.tabSide.classList.toggle('active', tab === 'side');
-            resetUI();
-            
-            ui.placeholderText.innerText = tab === 'front' ? "Загрузите фото (анфас)" : "Загрузите фото (профиль сбоку)";
+            range(min, max) { return min + this.next() * (max - min); }
+            choice(arr) { return arr[Math.floor(this.next() * arr.length)]; }
         }
 
-        ui.imageInput.addEventListener('change', function(e) {
+        let randomGen = new PRNG(12345);
+
+        // ФУНКЦИЯ ЛОГИРОВАНИЯ В ТЕРМИНАЛ
+        function log(msg, type = 'sys') {
+            const now = new Date();
+            const timeStr = `[${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}.${now.getMilliseconds().toString().padStart(3,'0').substring(0,2)}]`;
+            let colorClass = 'term-sys';
+            if(type === 'err') colorClass = 'term-err';
+            if(type === 'warn') colorClass = 'term-warn';
+            
+            const div = document.createElement('div');
+            div.className = 'term-line';
+            div.innerHTML = `<span class="term-time">${timeStr}</span><span class="${colorClass}">${msg}</span>`;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // ОБРАБОТКА ЗАГРУЗКИ ФОТО
+        imageLoader.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    ui.preview.src = event.target.result;
-                    ui.preview.style.display = 'block';
-                    ui.placeholderText.style.display = 'none';
-                    ui.analyzeBtn.style.display = 'block';
-                    resetUI();
+            if (!file) return;
+
+            log(`Загрузка файла: ${file.name} (${(file.size/1024).toFixed(2)} KB)`, 'sys');
+            
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                targetImage.onload = () => {
+                    placeholder.style.display = 'none';
+                    targetImage.style.display = 'block';
+                    
+                    // Настраиваем Canvas под размер картинки
+                    const rect = targetImage.getBoundingClientRect();
+                    overlay.width = rect.width;
+                    overlay.height = rect.height;
+                    uploadedImageWidth = rect.width;
+                    uploadedImageHeight = rect.height;
+
+                    btnAnalyze.disabled = false;
+                    btnAnalyze.innerText = "Инициализировать анализ";
+                    log(`Изображение смонтировано. Разрешение: ${targetImage.naturalWidth}x${targetImage.naturalHeight}. Готовность к анализу.`, 'sys');
+                    
+                    // Сброс интерфейса
+                    ctxOverlay.clearRect(0, 0, overlay.width, overlay.height);
+                    ctxRadar.clearRect(0, 0, radarCanvas.width, radarCanvas.height);
+                    metricsOutput.innerHTML = '';
+                    finalScoreBox.style.display = 'none';
+                };
+                targetImage.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // ХЕШИРОВАНИЕ ПИКСЕЛЕЙ (Создание уникального отпечатка фото)
+        function generateImageHash(imgElement) {
+            log('Инициализация канвас-буфера для чтения пикселей...', 'sys');
+            const tempCanvas = document.createElement('canvas');
+            const tCtx = tempCanvas.getContext('2d');
+            // Масштабируем вниз для скорости
+            tempCanvas.width = 100; 
+            tempCanvas.height = 100;
+            tCtx.drawImage(imgElement, 0, 0, 100, 100);
+            
+            const imgData = tCtx.getImageData(0, 0, 100, 100).data;
+            let hash = 0;
+            // Берем каждый 4-й пиксель (только Red канал, чтобы было быстрее)
+            for (let i = 0; i < imgData.length; i += 16) {
+                hash = ((hash << 5) - hash) + imgData[i] + imgData[i+1] + imgData[i+2];
+                hash |= 0; // Convert to 32bit integer
+            }
+            return Math.abs(hash);
+        }
+
+        // АНИМАЦИЯ И РИСОВАНИЕ НА ФОТО (Сетка и точки)
+        function drawFacialMapping() {
+            const w = overlay.width;
+            const h = overlay.height;
+            ctxOverlay.clearRect(0, 0, w, h);
+
+            // Имитация сканирующей сетки
+            ctxOverlay.strokeStyle = 'rgba(0, 255, 204, 0.15)';
+            ctxOverlay.lineWidth = 1;
+            for(let i = 0; i < w; i += 20) { ctxOverlay.beginPath(); ctxOverlay.moveTo(i, 0); ctxOverlay.lineTo(i, h); ctxOverlay.stroke(); }
+            for(let j = 0; j < h; j += 20) { ctxOverlay.beginPath(); ctxOverlay.moveTo(0, j); ctxOverlay.lineTo(w, j); ctxOverlay.stroke(); }
+
+            // Псевдо-точки (landmarks), зависят от размера картинки, чтобы смотрелось реалистично
+            const points = [
+                {x: w*0.35, y: h*0.45}, {x: w*0.65, y: h*0.45}, // Глаза
+                {x: w*0.5, y: h*0.6}, // Нос
+                {x: w*0.4, y: h*0.75}, {x: w*0.6, y: h*0.75}, // Углы рта
+                {x: w*0.25, y: h*0.65}, {x: w*0.75, y: h*0.65}, // Гониальные углы (челюсть)
+                {x: w*0.5, y: h*0.9} // Подбородок
+            ];
+
+            ctxOverlay.fillStyle = '#00ffcc';
+            ctxOverlay.strokeStyle = '#00ffcc';
+            ctxOverlay.lineWidth = 2;
+
+            // Рисуем связи
+            ctxOverlay.beginPath();
+            ctxOverlay.moveTo(points[5].x, points[5].y); // Левая челюсть
+            ctxOverlay.lineTo(points[7].x, points[7].y); // Подбородок
+            ctxOverlay.lineTo(points[6].x, points[6].y); // Правая челюсть
+            ctxOverlay.stroke();
+
+            ctxOverlay.beginPath();
+            ctxOverlay.moveTo(points[0].x, points[0].y);
+            ctxOverlay.lineTo(points[1].x, points[1].y);
+            ctxOverlay.setLineDash([5, 5]);
+            ctxOverlay.stroke();
+            ctxOverlay.setLineDash([]);
+
+            // Рисуем точки
+            points.forEach((p, i) => {
+                ctxOverlay.beginPath();
+                ctxOverlay.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                ctxOverlay.fill();
+                ctxOverlay.font = "10px Courier";
+                ctxOverlay.fillText(`P${i}`, p.x + 8, p.y - 8);
+            });
+        }
+
+        // ОТРИСОВКА РАДАРНОЙ ДИАГРАММЫ (Без внешних библиотек)
+        function drawRadarChart(stats) {
+            const w = radarCanvas.clientWidth;
+            const h = radarCanvas.clientHeight;
+            radarCanvas.width = w;
+            radarCanvas.height = h;
+            
+            const cx = w / 2;
+            const cy = h / 2;
+            const radius = Math.min(w, h) / 2 - 30;
+            const sides = stats.length;
+            const angle = (Math.PI * 2) / sides;
+
+            // Фон радара (паутина)
+            ctxRadar.strokeStyle = '#333';
+            ctxRadar.lineWidth = 1;
+            for(let step = 0.2; step <= 1; step += 0.2) {
+                ctxRadar.beginPath();
+                for(let i = 0; i <= sides; i++) {
+                    const a = i * angle - Math.PI/2;
+                    const x = cx + Math.cos(a) * radius * step;
+                    const y = cy + Math.sin(a) * radius * step;
+                    if(i === 0) ctxRadar.moveTo(x, y);
+                    else ctxRadar.lineTo(x, y);
                 }
-                reader.readAsDataURL(file);
+                ctxRadar.stroke();
             }
-        });
 
-        function resetUI() {
-            ui.ratingBox.style.display = 'none';
-            ui.statusText.innerText = '';
-            ui.metricsPanel.innerHTML = '<div style="text-align:center; color:var(--text-muted); margin-top: 50%;">Ожидание запуска анализа...</div>';
-        }
-
-        function getRandomItem(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
-        }
-
-        function calculateTier(score) {
-            if (score >= 8.0) return { tier: "CHAD", color: "#ffaa00", desc: "Генетическая элита. Идеальное костное развитие, топовый диморфизм." };
-            if (score >= 6.5) return { tier: "CHADLITE", color: "#00e6b8", desc: "Топ 10-15%. Отличная база, выраженные маскулинные черты, привлекает внимание." };
-            if (score >= 5.5) return { tier: "HTN", color: "#33ccff", desc: "High Tier Normie. Выше среднего. Хорошая гармония, с небольшими луксмакс-доработками (сушка, груминг) легко прыгает в Chadlite." };
-            if (score >= 4.5) return { tier: "MTN", color: "#aadd00", desc: "Mid Tier Normie. База большинства. Нормальное развитие, но есть зоны для улучшения (нужен хардмакс или жесткий джимселл)." };
-            return { tier: "LTN", color: "#ff4444", desc: "Low Tier Normie. Есть заметные недостатки в костной структуре. Рекомендуется фокус на физ. форму, хирургию (при необходимости) и стиль." };
-        }
-
-        ui.analyzeBtn.addEventListener('click', function() {
-            ui.scanner.style.display = 'block';
-            ui.analyzeBtn.disabled = true;
-            ui.metricsPanel.innerHTML = '';
+            // Оси и текст
+            ctxRadar.fillStyle = '#888';
+            ctxRadar.font = "11px sans-serif";
+            ctxRadar.textAlign = "center";
+            ctxRadar.textBaseline = "middle";
             
-            const isFront = currentTab === 'front';
-            ui.statusText.innerText = isFront ? 'Построение карты лица...' : 'Трекинг профиля (гонион, назион)...';
+            stats.forEach((stat, i) => {
+                const a = i * angle - Math.PI/2;
+                const tx = cx + Math.cos(a) * (radius + 20);
+                const ty = cy + Math.sin(a) * (radius + 15);
+                ctxRadar.fillText(stat.label, tx, ty);
+            });
 
-            setTimeout(() => {
-                ui.scanner.style.display = 'none';
-                ui.analyzeBtn.disabled = false;
-                ui.statusText.innerText = 'Анализ завершен.';
+            // Данные пользователя
+            ctxRadar.beginPath();
+            ctxRadar.fillStyle = 'rgba(0, 255, 204, 0.3)';
+            ctxRadar.strokeStyle = '#00ffcc';
+            ctxRadar.lineWidth = 2;
+
+            stats.forEach((stat, i) => {
+                const a = i * angle - Math.PI/2;
+                const valRadius = radius * (stat.value / 100);
+                const x = cx + Math.cos(a) * valRadius;
+                const y = cy + Math.sin(a) * valRadius;
+                if(i === 0) ctxRadar.moveTo(x, y);
+                else ctxRadar.lineTo(x, y);
                 
-                generateReport(isFront);
-            }, 2000);
+                // Кружочки на концах
+                ctxRadar.arc(x, y, 3, 0, Math.PI*2);
+                ctxRadar.moveTo(x, y); // Возврат кисти
+            });
+            ctxRadar.closePath();
+            ctxRadar.fill();
+            ctxRadar.stroke();
+        }
+
+        // ЗАПУСК АНАЛИЗА
+        btnAnalyze.addEventListener('click', async () => {
+            btnAnalyze.disabled = true;
+            btnAnalyze.innerText = "Анализ в процессе...";
+            
+            // 1. Вычисляем хэш
+            log('Запуск алгоритма хеширования матрицы пикселей...', 'sys');
+            imageSeed = generateImageHash(targetImage);
+            randomGen = new PRNG(imageSeed); // Инициализация генератора с сидом картинки
+            log(`Сгенерирован уникальный биометрический ключ: 0x${imageSeed.toString(16).toUpperCase()}`, 'warn');
+
+            // 2. Фейковые задержки для имитации работы нейросети
+            const steps = [
+                {msg: "Детекция краев (Canny Edge Detection)...", delay: 500},
+                {msg: "Распознавание ключевых точек (Landmark mapping 68 pts)...", delay: 800, action: drawFacialMapping},
+                {msg: "Измерение индекса FWHR (Facial Width-to-Height Ratio)...", delay: 1200},
+                {msg: "Оценка проекции и площади глазницы...", delay: 1500},
+                {msg: "Вычисление отношения ширины скул к ширине челюсти (Bizygomatic-to-Bigonial)...", delay: 1800},
+                {msg: "Агрегация данных и калибровка PSL метрик...", delay: 2200}
+            ];
+
+            let cumulativeDelay = 0;
+            for (let i = 0; i < steps.length; i++) {
+                cumulativeDelay += (steps[i].delay - (i > 0 ? steps[i-1].delay : 0));
+                setTimeout(() => {
+                    log(steps[i].msg, 'sys');
+                    if(steps[i].action) steps[i].action();
+                }, cumulativeDelay);
+            }
+
+            // 3. Вывод результатов
+            setTimeout(() => {
+                generateFinalReport();
+                btnAnalyze.innerText = "Анализ завершен";
+            }, cumulativeDelay + 500);
         });
 
-        function generateReport(isFront) {
-            let metricsHTML = '';
-            let score = (Math.random() * (7.5 - 4.5) + 4.5).toFixed(1); // Рандомная база от MTN до Chadlite
+        function generateFinalReport() {
+            log('Формирование клинического отчета...', 'warn');
 
-            if (isFront) {
-                metricsHTML = `
-                    <div class="metric"><div class="metric-header"><span>Eye Area (Глаза)</span><span class="metric-value">${getRandomItem(data.front.eyeArea)}</span></div></div>
-                    <div class="metric"><div class="metric-header"><span>Canthal Tilt</span><span class="metric-value">${getRandomItem(data.front.canthal)}</span></div></div>
-                    <div class="metric"><div class="metric-header"><span>FWHR (Ширина/Высота)</span><span class="metric-value">${getRandomItem(data.front.fwRatio)}</span></div></div>
-                    <div class="metric"><div class="metric-header"><span>Нижняя треть (Челюсть)</span><span class="metric-value">${getRandomItem(data.front.jawSymmetry)}</span></div></div>
-                `;
-            } else {
-                metricsHTML = `
-                    <div class="metric"><div class="metric-header"><span>Гониальный угол</span><span class="metric-value">${getRandomItem(data.side.gonial)}</span></div></div>
-                    <div class="metric"><div class="metric-header"><span>Forward Growth</span><span class="metric-value">${getRandomItem(data.side.maxilla)}</span></div></div>
-                    <div class="metric"><div class="metric-header"><span>Длина ветви челюсти (Ramus)</span><span class="metric-value">${getRandomItem(data.side.ramus)}</span></div></div>
-                    <div class="metric"><div class="metric-header"><span>Бровные дуги</span><span class="metric-value">${getRandomItem(data.side.browRidge)}</span></div></div>
-                `;
-            }
-
-            ui.metricsPanel.innerHTML = metricsHTML;
-
-            // Рейтинг
-            const tierInfo = calculateTier(score);
-            ui.tierBadge.innerText = tierInfo.tier;
-            ui.tierBadge.style.backgroundColor = tierInfo.color;
-            ui.tierBadge.style.color = (tierInfo.tier === 'CHAD' || tierInfo.tier === 'LTN') ? '#fff' : '#000';
+            // Детерминированная генерация метрик на основе сида фото
+            const fwhr = randomGen.range(1.6, 2.1).toFixed(2);
+            const canthalTilt = randomGen.choice(["Положительный (Hunter)", "Нейтральный", "Отрицательный", "Слегка положительный"]);
+            const midfaceRatio = randomGen.range(0.85, 1.1).toFixed(2);
+            const ipd = randomGen.range(58, 70).toFixed(1) + " мм";
+            const symmetry = randomGen.range(75, 98).toFixed(1) + "%";
             
-            ui.pslScore.innerHTML = `${score}<span> / 10 PSL</span>`;
-            
-            // Генерация клинического текста
-            let analysisNotes = `<strong>Вердикт (${tierInfo.tier}):</strong> ${tierInfo.desc} `;
-            if (isFront) {
-                analysisNotes += `<br><br><strong>Детали (Анфас):</strong> Костная структура читается хорошо. Если есть излишки лицевого жира — сушка (cardio + дефицит калорий) сделает углы резче. Глазная зона играет решающую роль: при hunter eyes баллы сразу растут вверх.`;
-            } else {
-                analysisNotes += `<br><br><strong>Детали (Профиль):</strong> В движении профиль решает многое. Если гониальный угол в районе 120-130 градусов (как у того же Василия Степанова в лучшие годы) и ветвь челюсти длинная — это мощный маскулинный маркер. Если есть ретрузия максиллы — стоит изучить мьюинг (mewing) для правильной позиции языка.`;
-            }
+            // Заполнение левого списка метрик
+            metricsOutput.innerHTML = `
+                <div class="metric-row"><span class="metric-label">FWHR Индекс</span><span class="metric-val">${fwhr}</span></div>
+                <div class="metric-row"><span class="metric-label">Кантальный наклон</span><span class="metric-val">${canthalTilt}</span></div>
+                <div class="metric-row"><span class="metric-label">Симметрия</span><span class="metric-val">${symmetry}</span></div>
+                <div class="metric-row"><span class="metric-label">Компактность ср. зоны (Midface)</span><span class="metric-val">${midfaceRatio}</span></div>
+                <div class="metric-row"><span class="metric-label">Расстояние между зрачками (IPD)</span><span class="metric-val">${ipd}</span></div>
+            `;
 
-            ui.analysisText.innerHTML = analysisNotes;
-            ui.ratingBox.style.display = 'block';
+            // Статы для радара (от 0 до 100)
+            const stats = [
+                {label: "Маскулинность", value: randomGen.range(50, 100)},
+                {label: "Симметрия", value: randomGen.range(60, 98)},
+                {label: "Глазная зона", value: randomGen.range(40, 95)},
+                {label: "Развитие челюсти", value: randomGen.range(45, 100)},
+                {label: "Гармония третей", value: randomGen.range(55, 95)}
+            ];
+            
+            drawRadarChart(stats);
+
+            // Вычисление итогового балла
+            let totalAvg = stats.reduce((acc, curr) => acc + curr.value, 0) / 5;
+            // Перевод 100-балльной шкалы в 10-балльную PSL (от 3.5 до 8.5 для реализма)
+            let pslScore = ((totalAvg / 100) * 5 + 3.5).toFixed(1);
+
+            let tier = "LTN";
+            let color = "#ff4444";
+            let desc = "Требуется серьезный hardmaxxing. Костная структура недоразвита.";
+
+            if(pslScore >= 7.5) { tier = "CHAD"; color = "var(--chad-gold)"; desc = "Генетическая элита (Top 1%). Экстремальный диморфизм и идеальные пропорции костей черепа."; }
+            else if(pslScore >= 6.0) { tier = "CHADLITE"; color = "var(--accent-1)"; desc = "Отличная база (Top 10-15%). Высокий потенциал. Низкий процент жира сделает лицо точеным."; }
+            else if (pslScore >= 5.0) { tier = "HTN"; color = "#33ccff"; desc = "Выше среднего. Необходим grooming и softmaxxing (уход за кожей, прическа) для максимизации результата."; }
+            else if (pslScore >= 4.0) { tier = "MTN"; color = "#aadd00"; desc = "Среднестатистическое развитие. Выраженные недостатки отсутствуют, но и выдающихся черт нет. Рекомендован mewing."; }
+
+            document.getElementById('tierLabel').innerText = tier;
+            document.getElementById('tierLabel').style.color = color;
+            document.getElementById('finalScoreBox').style.borderColor = color;
+            document.getElementById('scoreVal').innerText = pslScore + " / 10 PSL";
+            document.getElementById('scoreDesc').innerText = desc;
+            
+            finalScoreBox.style.display = 'block';
+            log('Отчет успешно сгенерирован и выведен на экран.', 'sys');
         }
     </script>
 </body>
